@@ -1,3 +1,4 @@
+name: CI #自动化的名称
 on:
   push:
     branches:
