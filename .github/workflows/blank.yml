@@ -1,8 +1,8 @@
-name: CI3 #自动化的名称
+name: CI3
 on:
   push:
     branches:
-      - source  # default branch
+      - source
 
 jobs:
   build:
@@ -26,4 +26,4 @@ jobs:
         with:
           github_token: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           publish_dir: ./public
-          publish_branch: master  # deploying branch
+          publish_branch: master
