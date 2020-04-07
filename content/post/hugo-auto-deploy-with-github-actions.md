@@ -9,6 +9,7 @@ toc: true
 Hugo 是一款开源的使用 go 语言写的静态网站生成器，生成的静态页面可以轻松部署到 github pages。
 
 GitHub Actions 是 GitHub 的持续集成服务，持续集成由很多操作组成，比如抓取代码、运行测试、登录远程服务器，发布到第三方服务等等。GitHub 把这些操作就称为 actions。如果你需要某个 action，不必自己写复杂的脚本，直接引用他人写好的 action 即可，整个持续集成过程，就变成了一个 actions 的组合。[Github actions 市场](https://github.com/marketplace?type=actions)，可以搜索别人提交的 actions。
+<!--more-->
 
 ## 自动部署要点
 - username.github.io 只能使用 master 分支
@@ -72,3 +73,8 @@ jobs:
 设置完成后，向 source 分支提交代码，会自动生成静态页面发布到 master 分支。
 效果类似
 ![](https://github.com/peaceiris/actions-gh-pages/blob/master/images/log_overview.jpg?raw=true)
+
+## 参考资料
+- https://tianhui.xin/blog/2019/11/17/hugousegithubactionstopages/
+- https://github.com/peaceiris/actions-hugo
+- https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-deploy_key
