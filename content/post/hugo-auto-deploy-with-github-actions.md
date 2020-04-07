@@ -1,5 +1,5 @@
 ---
-title: "使用 Github Actions 自动部署 hugo"
+title: "使用 Github Actions 自动部署 Hugo"
 date: 2020-04-07T14:03:04+08:00
 tags: ["hugo", "github"]
 categories: ["Github"]
@@ -67,8 +67,8 @@ jobs:
 1. `ssh-keygen -t rsa -b 4096 -C "$(git config user.email)" -f gh-pages -N ""` 生成公私钥对
 2. __Repository Settings__ - __Deploy Keys__，粘贴 `gh-pages.pub` 内容并勾选 ` Allow write access`
 3. __Repository Settings__ - __Secrets__，粘贴 `gh-pages` 内容, name 必须为 `ACTIONS_DEPLOY_KEY`
-![](https://github.com/peaceiris/actions-gh-pages/blob/master/images/secrets-1.jpg?raw=true =800x)
+![](https://github.com/peaceiris/actions-gh-pages/blob/master/images/secrets-1.jpg?raw=true)
 
 设置完成后，向 source 分支提交代码，会自动生成静态页面发布到 master 分支。
 效果类似
-![](https://github.com/peaceiris/actions-gh-pages/blob/master/images/log_overview.jpg?raw=true =800x)
+![](https://github.com/peaceiris/actions-gh-pages/blob/master/images/log_overview.jpg?raw=true)
