@@ -73,11 +73,11 @@ cp.jegotrip.com.cn&lt;/p>
 &lt;li>&lt;code>ssh-keygen -t rsa -b 4096 -C &amp;quot;$(git config user.email)&amp;quot; -f gh-pages -N &amp;quot;&amp;quot;&lt;/code> 生成公私钥对&lt;/li>
 &lt;li>&lt;strong>Repository Settings&lt;/strong> - &lt;strong>Deploy Keys&lt;/strong>，粘贴 &lt;code>gh-pages.pub&lt;/code> 内容并勾选 &lt;code> Allow write access&lt;/code>&lt;/li>
 &lt;li>&lt;strong>Repository Settings&lt;/strong> - &lt;strong>Secrets&lt;/strong>，粘贴 &lt;code>gh-pages&lt;/code> 内容, name 必须为 &lt;code>ACTIONS_DEPLOY_KEY&lt;/code>
-&lt;img src="https://github.com/peaceiris/actions-gh-pages/blob/master/images/secrets-1.jpg?raw=true" alt="">&lt;/li>
+&lt;img src="https://cdn.jsdelivr.net/gh/peaceiris/actions-gh-pages/images/secrets-1.jpg" alt="">&lt;/li>
 &lt;/ol>
 &lt;p>设置完成后，向 source 分支提交代码，会自动生成静态页面发布到 master 分支。
 效果类似
-&lt;img src="https://github.com/peaceiris/actions-gh-pages/blob/master/images/log_overview.jpg?raw=true" alt="">&lt;/p>
+&lt;img src="https://cdn.jsdelivr.net/gh/peaceiris/actions-gh-pages/images/log_overview.jpg" alt="">&lt;/p>
 &lt;h2 id="参考资料">参考资料&lt;/h2>
 &lt;ul>
 &lt;li>&lt;a href="https://tianhui.xin/blog/2019/11/17/hugousegithubactionstopages/">https://tianhui.xin/blog/2019/11/17/hugousegithubactionstopages/&lt;/a>&lt;/li>
