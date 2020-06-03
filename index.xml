@@ -64,7 +64,7 @@ ProxyJump jumpserver
 &lt;/li>
 &lt;/ul>
 &lt;p>&lt;strong>corkscrew 在代理不稳定时比 nc 可靠&lt;/strong>&lt;/p>
-&lt;h3 id="参考连接">参考连接&lt;/h3>
+&lt;h3 id="参考链接">参考链接&lt;/h3>
 &lt;ul>
 &lt;li>&lt;a href="https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts">https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/">https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/&lt;/a>&lt;/li>
