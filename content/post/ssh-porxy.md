@@ -94,7 +94,7 @@ __ProxyCommand 与 ProxyJump__
 
 __corkscrew 在代理不稳定时比 nc 可靠__ 
 
-### 参考连接
+### 参考链接
 
 - https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts
 - https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/
