@@ -6,9 +6,10 @@ categories: ["Windows"]
 draft: fasle
 ---
 
-Win 10 应用商店打开就报 0x80131500 错误，尝试各种方法都不行，尝试过的方法
+Win 10 应用商店打开就报 0x80131500 错误，尝试各种方法都不行，最终使用 fiddler 曲线解决。
+<!--more-->
 
-来自 https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b
+尝试过的方法来自 https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b
 
 - ~~按 “Windows 徽标键+R”，在运行窗口中，键入“WSReset.exe” 并点击 “运行”~~
 - ~~设置→应用→找到microsoft store →高级→重置此应用~~
