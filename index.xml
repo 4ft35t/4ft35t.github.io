@@ -1,4 +1,20 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>4ft35t blog</title><link>https://4ft35t.github.io/</link><description>Recent content on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 01 Jan 2014 00:13:27 +0000</lastBuildDate><atom:link href="https://4ft35t.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>解决无忧行长时间显示“正在连接电话服务器”问题</title><link>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</link><pubDate>Thu, 09 Apr 2020 21:48:15 +0800</pubDate><guid>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</guid><description>&lt;p>无忧行(JegoTrip)APP是中国移动专门为出境游用户量身打造的APP。在境内也可以使用，移动号码可以在 APP 内接电话和收短信, 轻松实现一机双号。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>4ft35t blog</title><link>https://4ft35t.github.io/</link><description>Recent content on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 03 Jun 2020 11:48:10 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Fix Windows Store 0x80131500 Error</title><link>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</link><pubDate>Wed, 03 Jun 2020 11:48:10 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</guid><description>&lt;p>Win 10 应用商店打开就报 0x80131500 错误，尝试各种方法都不行，尝试过的方法&lt;/p>
+&lt;p>来自 &lt;a href="https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b">https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>&lt;del>按 “Windows 徽标键+R”，在运行窗口中，键入“WSReset.exe” 并点击 “运行”&lt;/del>&lt;/li>
+&lt;li>&lt;del>设置→应用→找到microsoft store →高级→重置此应用&lt;/del>&lt;/li>
+&lt;li>&lt;del>打开 IE 浏览器，点击设置，打开 Internet 选项，点击高级，并勾选 “使用SSL 3.0”、”使用 TLS 1.0“、”使用 TLS 1.1“、”使用 TLS 1.2“，应用后重启电脑&lt;/del>&lt;/li>
+&lt;li>&lt;del>卸载并重装应用商店&lt;/del>&lt;/li>
+&lt;/ul>
+&lt;p>最终靠知乎的这条答案曲线解决。&lt;/p>
+&lt;p>&lt;a href="https://www.zhihu.com/question/310873087/answer/1127300614">https://www.zhihu.com/question/310873087/answer/1127300614&lt;/a>&lt;/p>
+&lt;h3 id="操作步骤">操作步骤&lt;/h3>
+&lt;ol>
+&lt;li>下载安装 fiddler &lt;a href="https://telerik-fiddler.s3.amazonaws.com/fiddler/FiddlerSetup.exe">https://telerik-fiddler.s3.amazonaws.com/fiddler/FiddlerSetup.exe&lt;/a>&lt;/li>
+&lt;li>打开fiddler&amp;mdash;点击左上角winconfig&amp;mdash;给 Microsoft Store 打勾&amp;mdash;点save changes&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200603120719.png" alt="image-20200603120155534">&lt;/p>
+&lt;p>再次打开应用商店就能正常使用。唯一的缺陷是需要打开 fiddler 才能使用应用商店，不然会报 0x80072EFD 错误。&lt;/p></description></item><item><title>解决无忧行长时间显示“正在连接电话服务器”问题</title><link>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</link><pubDate>Thu, 09 Apr 2020 21:48:15 +0800</pubDate><guid>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</guid><description>&lt;p>无忧行(JegoTrip)APP是中国移动专门为出境游用户量身打造的APP。在境内也可以使用，移动号码可以在 APP 内接电话和收短信, 轻松实现一机双号。&lt;/p>
 &lt;h2 id="具体症状">具体症状&lt;/h2>
 &lt;p>家里路由器上部署梯子, 国内 IP 直连，其余 IP 走梯子, 国内 IP 库用的 &lt;a href="https://github.com/17mon/china_ip_list">https://github.com/17mon/china_ip_list&lt;/a>。连接家里 WIFI，无忧行 APP 启动后，显示“正在连接电话服务器”, 持续 30 秒以上才能连接到服务器，之后才能收到短信；用 4G 则没有这个提示，启动 APP 瞬间就能收到短信。猜测是无忧行服务器的香港 IP 走梯子后比直连慢很多所致。&lt;/p>
 &lt;h2 id="排查-ip">排查 IP&lt;/h2>
