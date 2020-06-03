@@ -68,8 +68,8 @@ ProxyJump jumpserver
 &lt;ul>
 &lt;li>&lt;a href="https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts">https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/">https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>解决应用商店 0x80131500 错误</title><link>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</link><pubDate>Wed, 03 Jun 2020 11:48:10 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</guid><description>&lt;p>Win 10 应用商店打开就报 0x80131500 错误，尝试各种方法都不行，尝试过的方法&lt;/p>
-&lt;p>来自 &lt;a href="https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b">https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b&lt;/a>&lt;/p>
+&lt;/ul></description></item><item><title>解决应用商店 0x80131500 错误</title><link>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</link><pubDate>Wed, 03 Jun 2020 11:48:10 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</guid><description>&lt;p>Win 10 应用商店打开就报 0x80131500 错误，尝试各种方法都不行，最终使用 fiddler 曲线解决。&lt;/p>
+&lt;p>尝试过的方法来自 &lt;a href="https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b">https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b&lt;/a>&lt;/p>
 &lt;ul>
 &lt;li>&lt;del>按 “Windows 徽标键+R”，在运行窗口中，键入“WSReset.exe” 并点击 “运行”&lt;/del>&lt;/li>
 &lt;li>&lt;del>设置→应用→找到microsoft store →高级→重置此应用&lt;/del>&lt;/li>
