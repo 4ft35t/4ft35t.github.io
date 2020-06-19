@@ -18,7 +18,10 @@ echo
 + echo
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>shell 会将最后一条命令的返回状态码作为整个脚本的返回状态码。test 在最后一行时，&lt;code>[ $status != &amp;quot;success&amp;quot; ]&lt;/code> 的返回结果非0，后面的　&amp;amp;&amp;amp; 内容不会执行，整个脚本结束，脚本返回状态码就是中括号内test命令的反馈状态码。　　　　　　&lt;/p>
 &lt;h3 id="避坑经验">避坑经验&lt;/h3>
-&lt;p>退出用__||__, 避免用　__&amp;amp;&amp;amp;__；一定要用__&amp;amp;&amp;amp;做退出条件时，不能作为脚本或者函数的最后一条命令__。&lt;/p>
+&lt;ul>
+&lt;li>退出用或逻辑 &lt;code>||&lt;/code>，避免用与逻辑 &lt;del>&amp;amp;&amp;amp;&lt;/del>&lt;/li>
+&lt;li>一定要用 &lt;strong>&amp;amp;&amp;amp; 做退出条件时，不能作为脚本或者函数的最后一条命令&lt;/strong>&lt;/li>
+&lt;/ul>
 &lt;p>上面脚本改造成||退出&lt;/p>
 &lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#f92672">[&lt;/span> $status &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;success&amp;#34;&lt;/span> &lt;span style="color:#f92672">]&lt;/span> &lt;span style="color:#f92672">||&lt;/span> exit &lt;span style="color:#ae81ff">２&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>因为是最后一行，还可以直接省略后面的内容&lt;/p>
