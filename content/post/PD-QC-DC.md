@@ -40,7 +40,7 @@ DC 圆头用两组数字来定义一个头的大小，**外直径**和**内直�
 
 使用 PD 充电器头+PD 诱骗器给笔记本供电和原装电源体积对比
 
-<img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/mmexport1594626877412.jpg" style="zoom:50%;" />
+![](https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/mmexport1594626877412.jpg)
 
 PD 诱骗器头的另一侧一般是 type-c 头，使用一根双头 type-c 的线连接 PD
 
@@ -57,7 +57,7 @@ PD 诱骗器可以解决 19v 左右供电问题，别的小电器用的 DC  头�
 
 QC 诱骗线的另一侧是 USB 插头。
 
-<img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot 2020-07-13 at 16.08.32.png" style="zoom:50%;" />
+![](https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2016.08.32.png)
 
 
 
