@@ -19,14 +19,14 @@
 &lt;h3 id="pd-诱骗头">PD 诱骗头&lt;/h3>
 &lt;p>淘宝上的 PD 诱骗器头一般输出电压是 18.5v ~ 20v，笔记本电脑电源输出电压一般在 19v 左右。使用 PD 诱骗头，完美用 PD 头给笔记本电脑和 Surface Pro供电，节约不少桌面空间。&lt;/p>
 &lt;p>使用 PD 充电器头+PD 诱骗器给笔记本供电和原装电源体积对比&lt;/p>
-&lt;p>&lt;!-- raw HTML omitted -->&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/mmexport1594626877412.jpg" alt="">&lt;/p>
 &lt;p>PD 诱骗器头的另一侧一般是 type-c 头，使用一根双头 type-c 的线连接 PD&lt;/p>
 &lt;p>电源和诱骗器。&lt;/p>
 &lt;h3 id="qc-诱骗线升压线">QC 诱骗线／升压线&lt;/h3>
 &lt;p>PD 诱骗器可以解决 19v 左右供电问题，别的小电器用的 DC 头一般是 9V 或者 12v，这就需要另外找一种可以诱骗出 9v 或者 12v 电压的诱骗器。在群里提问后得到关键字“升压线”。后换成“qc 诱骗线”后结果更多。&lt;/p>
 &lt;p>用 12v 的 QC 诱骗线给 SmrtClean 超声波清洗机供电，同样节约很多桌面空间。&lt;/p>
 &lt;p>QC 诱骗线的另一侧是 USB 插头。&lt;/p>
-&lt;p>&lt;!-- raw HTML omitted -->&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2016.08.32.png" alt="">&lt;/p>
 &lt;h3 id="趣事">趣事&lt;/h3>
 &lt;p>家里有个硕方的标签打印机，自带电源是 9v 2.5a，直接插笔记本诱骗器的 19v 供电居然可以正常工作。&lt;/p></description></item><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;p>一个小脚本，&lt;code>[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code>,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p>
 &lt;h3 id="排查">排查&lt;/h3>
