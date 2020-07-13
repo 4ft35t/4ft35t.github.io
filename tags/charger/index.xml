@@ -1,9 +1,2 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>charger on 4ft35t blog</title><link>https://4ft35t.github.io/tags/charger/</link><description>Recent content in charger on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 13 Jul 2020 14:35:25 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/charger/index.xml" rel="self" type="application/rss+xml"/><item><title>PD/QC 电源转 DC 头输出</title><link>https://4ft35t.github.io/post/pd-qc-dc/</link><pubDate>Mon, 13 Jul 2020 14:35:25 +0800</pubDate><guid>https://4ft35t.github.io/post/pd-qc-dc/</guid><description>最初了解到 PD 电源 type-c 输出转 DC 圆头输出，是在 twitter 上，当时作者说从淘宝买了 PD 诱骗器，可以用 PD 头给 NUC 供电，省了 NUC 自带电源占的空间。
-PD 和 QC 是两种电源快冲协议，一般 PD 充电头都支持 QC 协议，反之则不行；与之相对映的，PD 充电头的价格要比 QC 贵很多。
-我也量了一下笔记本充电头的外径 4mm，然后在淘宝看到的参数有两种：
-4.0*1.35 4.0*1.7 第一次看到这个星号，__想当然以为是直径乘以长度__，买了 4.0*1.35 就踩坑了。
-DC 头尺寸表示方法 DC 头是家里小电器常用的供电插头，通常是圆的，中心是空的。光猫、路由器、笔记本电脑、台灯等都在用这种接头。DC 头供电比 USB 稳固、可靠、耐用。
-DC 圆头用两组数字来定义一个头的大小，外直径和内直径。
-一个外直径 5.5mm，内直径 2.1mm 的 DC 头，在淘宝上不同店家有两种写法：
-5.5*2.1 5521 一个小提示，DC 5525 插头兼容 5521，也就是 5525 的插头可以插在 5525 和 5521 的插座上。
-PD 诱骗头 淘宝上的 PD 诱骗器头一般输出电压是 18.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>charger on 4ft35t blog</title><link>https://4ft35t.github.io/tags/charger/</link><description>Recent content in charger on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 13 Jul 2020 14:35:25 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/charger/index.xml" rel="self" type="application/rss+xml"/><item><title>PD/QC 电源转 DC 头输出</title><link>https://4ft35t.github.io/post/pd-qc-dc/</link><pubDate>Mon, 13 Jul 2020 14:35:25 +0800</pubDate><guid>https://4ft35t.github.io/post/pd-qc-dc/</guid><description>&lt;p>最初了解到 PD 电源 type-c 输出转 DC 圆头输出，是在 twitter 上，当时作者说从淘宝买了 PD 诱骗器，可以用 PD 头给 NUC 供电，省了 NUC 自带电源占的空间。&lt;/p>
+&lt;p>PD 和 QC 是两种电源快冲协议，一般 PD 充电头都支持 QC 协议，反之则不行；与之相对应的，PD 充电头的价格要比 QC 贵很多。&lt;/p></description></item></channel></rss>
