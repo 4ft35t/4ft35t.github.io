@@ -1,4 +1,34 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>4ft35t blog</title><link>https://4ft35t.github.io/</link><description>Recent content on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 19 Jun 2020 17:55:19 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;p>一个小脚本，&lt;code>[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code>,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>4ft35t blog</title><link>https://4ft35t.github.io/</link><description>Recent content on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 13 Jul 2020 14:35:25 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>PD/QC 电源转 DC 头输出</title><link>https://4ft35t.github.io/post/pd-qc-dc/</link><pubDate>Mon, 13 Jul 2020 14:35:25 +0800</pubDate><guid>https://4ft35t.github.io/post/pd-qc-dc/</guid><description>&lt;p>最初了解到 PD 电源 type-c 输出转 DC 圆头输出，是在 twitter 上，当时作者说从淘宝买了 PD 诱骗器，可以用 PD 头给 NUC 供电，省了 NUC 自带电源占的空间。&lt;/p>
+&lt;p>PD 和 QC 是两种电源快冲协议，一般 PD 充电头都支持 QC 协议，反之则不行；与之相对映的，PD 充电头的价格要比 QC 贵很多。&lt;/p>
+&lt;p>我也量了一下笔记本充电头的外径 4mm，然后在淘宝看到的参数有两种：&lt;/p>
+&lt;ul>
+&lt;li>4.0*1.35&lt;/li>
+&lt;li>4.0*1.7&lt;/li>
+&lt;/ul>
+&lt;p>第一次看到这个星号，&lt;del>__想当然以为是直径乘以长度__&lt;/del>，买了 4.0*1.35 就踩坑了。&lt;/p>
+&lt;h3 id="dc-头尺寸表示方法">DC 头尺寸表示方法&lt;/h3>
+&lt;p>DC 头是家里小电器常用的供电插头，通常是圆的，中心是空的。光猫、路由器、笔记本电脑、台灯等都在用这种接头。DC 头供电比 USB 稳固、可靠、耐用。&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2015.10.09.png" alt="">&lt;/p>
+&lt;p>DC 圆头用两组数字来定义一个头的大小，&lt;strong>外直径&lt;/strong>和&lt;strong>内直径&lt;/strong>。&lt;/p>
+&lt;p>一个外直径 5.5mm，内直径 2.1mm 的 DC 头，在淘宝上不同店家有两种写法：&lt;/p>
+&lt;ul>
+&lt;li>5.5*2.1&lt;/li>
+&lt;li>5521&lt;/li>
+&lt;/ul>
+&lt;p>一个小提示，DC 5525 插头兼容 5521，也就是 5525 的插头可以插在 5525 和 5521 的插座上。&lt;/p>
+&lt;h3 id="pd-诱骗头">PD 诱骗头&lt;/h3>
+&lt;p>淘宝上的 PD 诱骗器头一般输出电压是 18.5v ~ 20v，笔记本电脑电源输出电压一般在 19v 左右。使用 PD 诱骗头，完美用 PD 头给笔记本电脑和 Surface Pro供电，节约不少桌面空间。&lt;/p>
+&lt;p>使用 PD 充电器头+PD 诱骗器给笔记本供电和原装电源体积对比&lt;/p>
+&lt;p>&lt;!-- raw HTML omitted -->&lt;/p>
+&lt;p>PD 诱骗器头的另一侧一般是 type-c 头，使用一根双头 type-c 的线连接 PD&lt;/p>
+&lt;p>电源和诱骗器。&lt;/p>
+&lt;h3 id="qc-诱骗线升压线">QC 诱骗线／升压线&lt;/h3>
+&lt;p>PD 诱骗器可以解决 19v 左右供电问题，别的小电器用的 DC 头一般是 9V 或者 12v，这就需要另外找一种可以诱骗出 9v 或者 12v 电压的诱骗器。在群里提问后得到关键字“升压线”。后换成“qc 诱骗线”后结果更多。&lt;/p>
+&lt;p>用 12v 的 QC 诱骗线给 SmrtClean 超声波清洗机供电，同样节约很多桌面空间。&lt;/p>
+&lt;p>QC 诱骗线的另一侧是 USB 插头。&lt;/p>
+&lt;p>&lt;!-- raw HTML omitted -->&lt;/p>
+&lt;h3 id="趣事">趣事&lt;/h3>
+&lt;p>家里有个硕方的标签打印机，自带电源是 9v 2.5a，直接插笔记本诱骗器的 19v 供电居然可以正常工作。&lt;/p></description></item><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;p>一个小脚本，&lt;code>[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code>,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p>
 &lt;h3 id="排查">排查&lt;/h3>
 &lt;p>这个写法以前在脚本里经常写，稳定运行未出错。对比之前的脚本后发现差异，之前的脚本 exit 是提前退出，后面还有内容；这个脚本exit是上层调用脚本反馈最终结果，exit 是最后一行。&lt;/p>
 &lt;p>修改脚本后一切正常&lt;/p>
