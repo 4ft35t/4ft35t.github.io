@@ -31,8 +31,8 @@
 &lt;span style="color:#a6e22e">toastLog&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;截图完成&amp;#34;&lt;/span>);
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="触发">触发&lt;/h2>
 &lt;p>一开始设想的是 autojs 监听通知，使用 &lt;a href="https://github.com/Finb/Bark">Bark&lt;/a> 的安卓客户端 &lt;a href="https://github.com/xlvecle/PushLite">PushLite&lt;/a> 来接收通知触发截图，然而 PushLite 需要 Google FCM，安装太折腾，放弃，寻求电脑端触发的方案。&lt;/p>
-&lt;p>一番搜索，决定用 cgi 来接收外部请求并触发截图，各种依赖最少。
-电脑上连接多个安卓手机，执行 adb 命令需要指定设备 id，设备 id 用 &lt;code>adb devices&lt;/code> 获取&lt;/p>
+&lt;p>一番搜索，决定用 cgi 来接收外部请求并触发截图，各种依赖最少。&lt;/p>
+&lt;p>电脑上连接多个安卓手机，执行 adb 命令需要指定设备 id，设备 id 用 &lt;code>adb devices&lt;/code> 获取&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">adb devices
 List of devices attached
 NXTDU1xxxxxxxxx device
@@ -78,8 +78,8 @@ echo &lt;span style="color:#e6db74">&amp;#34;&amp;lt;/body&amp;gt;&amp;lt;/html&
 mkdir cgi-bin
 mv yunshanfu.sh cgi-bin
 python3 -m http.server --cgi
-&lt;/code>&lt;/pre>&lt;/div>&lt;p>浏览器访问 &lt;code>http://127.0.0.1:8000/cgi-bin/yunshanfu.sh&lt;/code>, 即可触发截图，并在当前页面展示截图。
-设置端口转发，公网访问效果如图
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>浏览器访问 &lt;code>http://127.0.0.1:8000/cgi-bin/yunshanfu.sh&lt;/code>, 即可触发截图，并在当前页面展示截图。&lt;/p>
+&lt;p>设置端口转发，公网访问效果如图
 &lt;img class="mx-auto" alt="" src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2021/IMG_0317.jpg" />
 &lt;/p>
 &lt;p>最后，所有相关代码在 &lt;a href="https://github.com/4ft35t/Android-Screenshoot-Remote">https://github.com/4ft35t/Android-Screenshoot-Remote&lt;/a>&lt;/p></description></item><item><title>PD/QC 电源转 DC 头输出</title><link>https://4ft35t.github.io/post/pd-qc-dc/</link><pubDate>Mon, 13 Jul 2020 14:35:25 +0800</pubDate><guid>https://4ft35t.github.io/post/pd-qc-dc/</guid><description>&lt;p>最初了解到 PD 电源 type-c 输出转 DC 圆头输出，是在 twitter 上，当时作者说从淘宝买了 PD 诱骗器，可以用 PD 头给 NUC 供电，省了 NUC 自带电源占的空间。&lt;/p>

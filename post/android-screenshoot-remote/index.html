@@ -91,8 +91,8 @@
 <span style=color:#a6e22e>toastLog</span>(<span style=color:#e6db74>&#34;截图完成&#34;</span>);
 </code></pre></div><h2 id=触发>触发</h2>
 <p>一开始设想的是 autojs 监听通知，使用 <a href=https://github.com/Finb/Bark>Bark</a> 的安卓客户端 <a href=https://github.com/xlvecle/PushLite>PushLite</a> 来接收通知触发截图，然而 PushLite 需要 Google FCM，安装太折腾，放弃，寻求电脑端触发的方案。</p>
-<p>一番搜索，决定用 cgi 来接收外部请求并触发截图，各种依赖最少。
-电脑上连接多个安卓手机，执行 adb 命令需要指定设备 id，设备 id 用 <code>adb devices</code> 获取</p>
+<p>一番搜索，决定用 cgi 来接收外部请求并触发截图，各种依赖最少。</p>
+<p>电脑上连接多个安卓手机，执行 adb 命令需要指定设备 id，设备 id 用 <code>adb devices</code> 获取</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>adb devices
 List of devices attached
 NXTDU1xxxxxxxxx        device
@@ -146,8 +146,8 @@ echo <span style=color:#e6db74>&#34;&lt;/body&gt;&lt;/html&gt;&#34;</span>
 mkdir cgi-bin
 mv yunshanfu.sh cgi-bin
 python3 -m http.server --cgi
-</code></pre></div><p>浏览器访问 <code>http://127.0.0.1:8000/cgi-bin/yunshanfu.sh</code>, 即可触发截图，并在当前页面展示截图。
-设置端口转发，公网访问效果如图
+</code></pre></div><p>浏览器访问 <code>http://127.0.0.1:8000/cgi-bin/yunshanfu.sh</code>, 即可触发截图，并在当前页面展示截图。</p>
+<p>设置端口转发，公网访问效果如图
 <img class=mx-auto alt src=https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2021/IMG_0317.jpg>
 </p>
 <p>最后，所有相关代码在 <a href=https://github.com/4ft35t/Android-Screenshoot-Remote>https://github.com/4ft35t/Android-Screenshoot-Remote</a></p>
