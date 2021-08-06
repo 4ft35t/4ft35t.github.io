@@ -1,0 +1,296 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Android 远程截图 | 4ft35t blog</title>
+<meta property="og:title" content="Android 远程截图 - 4ft35t blog">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2021-08-06T16:51:31+08:00">
+<meta property="article:modified_time" content="2021-08-06T16:51:31+08:00">
+<meta name=Keywords content="openwrt,lede,router">
+<meta name=description content="Android 远程截图">
+<meta name=author content="af.test">
+<meta property="og:url" content="https://4ft35t.github.io/post/android-screenshoot-remote/">
+<link rel="shortcut icon" href=/favicon.ico type=image/x-icon>
+<link rel=stylesheet href=/css/normalize.css>
+<link rel=stylesheet href=/css/style.css>
+<script type=text/javascript src=//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js></script>
+</head>
+<body>
+<header id=header class=clearfix>
+<div class=container>
+<div class=col-group>
+<div class=site-name>
+<a id=logo href=https://4ft35t.github.io/>
+4ft35t blog
+</a>
+<p class=description>折腾笔记</p>
+</div>
+<div>
+<nav id=nav-menu class=clearfix>
+<a class=current href=https://4ft35t.github.io/>首页</a>
+<a href=https://4ft35t.github.io/archives/ title=归档>归档</a>
+<a href=https://4ft35t.github.io/about/ title=关于>关于</a>
+</nav>
+</div>
+</div>
+</div>
+</header>
+<div id=body>
+<div class=container>
+<div class=col-group>
+<div class=col-8 id=main>
+<div class=res-cons>
+<article class=post>
+<header>
+<h1 class=post-title>Android 远程截图</h1>
+</header>
+<date class="post-meta meta-date">
+2021年8月6日
+</date>
+<div class=post-meta>
+<span>|</span>
+<span class=meta-category><a href=/categories/network>Network</a></span>
+<span class=meta-category><a href=/categories/android>Android</a></span>
+</div>
+<div class=post-content>
+<p>某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。</p>
+<h2 id=背景>背景</h2>
+<p>云闪付公交乘车码，每周使用三次可以获得一张 6-5 消费券，但那一个帐号一周只能领一次，需要多个帐号。</p>
+<p>家里有个老华为手机，上面登录的有老人的云闪付帐号，但是注册帐号的手机号失效，无法更换新手机号，新设备登录需要短信验证码，只有拿这个手机去刷。</p>
+<p>不想带多个手机出门，开启折腾之路。</p>
+<h2 id=截屏>截屏</h2>
+<p>系统自带 <code>screencap</code> 命令，桌面和别的 app 可以截屏，云闪付不行，应该是云闪付设置了<code>FLAG_SECURE</code>。</p>
+<p><a href=https://github.com/Genymobile/scrcpy>scrcpy</a> 可以显示云闪付内容，猜测 <a href=https://github.com/Ericwyn/Auto.js>autojs</a> 使用 cast 模式也可以截屏，实测确实可以。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=color:#a6e22e>auto</span>();
+<span style=color:#a6e22e>app</span>.<span style=color:#a6e22e>launch</span>(<span style=color:#e6db74>&#34;com.unionpay&#34;</span>);
+<span style=color:#a6e22e>waitForPackage</span>(<span style=color:#e6db74>&#34;com.unionpay&#34;</span>);
+
+<span style=color:#75715e>// 首页点击乘车码
+</span><span style=color:#75715e></span><span style=color:#a6e22e>sleep</span>(<span style=color:#ae81ff>1500</span>)
+<span style=color:#66d9ef>if</span>(<span style=color:#a6e22e>text</span>(<span style=color:#e6db74>&#34;充值中心&#34;</span>).<span style=color:#a6e22e>exists</span>()){
+    <span style=color:#a6e22e>toastLog</span>(<span style=color:#e6db74>&#34;找到 乘车码 关键字&#34;</span>);
+    <span style=color:#a6e22e>target</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>text</span>(<span style=color:#e6db74>&#34;乘车码&#34;</span>).<span style=color:#a6e22e>findOne</span>();
+    <span style=color:#66d9ef>while</span>(<span style=color:#f92672>!</span><span style=color:#a6e22e>target</span>.<span style=color:#a6e22e>clickable</span>()){
+        <span style=color:#a6e22e>target</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>target</span>.<span style=color:#a6e22e>parent</span>()
+    }
+    <span style=color:#a6e22e>target</span>.<span style=color:#a6e22e>click</span>()
+}
+
+<span style=color:#a6e22e>waitForActivity</span>(<span style=color:#e6db74>&#34;com.unionpay.activity.react.UPActivityReactNative&#34;</span>);
+<span style=color:#a6e22e>sleep</span>(<span style=color:#ae81ff>2000</span>);
+<span style=color:#75715e>// 2、请求截图
+</span><span style=color:#75715e></span><span style=color:#66d9ef>if</span>(<span style=color:#f92672>!</span><span style=color:#a6e22e>requestScreenCapture</span>()){
+    <span style=color:#a6e22e>toastLog</span>(<span style=color:#e6db74>&#34;请求截图失败&#34;</span>);
+    <span style=color:#a6e22e>exit</span>();
+}
+
+<span style=color:#75715e>// 3、进行截图
+</span><span style=color:#75715e></span><span style=color:#a6e22e>captureScreen</span>(<span style=color:#e6db74>&#34;/sdcard/img.png&#34;</span>);
+<span style=color:#a6e22e>toastLog</span>(<span style=color:#e6db74>&#34;截图完成&#34;</span>);
+</code></pre></div><h2 id=触发>触发</h2>
+<p>一开始设想的是 autojs 监听通知，使用 <a href=https://github.com/Finb/Bark>Bark</a> 的安卓客户端 <a href=https://github.com/xlvecle/PushLite>PushLite</a> 来接收通知触发截图，然而 PushLite 需要 Google FCM，安装太折腾，放弃，寻求电脑端触发的方案。</p>
+<p>一番搜索，决定用 cgi 来接收外部请求并触发截图，各种依赖最少。
+电脑上连接多个安卓手机，执行 adb 命令需要指定设备 id，设备 id 用 <code>adb devices</code> 获取</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>adb devices
+List of devices attached
+NXTDU1xxxxxxxxx        device
+</code></pre></div><p>NXTDU1xxxxxxxxx 就是设备 id</p>
+<p>yunshanfu.sh</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#75715e>#!/bin/bash
+</span><span style=color:#75715e></span>echo <span style=color:#e6db74>&#34;Content-Type:text/html&#34;</span>
+echo <span style=color:#e6db74>&#34;&#34;</span>
+echo <span style=color:#e6db74>&#39;&lt;html&gt;&lt;meta charset=&#34;UTF-8&#34;&gt;&lt;body&gt;&#39;</span>
+
+dev<span style=color:#f92672>=</span>NXTDU1xxxxxxxxx
+img<span style=color:#f92672>=</span>/sdcard/img.png
+
+adb<span style=color:#f92672>(){</span>
+    /usr/bin/adb -s $dev $@
+<span style=color:#f92672>}</span>
+
+cleanup<span style=color:#f92672>(){</span>
+    adb shell rm $img
+    rm /tmp/ysf.png
+<span style=color:#f92672>}</span>
+
+unlock<span style=color:#f92672>(){</span>
+    adb shell input keyevent <span style=color:#ae81ff>224</span>
+    adb shell input swipe <span style=color:#ae81ff>300</span> <span style=color:#ae81ff>500</span> <span style=color:#ae81ff>300</span> <span style=color:#ae81ff>1500</span>
+    adb shell input text <span style=color:#ae81ff>12345678</span>
+<span style=color:#f92672>}</span>
+
+screenshoot<span style=color:#f92672>(){</span>
+     adb shell am start -n org.autojs.autojs/.external.open.RunIntentActivity -d /sdcard/Scripts/ysf.js
+     sleep <span style=color:#ae81ff>3</span>
+     <span style=color:#66d9ef>while</span> true
+     <span style=color:#66d9ef>do</span>
+         <span style=color:#75715e># 校验文件大小，避免 pull 回来未写完图片</span>
+         adb pull $img /tmp/ysf.png <span style=color:#f92672>&amp;&amp;</span> <span style=color:#f92672>[</span> <span style=color:#e6db74>&#34;</span><span style=color:#66d9ef>$(</span>stat -c %s /tmp/ysf.png<span style=color:#66d9ef>)</span><span style=color:#e6db74>&#34;</span> -ge <span style=color:#ae81ff>300000</span> <span style=color:#f92672>]</span> <span style=color:#f92672>&amp;&amp;</span> break
+         sleep <span style=color:#ae81ff>1</span>
+     <span style=color:#66d9ef>done</span>
+
+     <span style=color:#75715e># press power button</span>
+     adb shell input keyevent <span style=color:#ae81ff>26</span>
+<span style=color:#f92672>}</span>
+
+cleanup
+unlock
+screenshoot
+
+echo <span style=color:#e6db74>&#34;&lt;img src=&#39;data:image/png;base64,</span><span style=color:#66d9ef>$(</span>cat /tmp/ysf.png | base64 -w 0<span style=color:#66d9ef>)</span><span style=color:#e6db74>&#39;&gt;&#34;</span>
+echo <span style=color:#e6db74>&#34;&lt;/body&gt;&lt;/html&gt;&#34;</span>
+</code></pre></div><p>python http.server 的 cgi 脚本需要放在 <code>cgi-bin</code> 目录</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>chmod +x yunshanfu.sh
+mkdir cgi-bin
+mv yunshanfu.sh cgi-bin
+python3 -m http.server --cgi
+</code></pre></div><p>浏览器访问 <code>http://127.0.0.1:8000/cgi-bin/yunshanfu.sh</code>, 即可触发截图，并在当前页面展示截图。
+设置端口转发，公网访问效果如图
+<img class=mx-auto alt src=https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2021/IMG_0317.jpg>
+</p>
+<p>最后，所有相关代码在 <a href=https://github.com/4ft35t/Android-Screenshoot-Remote>https://github.com/4ft35t/Android-Screenshoot-Remote</a></p>
+</div>
+<div class=post-archive>
+<h2>See Also</h2>
+<ul class=listing>
+<li><a href=/post/pd-qc-dc/>PD/QC 电源转 DC 头输出</a></li>
+<li><a href=/post/bash-exit-in-conditional/>bash 条件退出踩坑</a></li>
+<li><a href=/post/promark3-flash-iceman-firmware/>Promark3 使用 冰人（iceman）固件</a></li>
+<li><a href=/post/ssh-porxy/>SSH 跳板机与代理</a></li>
+<li><a href=/post/fix-windows-store-0x80131500-error/>解决应用商店 0x80131500 错误</a></li>
+</ul>
+</div>
+<div class="post-meta meta-tags">
+<ul class=clearfix>
+<li><a href=/tags/android>android</a></li>
+<li><a href=/tags/screenshoot>screenshoot</a></li>
+<li><a href=/tags/autojs>autojs</a></li>
+<li><a href=/tags/cgi>cgi</a></li>
+<li><a href=/tags/adb>adb</a></li>
+<li><a href=/tags/scrcpy>scrcpy</a></li>
+</ul>
+</div>
+</article>
+<div class="post bg-white">
+<script src=https://utteranc.es/client.js repo=4ft35t/4ft35t.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script>
+</div>
+</div>
+<footer id=footer>
+<div>
+&copy; 2021 <a href=https://4ft35t.github.io/>4ft35t blog By af.test</a>
+</div>
+<br>
+<div>
+<div class=github-badge>
+<a href=https://gohugo.io/ target=_black rel=nofollow><span class=badge-subject>Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+</div>
+<div class=github-badge>
+<a href=https://www.flysnow.org/ target=_black><span class=badge-subject>Design by</span><span class="badge-value bg-brightgreen">飞雪无情</span></a>
+</div>
+<div class=github-badge>
+<a href=https://github.com/flysnow-org/maupassant-hugo target=_black><span class=badge-subject>Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+</div>
+</div>
+</footer>
+<script type=text/javascript>window.MathJax={tex2jax:{inlineMath:[['$','$']],processEscapes:!0}}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+<a id=rocket href=#top></a>
+<script type=text/javascript src="/js/totop.js?v=0.0.0" async></script>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-163577388-1','auto'),ga('send','pageview'))</script>
+<script async src=https://www.google-analytics.com/analytics.js></script>
+</div>
+<div id=secondary>
+<section class=widget>
+<form id=search action=//www.google.com/search method=get accept-charset=utf-8 target=_blank _lpchecked=1>
+<input type=text name=q maxlength=20 placeholder=Search>
+<input type=hidden name=sitesearch value=https://4ft35t.github.io/>
+<button type=submit class="submit icon-search"></button>
+</form>
+</section>
+<section class=widget>
+<h3 class=widget-title>最近文章</h3>
+<ul class=widget-list>
+<li>
+<a href=https://4ft35t.github.io/post/android-screenshoot-remote/ title="Android 远程截图">Android 远程截图</a>
+</li>
+<li>
+<a href=https://4ft35t.github.io/post/pd-qc-dc/ title="PD/QC 电源转 DC 头输出">PD/QC 电源转 DC 头输出</a>
+</li>
+<li>
+<a href=https://4ft35t.github.io/post/bash-exit-in-conditional/ title="bash 条件退出踩坑">bash 条件退出踩坑</a>
+</li>
+<li>
+<a href=https://4ft35t.github.io/post/promark3-flash-iceman-firmware/ title="Promark3 使用 冰人（iceman）固件">Promark3 使用 冰人（iceman）固件</a>
+</li>
+<li>
+<a href=https://4ft35t.github.io/post/ssh-porxy/ title="SSH 跳板机与代理">SSH 跳板机与代理</a>
+</li>
+<li>
+<a href=https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/ title="解决应用商店 0x80131500 错误">解决应用商店 0x80131500 错误</a>
+</li>
+<li>
+<a href=https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/ title=解决无忧行长时间显示“正在连接电话服务器”问题>解决无忧行长时间显示“正在连接电话服务器”问题</a>
+</li>
+<li>
+<a href=https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/ title="使用 Github Actions 自动部署 Hugo">使用 Github Actions 自动部署 Hugo</a>
+</li>
+</ul>
+</section>
+<section class=widget>
+<h3 class=widget-title><a href=/categories/>分类</a></h3>
+<ul class=widget-list>
+<li><a href=https://4ft35t.github.io/categories/android/>Android (1)</a></li>
+<li><a href=https://4ft35t.github.io/categories/github/>Github (1)</a></li>
+<li><a href=https://4ft35t.github.io/categories/linux/>Linux (1)</a></li>
+<li><a href=https://4ft35t.github.io/categories/mess/>Mess (2)</a></li>
+<li><a href=https://4ft35t.github.io/categories/network/>Network (3)</a></li>
+<li><a href=https://4ft35t.github.io/categories/windows/>Windows (1)</a></li>
+</ul>
+</section>
+<section class=widget>
+<h3 class=widget-title><a href=/tags/>标签</a></h3>
+<div class=tagcloud>
+<a href=https://4ft35t.github.io/tags/0x80072efd/>0x80072EFD</a>
+<a href=https://4ft35t.github.io/tags/0x80131500/>0x80131500</a>
+<a href=https://4ft35t.github.io/tags/adb/>adb</a>
+<a href=https://4ft35t.github.io/tags/android/>android</a>
+<a href=https://4ft35t.github.io/tags/autojs/>autojs</a>
+<a href=https://4ft35t.github.io/tags/bash/>bash</a>
+<a href=https://4ft35t.github.io/tags/cgi/>cgi</a>
+<a href=https://4ft35t.github.io/tags/charger/>charger</a>
+<a href=https://4ft35t.github.io/tags/dc/>DC</a>
+<a href=https://4ft35t.github.io/tags/error/>error</a>
+<a href=https://4ft35t.github.io/tags/exit/>exit</a>
+<a href=https://4ft35t.github.io/tags/github/>github</a>
+<a href=https://4ft35t.github.io/tags/hugo/>hugo</a>
+<a href=https://4ft35t.github.io/tags/ip/>IP</a>
+<a href=https://4ft35t.github.io/tags/jegotrip/>jegotrip</a>
+<a href=https://4ft35t.github.io/tags/pd/>PD</a>
+<a href=https://4ft35t.github.io/tags/pi-hole/>pi-hole</a>
+<a href=https://4ft35t.github.io/tags/pihole/>pihole</a>
+<a href=https://4ft35t.github.io/tags/proxmark3/>proxmark3</a>
+<a href=https://4ft35t.github.io/tags/proxy/>proxy</a>
+<a href=https://4ft35t.github.io/tags/qc/>QC</a>
+<a href=https://4ft35t.github.io/tags/rfid/>rfid</a>
+<a href=https://4ft35t.github.io/tags/scrcpy/>scrcpy</a>
+<a href=https://4ft35t.github.io/tags/screenshoot/>screenshoot</a>
+<a href=https://4ft35t.github.io/tags/shell/>shell</a>
+<a href=https://4ft35t.github.io/tags/ssh/>ssh</a>
+<a href=https://4ft35t.github.io/tags/test/>test</a>
+<a href=https://4ft35t.github.io/tags/windows/>windows</a>
+</div>
+</section>
+<section class=widget>
+<h3 class=widget-title>其它</h3>
+<ul class=widget-list>
+<li><a href=https://4ft35t.github.io/index.xml>文章 RSS</a></li>
+</ul>
+</section>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

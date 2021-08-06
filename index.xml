@@ -1,14 +1,100 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>4ft35t blog</title><link>https://4ft35t.github.io/</link><description>Recent content on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Mon, 13 Jul 2020 14:35:25 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>PD/QC 电源转 DC 头输出</title><link>https://4ft35t.github.io/post/pd-qc-dc/</link><pubDate>Mon, 13 Jul 2020 14:35:25 +0800</pubDate><guid>https://4ft35t.github.io/post/pd-qc-dc/</guid><description>&lt;p>最初了解到 PD 电源 type-c 输出转 DC 圆头输出，是在 twitter 上，当时作者说从淘宝买了 PD 诱骗器，可以用 PD 头给 NUC 供电，省了 NUC 自带电源占的空间。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>4ft35t blog</title><link>https://4ft35t.github.io/</link><description>Recent content on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Fri, 06 Aug 2021 16:51:31 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Android 远程截图</title><link>https://4ft35t.github.io/post/android-screenshoot-remote/</link><pubDate>Fri, 06 Aug 2021 16:51:31 +0800</pubDate><guid>https://4ft35t.github.io/post/android-screenshoot-remote/</guid><description>&lt;p>某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。&lt;/p>
+&lt;h2 id="背景">背景&lt;/h2>
+&lt;p>云闪付公交乘车码，每周使用三次可以获得一张 6-5 消费券，但那一个帐号一周只能领一次，需要多个帐号。&lt;/p>
+&lt;p>家里有个老华为手机，上面登录的有老人的云闪付帐号，但是注册帐号的手机号失效，无法更换新手机号，新设备登录需要短信验证码，只有拿这个手机去刷。&lt;/p>
+&lt;p>不想带多个手机出门，开启折腾之路。&lt;/p>
+&lt;h2 id="截屏">截屏&lt;/h2>
+&lt;p>系统自带 &lt;code>screencap&lt;/code> 命令，桌面和别的 app 可以截屏，云闪付不行，应该是云闪付设置了&lt;code>FLAG_SECURE&lt;/code>。&lt;/p>
+&lt;p>&lt;a href="https://github.com/Genymobile/scrcpy">scrcpy&lt;/a> 可以显示云闪付内容，猜测 &lt;a href="https://github.com/Ericwyn/Auto.js">autojs&lt;/a> 使用 cast 模式也可以截屏，实测确实可以。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-js" data-lang="js">&lt;span style="color:#a6e22e">auto&lt;/span>();
+&lt;span style="color:#a6e22e">app&lt;/span>.&lt;span style="color:#a6e22e">launch&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;com.unionpay&amp;#34;&lt;/span>);
+&lt;span style="color:#a6e22e">waitForPackage&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;com.unionpay&amp;#34;&lt;/span>);
+&lt;span style="color:#75715e">// 首页点击乘车码
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">sleep&lt;/span>(&lt;span style="color:#ae81ff">1500&lt;/span>)
+&lt;span style="color:#66d9ef">if&lt;/span>(&lt;span style="color:#a6e22e">text&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;充值中心&amp;#34;&lt;/span>).&lt;span style="color:#a6e22e">exists&lt;/span>()){
+&lt;span style="color:#a6e22e">toastLog&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;找到 乘车码 关键字&amp;#34;&lt;/span>);
+&lt;span style="color:#a6e22e">target&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">text&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;乘车码&amp;#34;&lt;/span>).&lt;span style="color:#a6e22e">findOne&lt;/span>();
+&lt;span style="color:#66d9ef">while&lt;/span>(&lt;span style="color:#f92672">!&lt;/span>&lt;span style="color:#a6e22e">target&lt;/span>.&lt;span style="color:#a6e22e">clickable&lt;/span>()){
+&lt;span style="color:#a6e22e">target&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">target&lt;/span>.&lt;span style="color:#a6e22e">parent&lt;/span>()
+}
+&lt;span style="color:#a6e22e">target&lt;/span>.&lt;span style="color:#a6e22e">click&lt;/span>()
+}
+&lt;span style="color:#a6e22e">waitForActivity&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;com.unionpay.activity.react.UPActivityReactNative&amp;#34;&lt;/span>);
+&lt;span style="color:#a6e22e">sleep&lt;/span>(&lt;span style="color:#ae81ff">2000&lt;/span>);
+&lt;span style="color:#75715e">// 2、请求截图
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">if&lt;/span>(&lt;span style="color:#f92672">!&lt;/span>&lt;span style="color:#a6e22e">requestScreenCapture&lt;/span>()){
+&lt;span style="color:#a6e22e">toastLog&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;请求截图失败&amp;#34;&lt;/span>);
+&lt;span style="color:#a6e22e">exit&lt;/span>();
+}
+&lt;span style="color:#75715e">// 3、进行截图
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">captureScreen&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;/sdcard/img.png&amp;#34;&lt;/span>);
+&lt;span style="color:#a6e22e">toastLog&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;截图完成&amp;#34;&lt;/span>);
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="触发">触发&lt;/h2>
+&lt;p>一开始设想的是 autojs 监听通知，使用 &lt;a href="https://github.com/Finb/Bark">Bark&lt;/a> 的安卓客户端 &lt;a href="https://github.com/xlvecle/PushLite">PushLite&lt;/a> 来接收通知触发截图，然而 PushLite 需要 Google FCM，安装太折腾，放弃，寻求电脑端触发的方案。&lt;/p>
+&lt;p>一番搜索，决定用 cgi 来接收外部请求并触发截图，各种依赖最少。
+电脑上连接多个安卓手机，执行 adb 命令需要指定设备 id，设备 id 用 &lt;code>adb devices&lt;/code> 获取&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">adb devices
+List of devices attached
+NXTDU1xxxxxxxxx device
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>NXTDU1xxxxxxxxx 就是设备 id&lt;/p>
+&lt;p>yunshanfu.sh&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#75715e">#!/bin/bash
+&lt;/span>&lt;span style="color:#75715e">&lt;/span>echo &lt;span style="color:#e6db74">&amp;#34;Content-Type:text/html&amp;#34;&lt;/span>
+echo &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>
+echo &lt;span style="color:#e6db74">&amp;#39;&amp;lt;html&amp;gt;&amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt;&amp;lt;body&amp;gt;&amp;#39;&lt;/span>
+dev&lt;span style="color:#f92672">=&lt;/span>NXTDU1xxxxxxxxx
+img&lt;span style="color:#f92672">=&lt;/span>/sdcard/img.png
+adb&lt;span style="color:#f92672">(){&lt;/span>
+/usr/bin/adb -s $dev $@
+&lt;span style="color:#f92672">}&lt;/span>
+cleanup&lt;span style="color:#f92672">(){&lt;/span>
+adb shell rm $img
+rm /tmp/ysf.png
+&lt;span style="color:#f92672">}&lt;/span>
+unlock&lt;span style="color:#f92672">(){&lt;/span>
+adb shell input keyevent &lt;span style="color:#ae81ff">224&lt;/span>
+adb shell input swipe &lt;span style="color:#ae81ff">300&lt;/span> &lt;span style="color:#ae81ff">500&lt;/span> &lt;span style="color:#ae81ff">300&lt;/span> &lt;span style="color:#ae81ff">1500&lt;/span>
+adb shell input text &lt;span style="color:#ae81ff">12345678&lt;/span>
+&lt;span style="color:#f92672">}&lt;/span>
+screenshoot&lt;span style="color:#f92672">(){&lt;/span>
+adb shell am start -n org.autojs.autojs/.external.open.RunIntentActivity -d /sdcard/Scripts/ysf.js
+sleep &lt;span style="color:#ae81ff">3&lt;/span>
+&lt;span style="color:#66d9ef">while&lt;/span> true
+&lt;span style="color:#66d9ef">do&lt;/span>
+&lt;span style="color:#75715e"># 校验文件大小，避免 pull 回来未写完图片&lt;/span>
+adb pull $img /tmp/ysf.png &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#f92672">[&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>stat -c %s /tmp/ysf.png&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span> -ge &lt;span style="color:#ae81ff">300000&lt;/span> &lt;span style="color:#f92672">]&lt;/span> &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> break
+sleep &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;span style="color:#66d9ef">done&lt;/span>
+&lt;span style="color:#75715e"># press power button&lt;/span>
+adb shell input keyevent &lt;span style="color:#ae81ff">26&lt;/span>
+&lt;span style="color:#f92672">}&lt;/span>
+cleanup
+unlock
+screenshoot
+echo &lt;span style="color:#e6db74">&amp;#34;&amp;lt;img src=&amp;#39;data:image/png;base64,&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>cat /tmp/ysf.png | base64 -w 0&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&amp;gt;&amp;#34;&lt;/span>
+echo &lt;span style="color:#e6db74">&amp;#34;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;&amp;#34;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>python http.server 的 cgi 脚本需要放在 &lt;code>cgi-bin&lt;/code> 目录&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">chmod +x yunshanfu.sh
+mkdir cgi-bin
+mv yunshanfu.sh cgi-bin
+python3 -m http.server --cgi
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>浏览器访问 &lt;code>http://127.0.0.1:8000/cgi-bin/yunshanfu.sh&lt;/code>, 即可触发截图，并在当前页面展示截图。
+设置端口转发，公网访问效果如图
+&lt;img class="mx-auto" alt="" src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2021/IMG_0317.jpg" />
+&lt;/p>
+&lt;p>最后，所有相关代码在 &lt;a href="https://github.com/4ft35t/Android-Screenshoot-Remote">https://github.com/4ft35t/Android-Screenshoot-Remote&lt;/a>&lt;/p></description></item><item><title>PD/QC 电源转 DC 头输出</title><link>https://4ft35t.github.io/post/pd-qc-dc/</link><pubDate>Mon, 13 Jul 2020 14:35:25 +0800</pubDate><guid>https://4ft35t.github.io/post/pd-qc-dc/</guid><description>&lt;p>最初了解到 PD 电源 type-c 输出转 DC 圆头输出，是在 twitter 上，当时作者说从淘宝买了 PD 诱骗器，可以用 PD 头给 NUC 供电，省了 NUC 自带电源占的空间。&lt;/p>
 &lt;p>PD 和 QC 是两种电源快充协议，一般 PD 充电头都支持 QC 协议，反之则不行；与之相对应的，PD 充电头的价格要比 QC 贵很多。&lt;/p>
 &lt;p>我也量了一下笔记本充电头的外径 4mm，然后在淘宝看到的参数有两种：&lt;/p>
 &lt;ul>
 &lt;li>4.0*1.35&lt;/li>
 &lt;li>4.0*1.7&lt;/li>
 &lt;/ul>
-&lt;p>第一次看到这个星号，&lt;del>__想当然以为是直径乘以长度__&lt;/del>，买了 4.0*1.35 就踩坑了。&lt;/p>
+&lt;p>第一次看到这个星号，&lt;del>&lt;strong>想当然以为是直径乘以长度&lt;/strong>&lt;/del>，买了 4.0*1.35 就踩坑了。&lt;/p>
 &lt;h3 id="dc-头尺寸表示方法">DC 头尺寸表示方法&lt;/h3>
 &lt;p>DC 头是家里小电器常用的供电插头，通常是圆的，中心是空的。光猫、路由器、笔记本电脑、台灯等都在用这种接头。DC 头供电比 USB 稳固、可靠、耐用。&lt;/p>
-&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2015.10.09.png" alt="">&lt;/p>
+&lt;p>
+&lt;img class="mx-auto" alt="" src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2015.10.09.png" />
+&lt;/p>
 &lt;p>DC 圆头用两组数字来定义一个头的大小，&lt;strong>外直径&lt;/strong>和&lt;strong>内直径&lt;/strong>。&lt;/p>
 &lt;p>一个外直径 5.5mm，内直径 2.1mm 的 DC 头，在淘宝上不同店家有两种写法：&lt;/p>
 &lt;ul>
@@ -19,30 +105,34 @@
 &lt;h3 id="pd-诱骗头">PD 诱骗头&lt;/h3>
 &lt;p>淘宝上的 PD 诱骗器头一般输出电压是 18.5v ~ 20v，笔记本电脑电源输出电压一般在 19v 左右。使用 PD 诱骗头，完美用 PD 头给笔记本电脑和 Surface Pro供电，节约不少桌面空间。&lt;/p>
 &lt;p>使用 PD 充电器头+PD 诱骗器给笔记本供电和原装电源体积对比&lt;/p>
-&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/mmexport1594626877412.jpg" alt="">&lt;/p>
+&lt;p>
+&lt;img class="mx-auto" alt="" src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/mmexport1594626877412.jpg" />
+&lt;/p>
 &lt;p>PD 诱骗器头的另一侧一般是 type-c 头，使用一根双头 type-c 的线连接 PD&lt;/p>
 &lt;p>电源和诱骗器。&lt;/p>
 &lt;h3 id="qc-诱骗线升压线">QC 诱骗线／升压线&lt;/h3>
 &lt;p>PD 诱骗器可以解决 19v 左右供电问题，别的小电器用的 DC 头一般是 9V 或者 12v，这就需要另外找一种可以诱骗出 9v 或者 12v 电压的诱骗器。在群里提问后得到关键字“升压线”。后换成“qc 诱骗线”后结果更多。&lt;/p>
 &lt;p>用 12v 的 QC 诱骗线给 SmrtClean 超声波清洗机供电，同样节约很多桌面空间。&lt;/p>
 &lt;p>QC 诱骗线的另一侧是 USB 插头。&lt;/p>
-&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2016.08.32.png" alt="">&lt;/p>
+&lt;p>
+&lt;img class="mx-auto" alt="" src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2016.08.32.png" />
+&lt;/p>
 &lt;h3 id="趣事">趣事&lt;/h3>
 &lt;p>家里有个硕方的标签打印机，自带电源是 9v 2.5a，直接插笔记本诱骗器的 19v 供电居然可以正常工作。&lt;/p></description></item><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;p>一个小脚本，&lt;code>[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code>,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p>
 &lt;h3 id="排查">排查&lt;/h3>
 &lt;p>这个写法以前在脚本里经常写，稳定运行未出错。对比之前的脚本后发现差异，之前的脚本 exit 是提前退出，后面还有内容；这个脚本exit是上层调用脚本反馈最终结果，exit 是最后一行。&lt;/p>
 &lt;p>修改脚本后一切正常&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">status&lt;span style="color:#f92672">=&lt;/span>success
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">status&lt;span style="color:#f92672">=&lt;/span>success
 &lt;span style="color:#f92672">[&lt;/span> $status !&lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;success&amp;#34;&lt;/span> &lt;span style="color:#f92672">]&lt;/span> &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> exit &lt;span style="color:#ae81ff">２&lt;/span>
 echo
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="原因分析">原因分析&lt;/h3>
 &lt;p>使用　bash -x 可以看出差异，&lt;/p>
 &lt;p>exit　在最后一行&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">bash -x t.sh
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">bash -x t.sh
 + status&lt;span style="color:#f92672">=&lt;/span>success
 + &lt;span style="color:#e6db74">&amp;#39;[&amp;#39;&lt;/span> success &lt;span style="color:#e6db74">&amp;#39;!=&amp;#39;&lt;/span> success &lt;span style="color:#e6db74">&amp;#39;]&amp;#39;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>exit 不在最后一行&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">bash -x t.sh
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">bash -x t.sh
 + status&lt;span style="color:#f92672">=&lt;/span>success
 + &lt;span style="color:#e6db74">&amp;#39;[&amp;#39;&lt;/span> success &lt;span style="color:#e6db74">&amp;#39;!=&amp;#39;&lt;/span> success &lt;span style="color:#e6db74">&amp;#39;]&amp;#39;&lt;/span>
 + echo
@@ -53,9 +143,9 @@ echo
 &lt;li>一定要用 &lt;strong>&amp;amp;&amp;amp; 做退出条件时，不能作为脚本或者函数的最后一条命令&lt;/strong>&lt;/li>
 &lt;/ul>
 &lt;p>上面脚本改造成||退出&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#f92672">[&lt;/span> $status &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;success&amp;#34;&lt;/span> &lt;span style="color:#f92672">]&lt;/span> &lt;span style="color:#f92672">||&lt;/span> exit &lt;span style="color:#ae81ff">２&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#f92672">[&lt;/span> $status &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;success&amp;#34;&lt;/span> &lt;span style="color:#f92672">]&lt;/span> &lt;span style="color:#f92672">||&lt;/span> exit &lt;span style="color:#ae81ff">２&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>因为是最后一行，还可以直接省略后面的内容&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#f92672">[&lt;/span> $status &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;success&amp;#34;&lt;/span> &lt;span style="color:#f92672">]&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">&lt;span style="color:#f92672">[&lt;/span> $status &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;success&amp;#34;&lt;/span> &lt;span style="color:#f92672">]&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Promark3 使用 冰人（iceman）固件</title><link>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</link><pubDate>Thu, 04 Jun 2020 19:21:59 +0800</pubDate><guid>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</guid><description>&lt;p>淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 &lt;code>Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error&lt;/code>。&lt;/p>
 &lt;p>官方固件编译、烧录、使用都没问题，看到冰人的固件有两条命令很心动，把重复工作自动化，节约时间。&lt;/p>
 &lt;ul>
@@ -64,7 +154,7 @@ echo
 &lt;/ul>
 &lt;h3 id="编译安装">编译安装&lt;/h3>
 &lt;p>win 10 的 WSL 可以直接访问串口，很方便。win 10 上的 COM3， 自动映射到 WSL 的 /dev/ttyS3。&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">sudo apt-get install --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">sudo apt-get install --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev
 git clone https://github.com/RfidResearchGroup/proxmark3.git
 cd proxmark3
 make clean &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> make all
@@ -77,11 +167,13 @@ make clean &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> make all
 &lt;p>Error: Unexpected reply 0x00fe NACK (expected ACK)
 Lock Error&lt;/p>
 &lt;/blockquote>
-&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200604192557.png" alt="image-20200604192556929">&lt;/p>
+&lt;p>
+&lt;img class="mx-auto" alt="image-20200604192556929" src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200604192557.png" />
+&lt;/p>
 &lt;h3 id="刷预编译固件">刷预编译固件&lt;/h3>
 &lt;p>在冰人固件的 wiki 中找到 windows 的预编译非 RDV4 版本下载，Generice Proxmark3 devices (non RDV4) [&lt;a href="https://drive.google.com/open?id=1PI3Xr1mussPBPnYGu4ZjWzGPARK4N7JR">Precompiled builds for RRG / Iceman repository x64&lt;/a>&lt;/p>
 &lt;p>提取 fullimage.elf 后，顺利刷入。&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash ./fullimage.elf
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash ./fullimage.elf
 &lt;span style="color:#f92672">[=]&lt;/span> Session log /home/kali/.proxmark3/log_20200604.txt
 &lt;span style="color:#f92672">[=]&lt;/span> Loading Preferences...
 &lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> loaded from JSON file /home/kali/.proxmark3/preferences.json
@@ -112,10 +204,10 @@ Have a nice day!
 &lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="解决方案">解决方案&lt;/h3>
 &lt;p>到这一步可以确认是关键编译参数问题，而非硬件缩水问题233。&lt;/p>
 &lt;p>查阅文档后，默认编译的目标平台是 PM3RDV4，非 PM3RDV4 需要设置为 PM3OTHER。&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">echo &lt;span style="color:#e6db74">&amp;#39;PLATFORM=PM3OTHER&amp;#39;&lt;/span> &amp;gt; Makefile.platform
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">echo &lt;span style="color:#e6db74">&amp;#39;PLATFORM=PM3OTHER&amp;#39;&lt;/span> &amp;gt; Makefile.platform
 make clean &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> make all
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>再刷固件就一切顺利&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash-fullimage
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash-fullimage
 &lt;span style="color:#f92672">[=]&lt;/span> Session log /home/kali/.proxmark3/logs/log_20200604.txt
 &lt;span style="color:#f92672">[=]&lt;/span> Loading preferences...
 &lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> loaded from JSON file /home/kali/.proxmark3/preferences.json
@@ -247,13 +339,15 @@ ProxyJump jumpserver
 &lt;li>下载安装 fiddler &lt;a href="https://telerik-fiddler.s3.amazonaws.com/fiddler/FiddlerSetup.exe">https://telerik-fiddler.s3.amazonaws.com/fiddler/FiddlerSetup.exe&lt;/a>&lt;/li>
 &lt;li>打开fiddler&amp;mdash;点击左上角winconfig&amp;mdash;给 Microsoft Store 打勾&amp;mdash;点save changes&lt;/li>
 &lt;/ol>
-&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200603120719.png" alt="image-20200603120155534">&lt;/p>
+&lt;p>
+&lt;img class="mx-auto" alt="image-20200603120155534" src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200603120719.png" />
+&lt;/p>
 &lt;p>再次打开应用商店就能正常使用。唯一的缺陷是需要打开 fiddler 才能使用应用商店，不然会报 0x80072EFD 错误。&lt;/p></description></item><item><title>解决无忧行长时间显示“正在连接电话服务器”问题</title><link>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</link><pubDate>Thu, 09 Apr 2020 21:48:15 +0800</pubDate><guid>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</guid><description>&lt;p>无忧行(JegoTrip)APP是中国移动专门为出境游用户量身打造的APP。在境内也可以使用，移动号码可以在 APP 内接电话和收短信, 轻松实现一机双号。&lt;/p>
 &lt;h2 id="具体症状">具体症状&lt;/h2>
 &lt;p>家里路由器上部署梯子, 国内 IP 直连，其余 IP 走梯子, 国内 IP 库用的 &lt;a href="https://github.com/17mon/china_ip_list">https://github.com/17mon/china_ip_list&lt;/a>。连接家里 WIFI，无忧行 APP 启动后，显示“正在连接电话服务器”, 持续 30 秒以上才能连接到服务器，之后才能收到短信；用 4G 则没有这个提示，启动 APP 瞬间就能收到短信。猜测是无忧行服务器的香港 IP 走梯子后比直连慢很多所致。&lt;/p>
 &lt;h2 id="排查-ip">排查 IP&lt;/h2>
 &lt;p>从 Pi-hole 导出 jego 相关域名, &lt;code>192.168.1.123&lt;/code> 是手机 IP&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash"> sqlite3 pihole-FTL.db &lt;span style="color:#e6db74">&amp;#34;select distinct
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash"> sqlite3 pihole-FTL.db &lt;span style="color:#e6db74">&amp;#34;select distinct
 &lt;/span>&lt;span style="color:#e6db74"> domain from queries where client=&amp;#39;192.168.1.123&amp;#39; and domain like &amp;#39;%jego%&amp;#39;&amp;#34;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>得到几个域名&lt;/p>
 &lt;blockquote>
@@ -286,31 +380,31 @@ cp.jegotrip.com.cn&lt;/p>
 &lt;h4 id="添加-actions">添加 Actions&lt;/h4>
 &lt;p>&lt;strong>Actions&lt;/strong> - &lt;strong>New workflows&lt;/strong>，选择 &lt;strong>Simple workflow&lt;/strong>
 然后填入以下内容&lt;/p>
-&lt;div class="highlight">&lt;pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">&lt;span style="color:#66d9ef">name&lt;/span>: Auto deploy hugo
-&lt;span style="color:#66d9ef">on&lt;/span>:
-&lt;span style="color:#66d9ef">push&lt;/span>:
-&lt;span style="color:#66d9ef">branches&lt;/span>: &lt;span style="color:#75715e"># 触发分支&lt;/span>
-- source
-&lt;span style="color:#66d9ef">jobs&lt;/span>:
-&lt;span style="color:#66d9ef">build&lt;/span>:
-&lt;span style="color:#66d9ef">runs-on&lt;/span>: ubuntu-latest
-&lt;span style="color:#66d9ef">steps&lt;/span>:
-- &lt;span style="color:#66d9ef">name&lt;/span>: checkout
-&lt;span style="color:#66d9ef">uses&lt;/span>: actions/checkout@master
-&lt;span style="color:#66d9ef">with&lt;/span>:
-&lt;span style="color:#66d9ef">submodules&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span> &lt;span style="color:#75715e"># 检查 Hugo themes 更新&lt;/span>
-- &lt;span style="color:#66d9ef">name&lt;/span>: Setup Hugo
-&lt;span style="color:#66d9ef">uses&lt;/span>: peaceiris/actions-hugo@v2
-&lt;span style="color:#66d9ef">with&lt;/span>:
-&lt;span style="color:#66d9ef">hugo-version&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;latest&amp;#39;&lt;/span>
-- &lt;span style="color:#66d9ef">name&lt;/span>: Build
-&lt;span style="color:#66d9ef">run&lt;/span>: hugo --minify
-- &lt;span style="color:#66d9ef">name&lt;/span>: Deploy
-&lt;span style="color:#66d9ef">uses&lt;/span>: peaceiris/actions-gh-pages@v3
-&lt;span style="color:#66d9ef">with&lt;/span>:
-&lt;span style="color:#66d9ef">deploy_key&lt;/span>: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-&lt;span style="color:#66d9ef">publish_dir&lt;/span>: ./public
-&lt;span style="color:#66d9ef">publish_branch&lt;/span>: master &lt;span style="color:#75715e"># 部署目的分支&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-yml" data-lang="yml">&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Auto deploy hugo&lt;/span>
+&lt;span style="color:#f92672">on&lt;/span>:
+&lt;span style="color:#f92672">push&lt;/span>:
+&lt;span style="color:#f92672">branches&lt;/span>: &lt;span style="color:#75715e"># 触发分支&lt;/span>
+- &lt;span style="color:#ae81ff">source&lt;/span>
+&lt;span style="color:#f92672">jobs&lt;/span>:
+&lt;span style="color:#f92672">build&lt;/span>:
+&lt;span style="color:#f92672">runs-on&lt;/span>: &lt;span style="color:#ae81ff">ubuntu-latest&lt;/span>
+&lt;span style="color:#f92672">steps&lt;/span>:
+- &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">checkout&lt;/span>
+&lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/checkout@master&lt;/span>
+&lt;span style="color:#f92672">with&lt;/span>:
+&lt;span style="color:#f92672">submodules&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span> &lt;span style="color:#75715e"># 检查 Hugo themes 更新&lt;/span>
+- &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Setup Hugo&lt;/span>
+&lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">peaceiris/actions-hugo@v2&lt;/span>
+&lt;span style="color:#f92672">with&lt;/span>:
+&lt;span style="color:#f92672">hugo-version&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;latest&amp;#39;&lt;/span>
+- &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Build&lt;/span>
+&lt;span style="color:#f92672">run&lt;/span>: &lt;span style="color:#ae81ff">hugo --minify&lt;/span>
+- &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Deploy&lt;/span>
+&lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">peaceiris/actions-gh-pages@v3&lt;/span>
+&lt;span style="color:#f92672">with&lt;/span>:
+&lt;span style="color:#f92672">deploy_key&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.ACTIONS_DEPLOY_KEY }}&lt;/span>
+&lt;span style="color:#f92672">publish_dir&lt;/span>: &lt;span style="color:#ae81ff">./public&lt;/span>
+&lt;span style="color:#f92672">publish_branch&lt;/span>: &lt;span style="color:#ae81ff">master&lt;/span> &lt;span style="color:#75715e"># 部署目的分支&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>引用的两个 actions 及作用&lt;/p>
 &lt;ul>
 &lt;li>&lt;a href="https://github.com/peaceiris/actions-hugo">peaceiris/actions-hugo&lt;/a> 获取最新的 hugo&lt;/li>
@@ -323,11 +417,13 @@ cp.jegotrip.com.cn&lt;/p>
 &lt;li>&lt;code>ssh-keygen -t rsa -b 4096 -C &amp;quot;$(git config user.email)&amp;quot; -f gh-pages -N &amp;quot;&amp;quot;&lt;/code> 生成公私钥对&lt;/li>
 &lt;li>&lt;strong>Repository Settings&lt;/strong> - &lt;strong>Deploy Keys&lt;/strong>，粘贴 &lt;code>gh-pages.pub&lt;/code> 内容并勾选 &lt;code> Allow write access&lt;/code>&lt;/li>
 &lt;li>&lt;strong>Repository Settings&lt;/strong> - &lt;strong>Secrets&lt;/strong>，粘贴 &lt;code>gh-pages&lt;/code> 内容, name 必须为 &lt;code>ACTIONS_DEPLOY_KEY&lt;/code>
-&lt;img src="https://cdn.jsdelivr.net/gh/peaceiris/actions-gh-pages/images/secrets-1.jpg" alt="">&lt;/li>
+&lt;img class="mx-auto" alt="" src="https://cdn.jsdelivr.net/gh/peaceiris/actions-gh-pages/images/secrets-1.jpg" />
+&lt;/li>
 &lt;/ol>
 &lt;p>设置完成后，向 source 分支提交代码，会自动生成静态页面发布到 master 分支。
 效果类似
-&lt;img src="https://cdn.jsdelivr.net/gh/peaceiris/actions-gh-pages/images/log_overview.jpg" alt="">&lt;/p>
+&lt;img class="mx-auto" alt="" src="https://cdn.jsdelivr.net/gh/peaceiris/actions-gh-pages/images/log_overview.jpg" />
+&lt;/p>
 &lt;h2 id="参考资料">参考资料&lt;/h2>
 &lt;ul>
 &lt;li>&lt;a href="https://tianhui.xin/blog/2019/11/17/hugousegithubactionstopages/">https://tianhui.xin/blog/2019/11/17/hugousegithubactionstopages/&lt;/a>&lt;/li>
