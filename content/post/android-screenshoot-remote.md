@@ -52,6 +52,7 @@ toastLog("截图完成");
 一开始设想的是 autojs 监听通知，使用 [Bark](https://github.com/Finb/Bark) 的安卓客户端 [PushLite](https://github.com/xlvecle/PushLite) 来接收通知触发截图，然而 PushLite 需要 Google FCM，安装太折腾，放弃，寻求电脑端触发的方案。
 
 一番搜索，决定用 cgi 来接收外部请求并触发截图，各种依赖最少。
+
 电脑上连接多个安卓手机，执行 adb 命令需要指定设备 id，设备 id 用 `adb devices` 获取
 ```bash
 adb devices
@@ -115,6 +116,7 @@ mv yunshanfu.sh cgi-bin
 python3 -m http.server --cgi
 ```
 浏览器访问 `http://127.0.0.1:8000/cgi-bin/yunshanfu.sh`, 即可触发截图，并在当前页面展示截图。
+
 设置端口转发，公网访问效果如图
 ![](https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2021/IMG_0317.jpg)
 
