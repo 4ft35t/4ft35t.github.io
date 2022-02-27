@@ -57,7 +57,7 @@
 <p>基于各种复杂环境，ssh 无法直接连接目标主机，需要借助中间的跳板机或者代理来连接。通常使用 ssh-agent 来通过跳板机连接目标主机，使用 ProxyCommand 或者 ProxyJump 连接更方便。</p>
 <h3 id=跳板机>跳板机</h3>
 <p>在　<code>~/.ssh/config</code> 中给跳板机一个方便记忆的别名，比如　jumpserver</p>
-<pre><code class=language-config data-lang=config>Host jumpserver
+<pre tabindex=0><code class=language-config data-lang=config>Host jumpserver
     User root
     HostName 1.2.3.4
     Port 2222
@@ -66,7 +66,7 @@
 <p>通过跳板机连接目标主机：</p>
 <p><code>ssh -o ProxyCommand="ssh -W %h:%p jumpserver" usr@10.0.0.1</code></p>
 <p>或者写入 config 文件，使用 <code>ssh dst</code> 直接登录目标主机</p>
-<pre><code class=language-config data-lang=config>Host dst
+<pre tabindex=0><code class=language-config data-lang=config>Host dst
     User usr
     HostName 10.0.0.1
     Port 22
@@ -74,7 +74,7 @@
 </code></pre><p>较新版本的 ssh 客户端可以使用 ProxyJump</p>
 <p><code>ssh -J jumpserver usr@10.0.0.1</code></p>
 <p>或者写入 config 文件</p>
-<pre><code class=language-config data-lang=config>Host dst
+<pre tabindex=0><code class=language-config data-lang=config>Host dst
     User usr
     HostName 10.0.0.1
     Port 22
@@ -149,7 +149,7 @@
 </div>
 <footer id=footer>
 <div>
-&copy; 2021 <a href=https://4ft35t.github.io/>4ft35t blog By af.test</a>
+&copy; 2022 <a href=https://4ft35t.github.io/>4ft35t blog By af.test</a>
 </div>
 <br>
 <div>
@@ -183,6 +183,9 @@
 <h3 class=widget-title>最近文章</h3>
 <ul class=widget-list>
 <li>
+<a href=https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/ title="利用 Pixel 一代的无限存储备份 NAS 照片">利用 Pixel 一代的无限存储备份 NAS 照片</a>
+</li>
+<li>
 <a href=https://4ft35t.github.io/post/android-screenshoot-remote/ title="Android 远程截图">Android 远程截图</a>
 </li>
 <li>
@@ -213,7 +216,7 @@
 <ul class=widget-list>
 <li><a href=https://4ft35t.github.io/categories/android/>Android (1)</a></li>
 <li><a href=https://4ft35t.github.io/categories/github/>Github (1)</a></li>
-<li><a href=https://4ft35t.github.io/categories/linux/>Linux (1)</a></li>
+<li><a href=https://4ft35t.github.io/categories/linux/>Linux (2)</a></li>
 <li><a href=https://4ft35t.github.io/categories/mess/>Mess (2)</a></li>
 <li><a href=https://4ft35t.github.io/categories/network/>Network (3)</a></li>
 <li><a href=https://4ft35t.github.io/categories/windows/>Windows (1)</a></li>
@@ -234,10 +237,13 @@
 <a href=https://4ft35t.github.io/tags/error/>error</a>
 <a href=https://4ft35t.github.io/tags/exit/>exit</a>
 <a href=https://4ft35t.github.io/tags/github/>github</a>
+<a href=https://4ft35t.github.io/tags/google/>google</a>
 <a href=https://4ft35t.github.io/tags/hugo/>hugo</a>
 <a href=https://4ft35t.github.io/tags/ip/>IP</a>
 <a href=https://4ft35t.github.io/tags/jegotrip/>jegotrip</a>
+<a href=https://4ft35t.github.io/tags/nas/>NAS</a>
 <a href=https://4ft35t.github.io/tags/pd/>PD</a>
+<a href=https://4ft35t.github.io/tags/photo/>photo</a>
 <a href=https://4ft35t.github.io/tags/pi-hole/>pi-hole</a>
 <a href=https://4ft35t.github.io/tags/pihole/>pihole</a>
 <a href=https://4ft35t.github.io/tags/proxmark3/>proxmark3</a>
