@@ -41,9 +41,9 @@
 &lt;li>确认正常后，点击 google-photo-free-up-space.js 右边三点&amp;ndash;更多&amp;ndash;定时任务，设置每天运行时间&lt;/li>
 &lt;/ol>
 &lt;p>google-photo-free-up-space.js 中 &lt;code>text()&lt;/code> 函数是在界面查找文本，如果系统语言不是英文，需要自行调整 21-22 行内容&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -63,9 +63,9 @@
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
-&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+&lt;/span>&lt;span style="background-color:#e5e5e5">&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+&lt;/span>&lt;/span>&lt;span style="background-color:#e5e5e5">&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+&lt;/span>&lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
@@ -83,44 +83,44 @@
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">auto&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">show&lt;/span>()
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>auto();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>console.show()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">utils&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">require&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;utils.js&amp;#39;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">var&lt;/span> utils &lt;span style="color:#000;font-weight:bold">=&lt;/span> require(&lt;span style="color:#d14">&amp;#39;utils.js&amp;#39;&lt;/span>);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">pkgName&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;com.google.android.apps.photos&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>pkgName&lt;span style="color:#000;font-weight:bold">=&lt;/span>&lt;span style="color:#d14">&amp;#39;com.google.android.apps.photos&amp;#39;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">utils&lt;/span>.&lt;span style="color:#a6e22e">startApp&lt;/span>(&lt;span style="color:#a6e22e">pkgName&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">toastLog&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;启动&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">pkgName&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;，等待检测中&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">waitForPackage&lt;/span>(&lt;span style="color:#a6e22e">pkgName&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">toastLog&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;检测到&amp;#39;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">pkgName&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#39;等待 Activity&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>utils.startApp(pkgName)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>toastLog(&lt;span style="color:#d14">&amp;#39;启动&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">+&lt;/span> pkgName &lt;span style="color:#000;font-weight:bold">+&lt;/span> &lt;span style="color:#d14">&amp;#39;，等待检测中&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>waitForPackage(pkgName)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>toastLog(&lt;span style="color:#d14">&amp;#39;检测到&amp;#39;&lt;/span> &lt;span style="color:#000;font-weight:bold">+&lt;/span> pkgName &lt;span style="color:#000;font-weight:bold">+&lt;/span> &lt;span style="color:#d14">&amp;#39;等待 Activity&amp;#39;&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">waitForActivity&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;com.google.android.apps.photos.home.HomeActivity&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">toastLog&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;找到首页 Activity&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 点击头像
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">id&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;og_apd_internal_image_view&amp;#34;&lt;/span>).&lt;span style="color:#a6e22e">waitFor&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">utils&lt;/span>.&lt;span style="color:#a6e22e">click&lt;/span>(&lt;span style="color:#a6e22e">id&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;og_apd_internal_image_view&amp;#34;&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">toastLog&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;找到头像，点击&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>waitForActivity(&lt;span style="color:#d14">&amp;#34;com.google.android.apps.photos.home.HomeActivity&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>toastLog(&lt;span style="color:#d14">&amp;#39;找到首页 Activity&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#998;font-style:italic">// 点击头像
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#998;font-style:italic">&lt;/span>id(&lt;span style="color:#d14">&amp;#34;og_apd_internal_image_view&amp;#34;&lt;/span>).waitFor()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>utils.click(id(&lt;span style="color:#d14">&amp;#34;og_apd_internal_image_view&amp;#34;&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>toastLog(&lt;span style="color:#d14">&amp;#39;找到头像，点击&amp;#39;&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 点击 free up
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">text&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Free up space&amp;#34;&lt;/span>).&lt;span style="color:#a6e22e">waitFor&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">utils&lt;/span>.&lt;span style="color:#a6e22e">click&lt;/span>(&lt;span style="color:#a6e22e">text&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Free up space&amp;#34;&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">toastLog&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;进入释放界面&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">sleep&lt;/span>(&lt;span style="color:#ae81ff">500&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#998;font-style:italic">// 点击 free up
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex; background-color:#e5e5e5">&lt;span>&lt;span style="color:#998;font-style:italic">&lt;/span>text(&lt;span style="color:#d14">&amp;#34;Free up space&amp;#34;&lt;/span>).waitFor()
+&lt;/span>&lt;/span>&lt;span style="display:flex; background-color:#e5e5e5">&lt;span>utils.click(text(&lt;span style="color:#d14">&amp;#34;Free up space&amp;#34;&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>toastLog(&lt;span style="color:#d14">&amp;#39;进入释放界面&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sleep(&lt;span style="color:#099">500&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 点击释放按钮
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">id&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;free_up_button&amp;#34;&lt;/span>).&lt;span style="color:#a6e22e">exists&lt;/span>()) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">utils&lt;/span>.&lt;span style="color:#a6e22e">click&lt;/span>(&lt;span style="color:#a6e22e">id&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;free_up_button&amp;#34;&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#998;font-style:italic">// 点击释放按钮
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#998;font-style:italic">&lt;/span>&lt;span style="color:#000;font-weight:bold">if&lt;/span> (id(&lt;span style="color:#d14">&amp;#34;free_up_button&amp;#34;&lt;/span>).exists()) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> utils.click(id(&lt;span style="color:#d14">&amp;#34;free_up_button&amp;#34;&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">toastLog&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;任务完成&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>toastLog(&lt;span style="color:#d14">&amp;#39;任务完成&amp;#39;&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 返回 app 主界面
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">back&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#998;font-style:italic">// 返回 app 主界面
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#998;font-style:italic">&lt;/span>back()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 2 次返回退出 app
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">back&lt;/span>(); &lt;span style="color:#a6e22e">back&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#998;font-style:italic">// 2 次返回退出 app
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#998;font-style:italic">&lt;/span>back(); back();
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">hide&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>console.hide()
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;h2 id="踩坑过程">踩坑过程&lt;/h2>
@@ -146,9 +146,9 @@
 &lt;h2 id="截屏">截屏&lt;/h2>
 &lt;p>系统自带 &lt;code>screencap&lt;/code> 命令，桌面和别的 app 可以截屏，云闪付不行，应该是云闪付设置了&lt;code>FLAG_SECURE&lt;/code>。&lt;/p>
 &lt;p>&lt;a href="https://github.com/Genymobile/scrcpy">scrcpy&lt;/a> 可以显示云闪付内容，猜测 &lt;a href="https://github.com/Ericwyn/Auto.js">autojs&lt;/a> 使用 cast 模式也可以截屏，实测确实可以。&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -176,55 +176,55 @@
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">auto&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">app&lt;/span>.&lt;span style="color:#a6e22e">launch&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;com.unionpay&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">waitForPackage&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;com.unionpay&amp;#34;&lt;/span>);
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-js" data-lang="js">&lt;span style="display:flex;">&lt;span>auto();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>app.launch(&lt;span style="color:#d14">&amp;#34;com.unionpay&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>waitForPackage(&lt;span style="color:#d14">&amp;#34;com.unionpay&amp;#34;&lt;/span>);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 首页点击乘车码
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">sleep&lt;/span>(&lt;span style="color:#ae81ff">1500&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span>(&lt;span style="color:#a6e22e">text&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;充值中心&amp;#34;&lt;/span>).&lt;span style="color:#a6e22e">exists&lt;/span>()){
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">toastLog&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;找到 乘车码 关键字&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">target&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">text&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;乘车码&amp;#34;&lt;/span>).&lt;span style="color:#a6e22e">findOne&lt;/span>();
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span>(&lt;span style="color:#f92672">!&lt;/span>&lt;span style="color:#a6e22e">target&lt;/span>.&lt;span style="color:#a6e22e">clickable&lt;/span>()){
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">target&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">target&lt;/span>.&lt;span style="color:#a6e22e">parent&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#998;font-style:italic">// 首页点击乘车码
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#998;font-style:italic">&lt;/span>sleep(&lt;span style="color:#099">1500&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">if&lt;/span>(text(&lt;span style="color:#d14">&amp;#34;充值中心&amp;#34;&lt;/span>).exists()){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> toastLog(&lt;span style="color:#d14">&amp;#34;找到 乘车码 关键字&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> target &lt;span style="color:#000;font-weight:bold">=&lt;/span> text(&lt;span style="color:#d14">&amp;#34;乘车码&amp;#34;&lt;/span>).findOne();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">while&lt;/span>(&lt;span style="color:#000;font-weight:bold">!&lt;/span>target.clickable()){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> target &lt;span style="color:#000;font-weight:bold">=&lt;/span> target.parent()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">target&lt;/span>.&lt;span style="color:#a6e22e">click&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> target.click()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">waitForActivity&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;com.unionpay.activity.react.UPActivityReactNative&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">sleep&lt;/span>(&lt;span style="color:#ae81ff">2000&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 2、请求截图
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">if&lt;/span>(&lt;span style="color:#f92672">!&lt;/span>&lt;span style="color:#a6e22e">requestScreenCapture&lt;/span>()){
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">toastLog&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;请求截图失败&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">exit&lt;/span>();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>waitForActivity(&lt;span style="color:#d14">&amp;#34;com.unionpay.activity.react.UPActivityReactNative&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sleep(&lt;span style="color:#099">2000&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#998;font-style:italic">// 2、请求截图
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#998;font-style:italic">&lt;/span>&lt;span style="color:#000;font-weight:bold">if&lt;/span>(&lt;span style="color:#000;font-weight:bold">!&lt;/span>requestScreenCapture()){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> toastLog(&lt;span style="color:#d14">&amp;#34;请求截图失败&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> exit();
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// 3、进行截图
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">captureScreen&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;/sdcard/img.png&amp;#34;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">toastLog&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;截图完成&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#998;font-style:italic">// 3、进行截图
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#998;font-style:italic">&lt;/span>captureScreen(&lt;span style="color:#d14">&amp;#34;/sdcard/img.png&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>toastLog(&lt;span style="color:#d14">&amp;#34;截图完成&amp;#34;&lt;/span>);
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;h2 id="触发">触发&lt;/h2>
 &lt;p>一开始设想的是 autojs 监听通知，使用 &lt;a href="https://github.com/Finb/Bark">Bark&lt;/a> 的安卓客户端 &lt;a href="https://github.com/xlvecle/PushLite">PushLite&lt;/a> 来接收通知触发截图，然而 PushLite 需要 Google FCM，安装太折腾，放弃，寻求电脑端触发的方案。&lt;/p>
 &lt;p>一番搜索，决定用 cgi 来接收外部请求并触发截图，各种依赖最少。&lt;/p>
 &lt;p>电脑上连接多个安卓手机，执行 adb 命令需要指定设备 id，设备 id 用 &lt;code>adb devices&lt;/code> 获取&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>adb devices
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>adb devices
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>List of devices attached
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>NXTDU1xxxxxxxxx device
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>NXTDU1xxxxxxxxx 就是设备 id&lt;/p>
 &lt;p>yunshanfu.sh&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -269,61 +269,61 @@
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>echo &lt;span style="color:#e6db74">&amp;#34;Content-Type:text/html&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#39;&amp;lt;html&amp;gt;&amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt;&amp;lt;body&amp;gt;&amp;#39;&lt;/span>
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#999;font-weight:bold;font-style:italic">#!/bin/bash
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#999;font-weight:bold;font-style:italic">&lt;/span>&lt;span style="color:#0086b3">echo&lt;/span> &lt;span style="color:#d14">&amp;#34;Content-Type:text/html&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#0086b3">echo&lt;/span> &lt;span style="color:#d14">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#0086b3">echo&lt;/span> &lt;span style="color:#d14">&amp;#39;&amp;lt;html&amp;gt;&amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt;&amp;lt;body&amp;gt;&amp;#39;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>dev&lt;span style="color:#f92672">=&lt;/span>NXTDU1xxxxxxxxx
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>img&lt;span style="color:#f92672">=&lt;/span>/sdcard/img.png
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#008080">dev&lt;/span>&lt;span style="color:#000;font-weight:bold">=&lt;/span>NXTDU1xxxxxxxxx
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#008080">img&lt;/span>&lt;span style="color:#000;font-weight:bold">=&lt;/span>/sdcard/img.png
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>adb&lt;span style="color:#f92672">(){&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> /usr/bin/adb -s $dev $@
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>adb&lt;span style="color:#000;font-weight:bold">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> /usr/bin/adb -s &lt;span style="color:#008080">$dev&lt;/span> &lt;span style="color:#008080">$@&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cleanup&lt;span style="color:#f92672">(){&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> adb shell rm $img
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cleanup&lt;span style="color:#000;font-weight:bold">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> adb shell rm &lt;span style="color:#008080">$img&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> rm /tmp/ysf.png
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>unlock&lt;span style="color:#f92672">(){&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> adb shell input keyevent &lt;span style="color:#ae81ff">224&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> adb shell input swipe &lt;span style="color:#ae81ff">300&lt;/span> &lt;span style="color:#ae81ff">500&lt;/span> &lt;span style="color:#ae81ff">300&lt;/span> &lt;span style="color:#ae81ff">1500&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> adb shell input text &lt;span style="color:#ae81ff">12345678&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>unlock&lt;span style="color:#000;font-weight:bold">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> adb shell input keyevent &lt;span style="color:#099">224&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> adb shell input swipe &lt;span style="color:#099">300&lt;/span> &lt;span style="color:#099">500&lt;/span> &lt;span style="color:#099">300&lt;/span> &lt;span style="color:#099">1500&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> adb shell input text &lt;span style="color:#099">12345678&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>screenshoot&lt;span style="color:#f92672">(){&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>screenshoot&lt;span style="color:#000;font-weight:bold">(){&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> adb shell am start -n org.autojs.autojs/.external.open.RunIntentActivity -d /sdcard/Scripts/ysf.js
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sleep &lt;span style="color:#ae81ff">3&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">while&lt;/span> true
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">do&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># 校验文件大小，避免 pull 回来未写完图片&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> adb pull $img /tmp/ysf.png &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#f92672">[&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>stat -c %s /tmp/ysf.png&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74">&amp;#34;&lt;/span> -ge &lt;span style="color:#ae81ff">300000&lt;/span> &lt;span style="color:#f92672">]&lt;/span> &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> break
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sleep &lt;span style="color:#ae81ff">1&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">done&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sleep &lt;span style="color:#099">3&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">while&lt;/span> &lt;span style="color:#0086b3">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">do&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#998;font-style:italic"># 校验文件大小，避免 pull 回来未写完图片&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> adb pull &lt;span style="color:#008080">$img&lt;/span> /tmp/ysf.png &lt;span style="color:#000;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span> &lt;span style="color:#d14">&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">$(&lt;/span>stat -c %s /tmp/ysf.png&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#d14">&amp;#34;&lt;/span> -ge &lt;span style="color:#099">300000&lt;/span> &lt;span style="color:#000;font-weight:bold">]&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#0086b3">break&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sleep &lt;span style="color:#099">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">done&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># press power button&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> adb shell input keyevent &lt;span style="color:#ae81ff">26&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#998;font-style:italic"># press power button&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> adb shell input keyevent &lt;span style="color:#099">26&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cleanup
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>unlock
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>screenshoot
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#34;&amp;lt;img src=&amp;#39;data:image/png;base64,&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>cat /tmp/ysf.png | base64 -w 0&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74">&amp;#39;&amp;gt;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#34;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#0086b3">echo&lt;/span> &lt;span style="color:#d14">&amp;#34;&amp;lt;img src=&amp;#39;data:image/png;base64,&lt;/span>&lt;span style="color:#000;font-weight:bold">$(&lt;/span>cat /tmp/ysf.png | base64 -w 0&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#d14">&amp;#39;&amp;gt;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#0086b3">echo&lt;/span> &lt;span style="color:#d14">&amp;#34;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>python http.server 的 cgi 脚本需要放在 &lt;code>cgi-bin&lt;/code> 目录&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>chmod +x yunshanfu.sh
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>chmod +x yunshanfu.sh
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir cgi-bin
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mv yunshanfu.sh cgi-bin
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>python3 -m http.server --cgi
@@ -373,46 +373,46 @@
 &lt;h3 id="排查">排查&lt;/h3>
 &lt;p>这个写法以前在脚本里经常写，稳定运行未出错。对比之前的脚本后发现差异，之前的脚本 exit 是提前退出，后面还有内容；这个脚本exit是上层调用脚本反馈最终结果，exit 是最后一行。&lt;/p>
 &lt;p>修改脚本后一切正常&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>status&lt;span style="color:#f92672">=&lt;/span>success
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span> $status !&lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;success&amp;#34;&lt;/span> &lt;span style="color:#f92672">]&lt;/span> &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> exit &lt;span style="color:#ae81ff">２&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>echo
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#008080">status&lt;/span>&lt;span style="color:#000;font-weight:bold">=&lt;/span>success
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span> &lt;span style="color:#008080">$status&lt;/span> !&lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#d14">&amp;#34;success&amp;#34;&lt;/span> &lt;span style="color:#000;font-weight:bold">]&lt;/span> &lt;span style="color:#000;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#0086b3">exit&lt;/span> &lt;span style="color:#099">２&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#0086b3">echo&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;h3 id="原因分析">原因分析&lt;/h3>
 &lt;p>使用　bash -x 可以看出差异，&lt;/p>
 &lt;p>exit　在最后一行&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>bash -x t.sh
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>+ status&lt;span style="color:#f92672">=&lt;/span>success
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>+ &lt;span style="color:#e6db74">&amp;#39;[&amp;#39;&lt;/span> success &lt;span style="color:#e6db74">&amp;#39;!=&amp;#39;&lt;/span> success &lt;span style="color:#e6db74">&amp;#39;]&amp;#39;&lt;/span>
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>bash -x t.sh
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>+ &lt;span style="color:#008080">status&lt;/span>&lt;span style="color:#000;font-weight:bold">=&lt;/span>success
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>+ &lt;span style="color:#d14">&amp;#39;[&amp;#39;&lt;/span> success &lt;span style="color:#d14">&amp;#39;!=&amp;#39;&lt;/span> success &lt;span style="color:#d14">&amp;#39;]&amp;#39;&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>exit 不在最后一行&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>bash -x t.sh
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>+ status&lt;span style="color:#f92672">=&lt;/span>success
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>+ &lt;span style="color:#e6db74">&amp;#39;[&amp;#39;&lt;/span> success &lt;span style="color:#e6db74">&amp;#39;!=&amp;#39;&lt;/span> success &lt;span style="color:#e6db74">&amp;#39;]&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>+ echo
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>bash -x t.sh
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>+ &lt;span style="color:#008080">status&lt;/span>&lt;span style="color:#000;font-weight:bold">=&lt;/span>success
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>+ &lt;span style="color:#d14">&amp;#39;[&amp;#39;&lt;/span> success &lt;span style="color:#d14">&amp;#39;!=&amp;#39;&lt;/span> success &lt;span style="color:#d14">&amp;#39;]&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>+ &lt;span style="color:#0086b3">echo&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>shell 会将最后一条命令的返回状态码作为整个脚本的返回状态码。test 在最后一行时，&lt;code>[ $status != &amp;quot;success&amp;quot; ]&lt;/code> 的返回结果非0，后面的　&amp;amp;&amp;amp; 内容不会执行，整个脚本结束，脚本返回状态码就是中括号内test命令的反馈状态码。　　　　　　&lt;/p>
@@ -422,21 +422,21 @@
 &lt;li>一定要用 &lt;strong>&amp;amp;&amp;amp; 做退出条件时，不能作为脚本或者函数的最后一条命令&lt;/strong>&lt;/li>
 &lt;/ul>
 &lt;p>上面脚本改造成||退出&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span> $status &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;success&amp;#34;&lt;/span> &lt;span style="color:#f92672">]&lt;/span> &lt;span style="color:#f92672">||&lt;/span> exit &lt;span style="color:#ae81ff">２&lt;/span>
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span> &lt;span style="color:#008080">$status&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#d14">&amp;#34;success&amp;#34;&lt;/span> &lt;span style="color:#000;font-weight:bold">]&lt;/span> &lt;span style="color:#000;font-weight:bold">||&lt;/span> &lt;span style="color:#0086b3">exit&lt;/span> &lt;span style="color:#099">２&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>因为是最后一行，还可以直接省略后面的内容&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span> $status &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;success&amp;#34;&lt;/span> &lt;span style="color:#f92672">]&lt;/span>
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span> &lt;span style="color:#008080">$status&lt;/span> &lt;span style="color:#000;font-weight:bold">=&lt;/span> &lt;span style="color:#d14">&amp;#34;success&amp;#34;&lt;/span> &lt;span style="color:#000;font-weight:bold">]&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div></description></item><item><title>Promark3 使用 冰人（iceman）固件</title><link>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</link><pubDate>Thu, 04 Jun 2020 19:21:59 +0800</pubDate><guid>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</guid><description>&lt;p>淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 &lt;code>Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error&lt;/code>。&lt;/p>
@@ -447,20 +447,20 @@
 &lt;/ul>
 &lt;h3 id="编译安装">编译安装&lt;/h3>
 &lt;p>win 10 的 WSL 可以直接访问串口，很方便。win 10 上的 COM3， 自动映射到 WSL 的 /dev/ttyS3。&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo apt-get install --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo apt-get install --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git clone https://github.com/RfidResearchGroup/proxmark3.git
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cd proxmark3
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make clean &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> make all
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#0086b3">cd&lt;/span> proxmark3
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make clean &lt;span style="color:#000;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> make all
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>修改 /dev/ttyS3 为所有用户可读写，设备拔插后需要再次执行&lt;/p>
@@ -478,9 +478,9 @@ Lock Error&lt;/p>
 &lt;h3 id="刷预编译固件">刷预编译固件&lt;/h3>
 &lt;p>在冰人固件的 wiki 中找到 windows 的预编译非 RDV4 版本下载，Generice Proxmark3 devices (non RDV4) [&lt;a href="https://drive.google.com/open?id=1PI3Xr1mussPBPnYGu4ZjWzGPARK4N7JR">Precompiled builds for RRG / Iceman repository x64&lt;/a>&lt;/p>
 &lt;p>提取 fullimage.elf 后，顺利刷入。&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -514,26 +514,26 @@ Lock Error&lt;/p>
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash ./fullimage.elf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[=]&lt;/span> Session log /home/kali/.proxmark3/log_20200604.txt
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[=]&lt;/span> Loading Preferences...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> loaded from JSON file /home/kali/.proxmark3/preferences.json
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> About to use the following file:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> ./fullimage.elf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> Waiting &lt;span style="color:#66d9ef">for&lt;/span> Proxmark3 to appear on /dev/ttyS5
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 🕑 &lt;span style="color:#ae81ff">59&lt;/span> found
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[=]&lt;/span> Available memory on this board: 512K bytes
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash ./fullimage.elf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[=]&lt;/span> Session log /home/kali/.proxmark3/log_20200604.txt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[=]&lt;/span> Loading Preferences...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> loaded from JSON file /home/kali/.proxmark3/preferences.json
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> About to use the following file:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> ./fullimage.elf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> Waiting &lt;span style="color:#000;font-weight:bold">for&lt;/span> Proxmark3 to appear on /dev/ttyS5
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 🕑 &lt;span style="color:#099">59&lt;/span> found
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[=]&lt;/span> Available memory on this board: 512K bytes
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[=]&lt;/span> Permitted flash range: 0x00102000-0x00180000
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> Loading ELF file ./fullimage.elf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> Loading usable ELF segments:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> 0: V 0x00102000 P 0x00102000 &lt;span style="color:#f92672">(&lt;/span>0x0003b4d0-&amp;gt;0x0003b4d0&lt;span style="color:#f92672">)&lt;/span> &lt;span style="color:#f92672">[&lt;/span>R X&lt;span style="color:#f92672">]&lt;/span> @0x94
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> 1: V 0x00200000 P 0x0013d4d0 &lt;span style="color:#f92672">(&lt;/span>0x00001370-&amp;gt;0x00001370&lt;span style="color:#f92672">)&lt;/span> &lt;span style="color:#f92672">[&lt;/span>RW &lt;span style="color:#f92672">]&lt;/span> @0x3b564
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[=]&lt;/span> Note: Extending previous segment from 0x3b4d0 to 0x3c840 bytes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[=]&lt;/span> Permitted flash range: 0x00102000-0x00180000
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> Loading ELF file ./fullimage.elf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> Loading usable ELF segments:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> 0: V 0x00102000 P 0x00102000 &lt;span style="color:#000;font-weight:bold">(&lt;/span>0x0003b4d0-&amp;gt;0x0003b4d0&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>R X&lt;span style="color:#000;font-weight:bold">]&lt;/span> @0x94
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> 1: V 0x00200000 P 0x0013d4d0 &lt;span style="color:#000;font-weight:bold">(&lt;/span>0x00001370-&amp;gt;0x00001370&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>RW &lt;span style="color:#000;font-weight:bold">]&lt;/span> @0x3b564
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[=]&lt;/span> Note: Extending previous segment from 0x3b4d0 to 0x3c840 bytes
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> Flashing...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> Writing segments &lt;span style="color:#66d9ef">for&lt;/span> file: ./fullimage.elf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> 0x00102000..0x0013e83f &lt;span style="color:#f92672">[&lt;/span>0x3c840 / &lt;span style="color:#ae81ff">485&lt;/span> blocks&lt;span style="color:#f92672">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> Flashing...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> Writing segments &lt;span style="color:#000;font-weight:bold">for&lt;/span> file: ./fullimage.elf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> 0x00102000..0x0013e83f &lt;span style="color:#000;font-weight:bold">[&lt;/span>0x3c840 / &lt;span style="color:#099">485&lt;/span> blocks&lt;span style="color:#000;font-weight:bold">]&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>...................................................................
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @@@ @@@@@@@ @@@@@@@@ @@@@@@@@@@ @@@@@@ @@@ @@@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @@! !@@ @@! @@! @@! @@! @@! @@@ @@!@!@@@
@@ -543,7 +543,7 @@ Lock Error&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> . .. .. . . .. ... . . . . . .. .
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>................................................ OK
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> All &lt;span style="color:#66d9ef">done&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> All &lt;span style="color:#000;font-weight:bold">done&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Have a nice day!
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
@@ -551,20 +551,20 @@ Lock Error&lt;/p>
 &lt;/div>&lt;h3 id="解决方案">解决方案&lt;/h3>
 &lt;p>到这一步可以确认是关键编译参数问题，而非硬件缩水问题233。&lt;/p>
 &lt;p>查阅文档后，默认编译的目标平台是 PM3RDV4，非 PM3RDV4 需要设置为 PM3OTHER。&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#39;PLATFORM=PM3OTHER&amp;#39;&lt;/span> &amp;gt; Makefile.platform
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make clean &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> make all
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#0086b3">echo&lt;/span> &lt;span style="color:#d14">&amp;#39;PLATFORM=PM3OTHER&amp;#39;&lt;/span> &amp;gt; Makefile.platform
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>make clean &lt;span style="color:#000;font-weight:bold">&amp;amp;&amp;amp;&lt;/span> make all
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>再刷固件就一切顺利&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -602,30 +602,30 @@ Lock Error&lt;/p>
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash-fullimage
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[=]&lt;/span> Session log /home/kali/.proxmark3/logs/log_20200604.txt
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[=]&lt;/span> Loading preferences...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> loaded from JSON file /home/kali/.proxmark3/preferences.json
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> About to use the following file:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> Waiting &lt;span style="color:#66d9ef">for&lt;/span> Proxmark3 to appear on /dev/ttyS5
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 🕑 &lt;span style="color:#ae81ff">59&lt;/span> found
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> Entering bootloader...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> &lt;span style="color:#f92672">(&lt;/span>Press and release the button only to abort&lt;span style="color:#f92672">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> Waiting &lt;span style="color:#66d9ef">for&lt;/span> Proxmark3 to appear on /dev/ttyS5
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 🕒 &lt;span style="color:#ae81ff">48&lt;/span> found
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[=]&lt;/span> Available memory on this board: 512K bytes
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash-fullimage
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[=]&lt;/span> Session log /home/kali/.proxmark3/logs/log_20200604.txt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[=]&lt;/span> Loading preferences...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> loaded from JSON file /home/kali/.proxmark3/preferences.json
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> About to use the following file:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> Waiting &lt;span style="color:#000;font-weight:bold">for&lt;/span> Proxmark3 to appear on /dev/ttyS5
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 🕑 &lt;span style="color:#099">59&lt;/span> found
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> Entering bootloader...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>Press and release the button only to abort&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> Waiting &lt;span style="color:#000;font-weight:bold">for&lt;/span> Proxmark3 to appear on /dev/ttyS5
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 🕒 &lt;span style="color:#099">48&lt;/span> found
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[=]&lt;/span> Available memory on this board: 512K bytes
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[=]&lt;/span> Permitted flash range: 0x00102000-0x00180000
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> Loading ELF file /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> Loading usable ELF segments:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> 0: V 0x00102000 P 0x00102000 &lt;span style="color:#f92672">(&lt;/span>0x0003b240-&amp;gt;0x0003b240&lt;span style="color:#f92672">)&lt;/span> &lt;span style="color:#f92672">[&lt;/span>R X&lt;span style="color:#f92672">]&lt;/span> @0x94
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> 1: V 0x00200000 P 0x0013d240 &lt;span style="color:#f92672">(&lt;/span>0x00001360-&amp;gt;0x00001360&lt;span style="color:#f92672">)&lt;/span> &lt;span style="color:#f92672">[&lt;/span>RW &lt;span style="color:#f92672">]&lt;/span> @0x3b2d4
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[=]&lt;/span> Note: Extending previous segment from 0x3b240 to 0x3c5a0 bytes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[=]&lt;/span> Permitted flash range: 0x00102000-0x00180000
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> Loading ELF file /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> Loading usable ELF segments:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> 0: V 0x00102000 P 0x00102000 &lt;span style="color:#000;font-weight:bold">(&lt;/span>0x0003b240-&amp;gt;0x0003b240&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>R X&lt;span style="color:#000;font-weight:bold">]&lt;/span> @0x94
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> 1: V 0x00200000 P 0x0013d240 &lt;span style="color:#000;font-weight:bold">(&lt;/span>0x00001360-&amp;gt;0x00001360&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>RW &lt;span style="color:#000;font-weight:bold">]&lt;/span> @0x3b2d4
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[=]&lt;/span> Note: Extending previous segment from 0x3b240 to 0x3c5a0 bytes
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> Flashing...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> Writing segments &lt;span style="color:#66d9ef">for&lt;/span> file: /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> 0x00102000..0x0013e59f &lt;span style="color:#f92672">[&lt;/span>0x3c5a0 / &lt;span style="color:#ae81ff">483&lt;/span> blocks&lt;span style="color:#f92672">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> Flashing...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> Writing segments &lt;span style="color:#000;font-weight:bold">for&lt;/span> file: /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> 0x00102000..0x0013e59f &lt;span style="color:#000;font-weight:bold">[&lt;/span>0x3c5a0 / &lt;span style="color:#099">483&lt;/span> blocks&lt;span style="color:#000;font-weight:bold">]&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>...................................................................
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @@@ @@@@@@@ @@@@@@@@ @@@@@@@@@@ @@@@@@ @@@ @@@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @@! !@@ @@! @@! @@! @@! @@! @@@ @@!@!@@@
@@ -635,7 +635,7 @@ Lock Error&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> . .. .. . . .. ... . . . . . .. .
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>.............................................. OK
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">[&lt;/span>+&lt;span style="color:#f92672">]&lt;/span> All &lt;span style="color:#66d9ef">done&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>+&lt;span style="color:#000;font-weight:bold">]&lt;/span> All &lt;span style="color:#000;font-weight:bold">done&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Have a nice day!
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
@@ -748,14 +748,14 @@ ProxyJump jumpserver
 &lt;p>家里路由器上部署梯子, 国内 IP 直连，其余 IP 走梯子, 国内 IP 库用的 &lt;a href="https://github.com/17mon/china_ip_list">https://github.com/17mon/china_ip_list&lt;/a>。连接家里 WIFI，无忧行 APP 启动后，显示“正在连接电话服务器”, 持续 30 秒以上才能连接到服务器，之后才能收到短信；用 4G 则没有这个提示，启动 APP 瞬间就能收到短信。猜测是无忧行服务器的香港 IP 走梯子后比直连慢很多所致。&lt;/p>
 &lt;h2 id="排查-ip">排查 IP&lt;/h2>
 &lt;p>从 Pi-hole 导出 jego 相关域名, &lt;code>192.168.1.123&lt;/code> 是手机 IP&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span> sqlite3 pihole-FTL.db &lt;span style="color:#e6db74">&amp;#34;select distinct
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> domain from queries where client=&amp;#39;192.168.1.123&amp;#39; and domain like &amp;#39;%jego%&amp;#39;&amp;#34;&lt;/span>
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span> sqlite3 pihole-FTL.db &lt;span style="color:#d14">&amp;#34;select distinct
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#d14"> domain from queries where client=&amp;#39;192.168.1.123&amp;#39; and domain like &amp;#39;%jego%&amp;#39;&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>得到几个域名&lt;/p>
@@ -789,9 +789,9 @@ cp.jegotrip.com.cn&lt;/p>
 &lt;h4 id="添加-actions">添加 Actions&lt;/h4>
 &lt;p>&lt;strong>Actions&lt;/strong> - &lt;strong>New workflows&lt;/strong>，选择 &lt;strong>Simple workflow&lt;/strong>
 然后填入以下内容&lt;/p>
-&lt;div class="highlight">&lt;div style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+&lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -822,36 +822,36 @@ cp.jegotrip.com.cn&lt;/p>
 &lt;/span>&lt;span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yml" data-lang="yml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Auto deploy hugo&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">on&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">push&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">branches&lt;/span>: &lt;span style="color:#75715e"># 触发分支&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">source&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">jobs&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">build&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">runs-on&lt;/span>: &lt;span style="color:#ae81ff">ubuntu-latest&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">steps&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">checkout&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/checkout@master&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">submodules&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span> &lt;span style="color:#75715e"># 检查 Hugo themes 更新&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Setup Hugo&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">peaceiris/actions-hugo@v2&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">hugo-version&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;latest&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Build&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: &lt;span style="color:#ae81ff">hugo --minify&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Deploy&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">peaceiris/actions-gh-pages@v3&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">deploy_key&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.ACTIONS_DEPLOY_KEY }}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">publish_dir&lt;/span>: &lt;span style="color:#ae81ff">./public&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">publish_branch&lt;/span>: &lt;span style="color:#ae81ff">master&lt;/span> &lt;span style="color:#75715e"># 部署目的分支&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yml" data-lang="yml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000080">name&lt;/span>:&lt;span style="color:#bbb"> &lt;/span>Auto deploy hugo&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb">&lt;/span>&lt;span style="color:#000080">on&lt;/span>:&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">push&lt;/span>:&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">branches&lt;/span>:&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#998;font-style:italic"># 触发分支&lt;/span>&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>- source&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb">&lt;/span>&lt;span style="color:#000080">jobs&lt;/span>:&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">build&lt;/span>:&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">runs-on&lt;/span>:&lt;span style="color:#bbb"> &lt;/span>ubuntu-latest&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">steps&lt;/span>:&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>- &lt;span style="color:#000080">name&lt;/span>:&lt;span style="color:#bbb"> &lt;/span>checkout&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">uses&lt;/span>:&lt;span style="color:#bbb"> &lt;/span>actions/checkout@master&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">with&lt;/span>:&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">submodules&lt;/span>:&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000;font-weight:bold">true&lt;/span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#998;font-style:italic"># 检查 Hugo themes 更新&lt;/span>&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>- &lt;span style="color:#000080">name&lt;/span>:&lt;span style="color:#bbb"> &lt;/span>Setup Hugo&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">uses&lt;/span>:&lt;span style="color:#bbb"> &lt;/span>peaceiris/actions-hugo@v2&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">with&lt;/span>:&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">hugo-version&lt;/span>:&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#d14">&amp;#39;latest&amp;#39;&lt;/span>&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>- &lt;span style="color:#000080">name&lt;/span>:&lt;span style="color:#bbb"> &lt;/span>Build&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">run&lt;/span>:&lt;span style="color:#bbb"> &lt;/span>hugo --minify&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>- &lt;span style="color:#000080">name&lt;/span>:&lt;span style="color:#bbb"> &lt;/span>Deploy&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">uses&lt;/span>:&lt;span style="color:#bbb"> &lt;/span>peaceiris/actions-gh-pages@v3&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">with&lt;/span>:&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">deploy_key&lt;/span>:&lt;span style="color:#bbb"> &lt;/span>${{ secrets.ACTIONS_DEPLOY_KEY }}&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">publish_dir&lt;/span>:&lt;span style="color:#bbb"> &lt;/span>./public&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#000080">publish_branch&lt;/span>:&lt;span style="color:#bbb"> &lt;/span>master&lt;span style="color:#bbb"> &lt;/span>&lt;span style="color:#998;font-style:italic"># 部署目的分支&lt;/span>&lt;span style="color:#bbb">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>引用的两个 actions 及作用&lt;/p>
 &lt;ul>
