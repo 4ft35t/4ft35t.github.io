@@ -46,7 +46,7 @@ Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，
  4. 确认正常后，点击 google-photo-free-up-space.js 右边三点--更多--定时任务，设置每天运行时间
 
  google-photo-free-up-space.js 中 `text()` 函数是在界面查找文本，如果系统语言不是英文，需要自行调整 21-22 行内容
- ```js class:"lineNo"
+ ```js {hl_lines=["21-22"]}
  auto();
  console.show()
 
