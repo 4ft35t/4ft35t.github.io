@@ -18,7 +18,7 @@ Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，
 
 ### NAS 设置
 群晖自带的 curl 不支持 FTP，需要下载一个静态编译开启 FTP 支持的 curl。可以在 [https://github.com/moparisthebest/static-curl/releases](https://github.com/moparisthebest/static-curl/releases) 下载。
-1. 下载 curl 并重命名成 __curl-amd64__, `chmod +x curl-amd64`
+1. 下载 curl 并重命名成 __curl-amd64__, 并执行 `chmod +x curl-amd64`
 2. 下载上传脚本[https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5](https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5), 和 curl-amd64 一起放到家目录。
 3. 修改 photo-upload.sh 中配置
   - ftp_server 手机 FTP server 地址，Solid Explorer 中可以看到
