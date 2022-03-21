@@ -8,7 +8,7 @@
 &lt;h3 id="nas-设置">NAS 设置&lt;/h3>
 &lt;p>群晖自带的 curl 不支持 FTP，需要下载一个静态编译开启 FTP 支持的 curl。可以在 &lt;a href="https://github.com/moparisthebest/static-curl/releases">https://github.com/moparisthebest/static-curl/releases&lt;/a> 下载。&lt;/p>
 &lt;ol>
-&lt;li>下载 curl 并重命名成 &lt;strong>curl-amd64&lt;/strong>, &lt;code>chmod +x curl-amd64&lt;/code>&lt;/li>
+&lt;li>下载 curl 并重命名成 &lt;strong>curl-amd64&lt;/strong>, 并执行 &lt;code>chmod +x curl-amd64&lt;/code>&lt;/li>
 &lt;li>下载上传脚本&lt;a href="https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5">https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5&lt;/a>, 和 curl-amd64 一起放到家目录。&lt;/li>
 &lt;li>修改 photo-upload.sh 中配置&lt;/li>
 &lt;/ol>
