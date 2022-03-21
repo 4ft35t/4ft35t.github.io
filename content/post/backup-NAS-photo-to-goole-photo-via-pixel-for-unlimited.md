@@ -1,7 +1,7 @@
 ---
 title: "利用 Pixel 一代的无限存储备份 NAS 照片"
 date: 2022-02-27T23:41:49+08:00
-tags: ["bash", "NAS", "photo", "shell", "google", "android"]
+tags: ["bash", "NAS", "photo", "shell", "google", "android", "autojs"]
 categories: ["Linux"]
 draft: false
 toc: true
@@ -33,6 +33,60 @@ Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，
 
 脚本根据 NAS 上照片的修改时间来增量备份，需要定期去手机上释放空间，避免手机空间占满。具体操作路径：Google 相册-右上角头像-释放空间。
 
+##  2022.03.20 更新，使用 Autojs 自动释放手机空间
+### 环境准备
+ - https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk
+ - https://raw.githubusercontent.com/4ft35t/utils/master/autojs/utils.js
+ - https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js
+
+### 操作步骤
+ 1. 安装 autojs, 运行 app， 并按照提示打开无障碍服务。
+ 2. 将 utils.js 和 google-photo-free-up-space.js 放到手机 /sdcard/Scripts 目录
+ 3. 打开 autojs，下拉刷新，点击 google-photo-free-up-space.js 右边的三角符号运行
+ 4. 确认正常后，点击 google-photo-free-up-space.js 右边三点--更多--定时任务，设置每天运行时间
+
+ google-photo-free-up-space.js 中 `text()` 函数是在界面查找文本，如果系统语言不是英文，需要自行调整 21-22 行内容
+ ```js class:"lineNo"
+ auto();
+ console.show()
+
+ var utils = require('utils.js');
+
+ pkgName='com.google.android.apps.photos'
+
+ utils.startApp(pkgName)
+ toastLog('启动' + pkgName + '，等待检测中')
+ waitForPackage(pkgName)
+ toastLog('检测到' + pkgName + '等待 Activity')
+
+ waitForActivity("com.google.android.apps.photos.home.HomeActivity")
+ toastLog('找到首页 Activity')
+ // 点击头像
+ id("og_apd_internal_image_view").waitFor()
+ utils.click(id("og_apd_internal_image_view"))
+ toastLog('找到头像，点击')
+
+ // 点击 free up
+ text("Free up space").waitFor()
+ utils.click(text("Free up space"))
+ toastLog('进入释放界面')
+ sleep(500)
+
+ // 点击释放按钮
+ if (id("free_up_button").exists()) {
+     utils.click(id("free_up_button"))
+     }
+toastLog('任务完成')
+
+// 返回 app 主界面
+back()
+
+// 2 次返回退出 app
+back(); back();
+
+console.hide()
+```
+
 ## 踩坑过程
 最初的设想，termux 安装 rclone, 然后将 NAS 共享目录挂载到本地目录，最后在相册里备份本地目录。
 
@@ -55,5 +109,3 @@ WebDAV 在 rclone 里不支持 rclone mount。
 3. [Original Pixel Phone – The Unlimited Google Photos Uploader](https://repaynt.com/2021/02/original-pixel-unlimited-google-photos-uploader/)
 4. [rclone SFTP configuration](https://rclone.org/sftp/)
 5. [mount-cifs-in-android](https://pmiku.com/note/mount-cifs-in-android.html)
-
-
