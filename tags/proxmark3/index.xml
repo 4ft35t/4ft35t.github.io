@@ -1,1 +1,221 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>proxmark3 on 4ft35t blog</title><link>https://4ft35t.github.io/tags/proxmark3/</link><description>Recent content in proxmark3 on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Thu, 04 Jun 2020 19:21:59 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/proxmark3/index.xml" rel="self" type="application/rss+xml"/><item><title>Promark3 使用 冰人（iceman）固件</title><link>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</link><pubDate>Thu, 04 Jun 2020 19:21:59 +0800</pubDate><guid>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</guid><description>&lt;p>淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 &lt;code>Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error&lt;/code>。&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>proxmark3 on 4ft35t blog</title><link>https://4ft35t.github.io/tags/proxmark3/</link><description>Recent content in proxmark3 on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 04 Jun 2020 19:21:59 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/proxmark3/index.xml" rel="self" type="application/rss+xml"/><item><title>Promark3 使用 冰人（iceman）固件</title><link>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</link><pubDate>Thu, 04 Jun 2020 19:21:59 +0800</pubDate><guid>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</guid><description>&lt;p>淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 &lt;code>Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error&lt;/code>。&lt;/p>
+&lt;p>官方固件编译、烧录、使用都没问题，看到冰人的固件有两条命令很心动，把重复工作自动化，节约时间。&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>auto&lt;/code> 自动识别卡类型&lt;/li>
+&lt;li>&lt;code>hf mf autopwn&lt;/code> 自动破解 IC 卡密码&lt;/li>
+&lt;/ul>
+&lt;h2 id="编译安装">编译安装&lt;/h2>
+&lt;p>win 10 的 WSL 可以直接访问串口，很方便。win 10 上的 COM3， 自动映射到 WSL 的 /dev/ttyS3。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo apt-get install --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git clone https://github.com/RfidResearchGroup/proxmark3.git
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">cd&lt;/span> proxmark3
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">make clean &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> make all
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>修改 /dev/ttyS3 为所有用户可读写，设备拔插后需要再次执行&lt;/p>
+&lt;p>&lt;code>sudo chmod 666 /dev/ttyS3&lt;/code>&lt;/p>
+&lt;p>同时刷 bootimg 和 fullimage&lt;/p>
+&lt;p>&lt;code>./pm3-flash-all&lt;/code>&lt;/p>
+&lt;p>bootimg 刷成功，刷 fullimage 出错&lt;/p>
+&lt;blockquote>
+&lt;p>Error: Unexpected reply 0x00fe NACK (expected ACK)
+Lock Error&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200604192557.png"
+loading="lazy"
+alt="image-20200604192556929"
+>&lt;/p>
+&lt;h2 id="刷预编译固件">刷预编译固件&lt;/h2>
+&lt;p>在冰人固件的 wiki 中找到 windows 的预编译非 RDV4 版本下载，Generice Proxmark3 devices (non RDV4) [&lt;a class="link" href="https://drive.google.com/open?id=1PI3Xr1mussPBPnYGu4ZjWzGPARK4N7JR" target="_blank" rel="noopener"
+>Precompiled builds for RRG / Iceman repository x64&lt;/a>&lt;/p>
+&lt;p>提取 fullimage.elf 后，顺利刷入。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash ./fullimage.elf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Session log /home/kali/.proxmark3/log_20200604.txt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Loading Preferences...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> loaded from JSON file /home/kali/.proxmark3/preferences.json
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> About to use the following file:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> ./fullimage.elf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Waiting &lt;span class="k">for&lt;/span> Proxmark3 to appear on /dev/ttyS5
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 🕑 &lt;span class="m">59&lt;/span> found
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Available memory on this board: 512K bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Permitted flash range: 0x00102000-0x00180000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Loading ELF file ./fullimage.elf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Loading usable ELF segments:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> 0: V 0x00102000 P 0x00102000 &lt;span class="o">(&lt;/span>0x0003b4d0-&amp;gt;0x0003b4d0&lt;span class="o">)&lt;/span> &lt;span class="o">[&lt;/span>R X&lt;span class="o">]&lt;/span> @0x94
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> 1: V 0x00200000 P 0x0013d4d0 &lt;span class="o">(&lt;/span>0x00001370-&amp;gt;0x00001370&lt;span class="o">)&lt;/span> &lt;span class="o">[&lt;/span>RW &lt;span class="o">]&lt;/span> @0x3b564
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Note: Extending previous segment from 0x3b4d0 to 0x3c840 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Flashing...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Writing segments &lt;span class="k">for&lt;/span> file: ./fullimage.elf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> 0x00102000..0x0013e83f &lt;span class="o">[&lt;/span>0x3c840 / &lt;span class="m">485&lt;/span> blocks&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">...................................................................
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @@@ @@@@@@@ @@@@@@@@ @@@@@@@@@@ @@@@@@ @@@ @@@
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @@! !@@ @@! @@! @@! @@! @@! @@@ @@!@!@@@
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> !!@ !@! @!!!:! @!! !!@ @!@ @!@!@!@! @!@@!!@!
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> !!: :!! !!: !!: !!: !!: !!! !!: !!!
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> : :: :: : : :: ::: : : : : : :: :
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> . .. .. . . .. ... . . . . . .. .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">................................................ OK
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> All &lt;span class="k">done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Have a nice day!
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="解决方案">解决方案&lt;/h2>
+&lt;p>到这一步可以确认是关键编译参数问题，而非硬件缩水问题233。&lt;/p>
+&lt;p>查阅文档后，默认编译的目标平台是 PM3RDV4，非 PM3RDV4 需要设置为 PM3OTHER。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">echo&lt;/span> &lt;span class="s1">&amp;#39;PLATFORM=PM3OTHER&amp;#39;&lt;/span> &amp;gt; Makefile.platform
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">make clean &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> make all
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>再刷固件就一切顺利&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash-fullimage
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Session log /home/kali/.proxmark3/logs/log_20200604.txt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Loading preferences...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> loaded from JSON file /home/kali/.proxmark3/preferences.json
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> About to use the following file:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Waiting &lt;span class="k">for&lt;/span> Proxmark3 to appear on /dev/ttyS5
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 🕑 &lt;span class="m">59&lt;/span> found
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Entering bootloader...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> &lt;span class="o">(&lt;/span>Press and release the button only to abort&lt;span class="o">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Waiting &lt;span class="k">for&lt;/span> Proxmark3 to appear on /dev/ttyS5
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 🕒 &lt;span class="m">48&lt;/span> found
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Available memory on this board: 512K bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Permitted flash range: 0x00102000-0x00180000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Loading ELF file /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Loading usable ELF segments:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> 0: V 0x00102000 P 0x00102000 &lt;span class="o">(&lt;/span>0x0003b240-&amp;gt;0x0003b240&lt;span class="o">)&lt;/span> &lt;span class="o">[&lt;/span>R X&lt;span class="o">]&lt;/span> @0x94
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> 1: V 0x00200000 P 0x0013d240 &lt;span class="o">(&lt;/span>0x00001360-&amp;gt;0x00001360&lt;span class="o">)&lt;/span> &lt;span class="o">[&lt;/span>RW &lt;span class="o">]&lt;/span> @0x3b2d4
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Note: Extending previous segment from 0x3b240 to 0x3c5a0 bytes
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Flashing...
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Writing segments &lt;span class="k">for&lt;/span> file: /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> 0x00102000..0x0013e59f &lt;span class="o">[&lt;/span>0x3c5a0 / &lt;span class="m">483&lt;/span> blocks&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">...................................................................
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @@@ @@@@@@@ @@@@@@@@ @@@@@@@@@@ @@@@@@ @@@ @@@
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @@! !@@ @@! @@! @@! @@! @@! @@@ @@!@!@@@
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> !!@ !@! @!!!:! @!! !!@ @!@ @!@!@!@! @!@@!!@!
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> !!: :!! !!: !!: !!: !!: !!! !!: !!!
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> : :: :: : : :: ::: : : : : : :: :
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> . .. .. . . .. ... . . . . . .. .
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">.............................................. OK
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> All &lt;span class="k">done&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Have a nice day!
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>刷完固件后的版本信息&lt;/p>
+&lt;blockquote>
+&lt;p>[ ARM ]
+bootrom: RRG/Iceman/master/v4.9237-188-gbd5aa92a 2020-06-04 16:05:12
+os: RRG/Iceman/master/v4.9237-188-gbd5aa92a 2020-06-04 21:01:01
+compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="参考链接">参考链接&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;a class="link" href="https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1" target="_blank" rel="noopener"
+>https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a class="link" href="https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md" target="_blank" rel="noopener"
+>https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ul></description></item></channel></rss>

@@ -1,1 +1,222 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>bash on 4ft35t blog</title><link>https://4ft35t.github.io/tags/bash/</link><description>Recent content in bash on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Sun, 27 Feb 2022 23:41:49 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/bash/index.xml" rel="self" type="application/rss+xml"/><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;p>Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p></description></item><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;p>一个小脚本，&lt;code>[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code>,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>bash on 4ft35t blog</title><link>https://4ft35t.github.io/tags/bash/</link><description>Recent content in bash on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 27 Feb 2022 23:41:49 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/bash/index.xml" rel="self" type="application/rss+xml"/><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;p>Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p>
+&lt;h2 id="tldr">TLDR&lt;/h2>
+&lt;h3 id="手机端设置">手机端设置&lt;/h3>
+&lt;ol>
+&lt;li>Pixel 手机无需 root，安装 &lt;a class="link" href="https://play.google.com/store/apps/details?id=pl.solidexplorer2" target="_blank" rel="noopener"
+>Solid Explorer&lt;/a>, 开启 FTP 服务。FTP 默认端口 9999, 默认目录 /sdcard/Download/。&lt;/li>
+&lt;li>在 FTP 目录放一张图片（使用 Solid Explorer 复制、浏览器从网上下载、FTP 上传均可），Google Photos 会询问是否备份此目录，选备份。&lt;/li>
+&lt;/ol>
+&lt;h3 id="nas-设置">NAS 设置&lt;/h3>
+&lt;p>群晖自带的 curl 不支持 FTP，需要下载一个静态编译开启 FTP 支持的 curl。可以在 &lt;a class="link" href="https://github.com/moparisthebest/static-curl/releases" target="_blank" rel="noopener"
+>https://github.com/moparisthebest/static-curl/releases&lt;/a> 下载。&lt;/p>
+&lt;ol>
+&lt;li>下载 curl 并重命名成 &lt;strong>curl-amd64&lt;/strong>, 并执行 &lt;code>chmod +x curl-amd64&lt;/code>&lt;/li>
+&lt;li>下载上传脚本&lt;a class="link" href="https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5" target="_blank" rel="noopener"
+>https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5&lt;/a>, 和 curl-amd64 一起放到家目录。&lt;/li>
+&lt;li>修改 photo-upload.sh 中配置&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>ftp_server 手机 FTP server 地址，Solid Explorer 中可以看到&lt;/li>
+&lt;li>limit_size 脚本运行一次上传的图片/视频数量，过大会导致手机存储空间被占满&lt;/li>
+&lt;li>PHOTO_DIRS 19 行不动，修改 16 行，一行一个目录。我的群晖照片总库 &lt;code>/volume1/photo&lt;/code>, 同时各用户使用 Synology Photos 备份手机照片到自己 home 目录, 17 行会加载所有用户目录下的照片，无需单独配置。&lt;/li>
+&lt;li>控制面板-任务计划-新增-计划的任务-用户定义的脚本
+&lt;ul>
+&lt;li>用户帐号选 &lt;code>admin&lt;/code>&lt;/li>
+&lt;li>计划-运行频率-每小时&lt;/li>
+&lt;li>任务设置-用户定义的脚本，&lt;code>bash /volume1/homes/xx/photo-upload.sh&lt;/code>，xx 是自己在 NAS 上用户&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>点击确定后，右键-运行，即可在手机上看到上传的照片/视频。&lt;/p>
+&lt;p>脚本根据 NAS 上照片的修改时间来增量备份，需要定期去手机上释放空间，避免手机空间占满。具体操作路径：Google 相册-右上角头像-释放空间。&lt;/p>
+&lt;h2 id="20220320-更新使用-autojs-自动释放手机空间">2022.03.20 更新，使用 Autojs 自动释放手机空间&lt;/h2>
+&lt;h3 id="环境准备">环境准备&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk" target="_blank" rel="noopener"
+>https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://raw.githubusercontent.com/4ft35t/utils/master/autojs/utils.js" target="_blank" rel="noopener"
+>https://raw.githubusercontent.com/4ft35t/utils/master/autojs/utils.js&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js" target="_blank" rel="noopener"
+>https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="操作步骤">操作步骤&lt;/h3>
+&lt;ol>
+&lt;li>安装 autojs, 运行 app， 并按照提示打开无障碍服务。&lt;/li>
+&lt;li>将 utils.js 和 google-photo-free-up-space.js 放到手机 /sdcard/Scripts 目录&lt;/li>
+&lt;li>打开 autojs，下拉刷新，点击 google-photo-free-up-space.js 右边的三角符号运行&lt;/li>
+&lt;li>确认正常后，点击 google-photo-free-up-space.js 右边三点&amp;ndash;更多&amp;ndash;定时任务，设置每天运行时间&lt;/li>
+&lt;/ol>
+&lt;p>google-photo-free-up-space.js 中 &lt;code>text()&lt;/code> 函数是在界面查找文本，如果系统语言不是英文，需要自行调整 21-22 行内容&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="hl">&lt;span class="lnt">21
+&lt;/span>&lt;/span>&lt;span class="hl">&lt;span class="lnt">22
+&lt;/span>&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-js" data-lang="js">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">auto&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">show&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kd">var&lt;/span> &lt;span class="nx">utils&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">require&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;utils.js&amp;#39;&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">pkgName&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;com.google.android.apps.photos&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">utils&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">startApp&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">pkgName&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;启动&amp;#39;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="nx">pkgName&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s1">&amp;#39;，等待检测中&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">waitForPackage&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">pkgName&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;检测到&amp;#39;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="nx">pkgName&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s1">&amp;#39;等待 Activity&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">waitForActivity&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;com.google.android.apps.photos.home.HomeActivity&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;找到首页 Activity&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 点击头像
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">id&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;og_apd_internal_image_view&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nx">waitFor&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">utils&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">click&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">id&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;og_apd_internal_image_view&amp;#34;&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;找到头像，点击&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 点击 free up
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line hl">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Free up space&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nx">waitFor&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line hl">&lt;span class="cl">&lt;span class="nx">utils&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">click&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Free up space&amp;#34;&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;进入释放界面&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">sleep&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">500&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 点击释放按钮
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">id&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;free_up_button&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nx">exists&lt;/span>&lt;span class="p">())&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">utils&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">click&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">id&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;free_up_button&amp;#34;&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;任务完成&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 返回 app 主界面
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">back&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 2 次返回退出 app
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">back&lt;/span>&lt;span class="p">();&lt;/span> &lt;span class="nx">back&lt;/span>&lt;span class="p">();&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">hide&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="踩坑过程">踩坑过程&lt;/h2>
+&lt;p>最初的设想，termux 安装 rclone, 然后将 NAS 共享目录挂载到本地目录，最后在相册里备份本地目录。&lt;/p>
+&lt;p>&lt;del>&lt;strong>rclone 挂载 SFTP&lt;/strong>&lt;/del>&lt;/p>
+&lt;p>群晖开启 STFP 支持，手机上 termux 里配置 rclone 一切正常，到执行 rclone mount 时报 &lt;code>/etc/fstab&lt;/code> 问题，具体记不清，因该是和手机没有 root 有关。&lt;/p>
+&lt;p>&lt;del>&lt;strong>rclone 挂载 WebDAV&lt;/strong>&lt;/del>&lt;/p>
+&lt;p>WebDAV 在 rclone 里不支持 rclone mount。&lt;/p>
+&lt;p>&lt;del>&lt;strong>挂载 SMB 共享文件夹&lt;/strong>&lt;/del>&lt;/p>
+&lt;p>找了几个文件管理器，都只能挂载给自己使用，不能提供给别的 app。只有 root 后才能全局挂载。&lt;/p>
+&lt;h2 id="参考链接">参考链接&lt;/h2>
+&lt;ol>
+&lt;li>&lt;a class="link" href="https://support.google.com/photos/answer/6220791" target="_blank" rel="noopener"
+>Choose the upload size of your photos &amp;amp; videos&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.reddit.com/r/GooglePixel/comments/l9m6nk/how_to_use_og_pixel_as_an_unlimited_google_photos/" target="_blank" rel="noopener"
+>How to use OG Pixel as an unlimited Google Photos uploader&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://repaynt.com/2021/02/original-pixel-unlimited-google-photos-uploader/" target="_blank" rel="noopener"
+>Original Pixel Phone – The Unlimited Google Photos Uploader&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://rclone.org/sftp/" target="_blank" rel="noopener"
+>rclone SFTP configuration&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://pmiku.com/note/mount-cifs-in-android.html" target="_blank" rel="noopener"
+>mount-cifs-in-android&lt;/a>&lt;/li>
+&lt;/ol></description></item><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;p>一个小脚本，&lt;code>[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code>,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p>
+&lt;h3 id="排查">排查&lt;/h3>
+&lt;p>这个写法以前在脚本里经常写，稳定运行未出错。对比之前的脚本后发现差异，之前的脚本 exit 是提前退出，后面还有内容；这个脚本exit是上层调用脚本反馈最终结果，exit 是最后一行。&lt;/p>
+&lt;p>修改脚本后一切正常&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">status&lt;/span>&lt;span class="o">=&lt;/span>success
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> &lt;span class="nv">$status&lt;/span> !&lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;success&amp;#34;&lt;/span> &lt;span class="o">]&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nb">exit&lt;/span> &lt;span class="m">２&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">echo&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="原因分析">原因分析&lt;/h3>
+&lt;p>使用　bash -x 可以看出差异，&lt;/p>
+&lt;p>exit　在最后一行&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">bash -x t.sh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+ &lt;span class="nv">status&lt;/span>&lt;span class="o">=&lt;/span>success
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+ &lt;span class="s1">&amp;#39;[&amp;#39;&lt;/span> success &lt;span class="s1">&amp;#39;!=&amp;#39;&lt;/span> success &lt;span class="s1">&amp;#39;]&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>exit 不在最后一行&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">bash -x t.sh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+ &lt;span class="nv">status&lt;/span>&lt;span class="o">=&lt;/span>success
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+ &lt;span class="s1">&amp;#39;[&amp;#39;&lt;/span> success &lt;span class="s1">&amp;#39;!=&amp;#39;&lt;/span> success &lt;span class="s1">&amp;#39;]&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+ &lt;span class="nb">echo&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>shell 会将最后一条命令的返回状态码作为整个脚本的返回状态码。test 在最后一行时，&lt;code>[ $status != &amp;quot;success&amp;quot; ]&lt;/code> 的返回结果非0，后面的　&amp;amp;&amp;amp; 内容不会执行，整个脚本结束，脚本返回状态码就是中括号内test命令的反馈状态码。　　　　　　&lt;/p>
+&lt;h3 id="避坑经验">避坑经验&lt;/h3>
+&lt;ul>
+&lt;li>退出用或逻辑 &lt;code>||&lt;/code>，避免用与逻辑 &lt;del>&amp;amp;&amp;amp;&lt;/del>&lt;/li>
+&lt;li>一定要用 &lt;strong>&amp;amp;&amp;amp; 做退出条件时，不能作为脚本或者函数的最后一条命令&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;p>上面脚本改造成||退出&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> &lt;span class="nv">$status&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;success&amp;#34;&lt;/span> &lt;span class="o">]&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="nb">exit&lt;/span> &lt;span class="m">２&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>因为是最后一行，还可以直接省略后面的内容&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> &lt;span class="nv">$status&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;success&amp;#34;&lt;/span> &lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item></channel></rss>

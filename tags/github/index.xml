@@ -1,2 +1,112 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>github on 4ft35t blog</title><link>https://4ft35t.github.io/tags/github/</link><description>Recent content in github on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Tue, 07 Apr 2020 14:03:04 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/github/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Github Actions 自动部署 Hugo</title><link>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</link><pubDate>Tue, 07 Apr 2020 14:03:04 +0800</pubDate><guid>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</guid><description>&lt;p>Hugo 是一款开源的使用 go 语言写的静态网站生成器，生成的静态页面可以轻松部署到 github pages。&lt;/p>
-&lt;p>GitHub Actions 是 GitHub 的持续集成服务，持续集成由很多操作组成，比如抓取代码、运行测试、登录远程服务器，发布到第三方服务等等。GitHub 把这些操作就称为 actions。如果你需要某个 action，不必自己写复杂的脚本，直接引用他人写好的 action 即可，整个持续集成过程，就变成了一个 actions 的组合。&lt;a href="https://github.com/marketplace?type=actions">Github actions 市场&lt;/a>，可以搜索别人提交的 actions。&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>github on 4ft35t blog</title><link>https://4ft35t.github.io/tags/github/</link><description>Recent content in github on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 07 Apr 2020 14:03:04 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/github/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Github Actions 自动部署 Hugo</title><link>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</link><pubDate>Tue, 07 Apr 2020 14:03:04 +0800</pubDate><guid>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</guid><description>&lt;p>Hugo 是一款开源的使用 go 语言写的静态网站生成器，生成的静态页面可以轻松部署到 github pages。&lt;/p>
+&lt;p>GitHub Actions 是 GitHub 的持续集成服务，持续集成由很多操作组成，比如抓取代码、运行测试、登录远程服务器，发布到第三方服务等等。GitHub 把这些操作就称为 actions。如果你需要某个 action，不必自己写复杂的脚本，直接引用他人写好的 action 即可，整个持续集成过程，就变成了一个 actions 的组合。&lt;a class="link" href="https://github.com/marketplace?type=actions" target="_blank" rel="noopener"
+>Github actions 市场&lt;/a>，可以搜索别人提交的 actions。&lt;/p>
+&lt;h2 id="自动部署要点">自动部署要点&lt;/h2>
+&lt;ul>
+&lt;li>username.github.io 只能使用 master 分支&lt;/li>
+&lt;li>Github actions 的配置 yaml 文件只能放在默认分支&lt;/li>
+&lt;/ul>
+&lt;h2 id="编写脚本">编写脚本&lt;/h2>
+&lt;p>自动部署可以从源码仓库部署到发布仓库，也可以在单一仓库的分支之间部署。
+本文的 hugo markdown 文件位于 username.github.io 的 &lt;code>source&lt;/code> 分支，生成的 html 文件在同仓库的 &lt;code>master&lt;/code> 分支发布。&lt;/p>
+&lt;h4 id="切换默认分支">切换默认分支&lt;/h4>
+&lt;p>&lt;strong>Repository Settings&lt;/strong> - &lt;strong>Branches&lt;/strong> 切换 source 为默认分支。&lt;/p>
+&lt;h4 id="添加-actions">添加 Actions&lt;/h4>
+&lt;p>&lt;strong>Actions&lt;/strong> - &lt;strong>New workflows&lt;/strong>，选择 &lt;strong>Simple workflow&lt;/strong>
+然后填入以下内容&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-yml" data-lang="yml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Auto deploy hugo&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">on&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">push&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">branches&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c"># 触发分支&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">source&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">jobs&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">build&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">runs-on&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ubuntu-latest&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">steps&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">checkout&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">uses&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">actions/checkout@master&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">with&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">submodules&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c"># 检查 Hugo themes 更新&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Setup Hugo&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">uses&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">peaceiris/actions-hugo@v2&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">with&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">hugo-version&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;latest&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Build&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">run&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">hugo --minify&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">Deploy&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">uses&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">peaceiris/actions-gh-pages@v3&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">with&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">deploy_key&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">${{ secrets.ACTIONS_DEPLOY_KEY }}&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">publish_dir&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">./public&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">publish_branch&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">master&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c"># 部署目的分支&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>引用的两个 actions 及作用&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://github.com/peaceiris/actions-hugo" target="_blank" rel="noopener"
+>peaceiris/actions-hugo&lt;/a> 获取最新的 hugo&lt;/li>
+&lt;li>&lt;a class="link" href="https://github.com/peaceiris/actions-gh-pages" target="_blank" rel="noopener"
+>peaceiris/actions-gh-pages&lt;/a> 发布静态页面&lt;/li>
+&lt;/ul>
+&lt;h2 id="设置部署权限">设置部署权限&lt;/h2>
+&lt;p>可以使用 Github Token 或者私钥给 workflow 仓库写权限。
+本文使用私钥，设置步骤如下&lt;/p>
+&lt;ol>
+&lt;li>&lt;code>ssh-keygen -t rsa -b 4096 -C &amp;quot;$(git config user.email)&amp;quot; -f gh-pages -N &amp;quot;&amp;quot;&lt;/code> 生成公私钥对&lt;/li>
+&lt;li>&lt;strong>Repository Settings&lt;/strong> - &lt;strong>Deploy Keys&lt;/strong>，粘贴 &lt;code>gh-pages.pub&lt;/code> 内容并勾选 &lt;code> Allow write access&lt;/code>&lt;/li>
+&lt;li>&lt;strong>Repository Settings&lt;/strong> - &lt;strong>Secrets&lt;/strong>，粘贴 &lt;code>gh-pages&lt;/code> 内容, name 必须为 &lt;code>ACTIONS_DEPLOY_KEY&lt;/code>
+&lt;img src="https://cdn.jsdelivr.net/gh/peaceiris/actions-gh-pages/images/secrets-1.jpg"
+loading="lazy"
+>&lt;/li>
+&lt;/ol>
+&lt;p>设置完成后，向 source 分支提交代码，会自动生成静态页面发布到 master 分支。
+效果类似
+&lt;img src="https://cdn.jsdelivr.net/gh/peaceiris/actions-gh-pages/images/log_overview.jpg"
+loading="lazy"
+>&lt;/p>
+&lt;h2 id="参考资料">参考资料&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://tianhui.xin/blog/2019/11/17/hugousegithubactionstopages/" target="_blank" rel="noopener"
+>https://tianhui.xin/blog/2019/11/17/hugousegithubactionstopages/&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://github.com/peaceiris/actions-hugo" target="_blank" rel="noopener"
+>https://github.com/peaceiris/actions-hugo&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-deploy_key" target="_blank" rel="noopener"
+>https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-deploy_key&lt;/a>&lt;/li>
+&lt;/ul></description></item></channel></rss>

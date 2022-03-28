@@ -1,193 +1,171 @@
-<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><title>Android 远程截图 | 4ft35t blog</title><meta property="og:title" content="Android 远程截图 - 4ft35t blog"><meta property="og:type" content="article"><meta property="article:published_time" content="2021-08-06T16:51:31+08:00"><meta property="article:modified_time" content="2021-08-06T16:51:31+08:00"><meta name=Keywords content="openwrt,lede,router,android,linux"><meta name=description content="Android 远程截图"><meta name=author content="af.test"><meta property="og:url" content="https://4ft35t.github.io/post/android-screenshoot-remote/"><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><link rel=stylesheet href=/css/normalize.css><link rel=stylesheet href=/css/style.css><script type=text/javascript src=//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js></script></head><body><header id=header class=clearfix><div class=container><div class=col-group><div class=site-name><a id=logo href=https://4ft35t.github.io/>4ft35t blog</a><p class=description>折腾笔记</p></div><div><nav id=nav-menu class=clearfix><a class=current href=https://4ft35t.github.io/>首页</a>
-<a href=https://4ft35t.github.io/archives/ title=归档>归档</a>
-<a href=https://4ft35t.github.io/about/ title=关于>关于</a></nav></div></div></div></header><div id=body><div class=container><div class=col-group><div class=col-8 id=main><div class=res-cons><style type=text/css>.post-toc{position:fixed;width:200px;margin-left:-210px;padding:5px 10px;font-family:Athelas,STHeiti,Microsoft Yahei,serif;font-size:12px;border:1px solid rgba(0,0,0,7%);border-radius:5px;background-color:rgba(255,255,255,.98);background-clip:padding-box;-webkit-box-shadow:1px 1px 2px rgba(0,0,0,.125);box-shadow:1px 1px 2px rgba(0,0,0,.125);word-wrap:break-word;white-space:nowrap;-webkit-box-sizing:border-box;box-sizing:border-box;z-index:999;cursor:pointer;max-height:70%;overflow-y:auto;overflow-x:hidden}.post-toc .post-toc-title{width:100%;margin:0 auto;font-size:20px;font-weight:400;text-transform:uppercase;text-align:center}.post-toc .post-toc-content{font-size:15px}.post-toc .post-toc-content>nav>ul{margin:10px 0}.post-toc .post-toc-content ul{padding-left:20px;list-style:square;margin:.5em;line-height:1.8em}.post-toc .post-toc-content ul ul{padding-left:15px;display:none}@media print,screen and (max-width:1057px){.post-toc{display:none}}</style><div class=post-toc style=position:absolute;top:188px><h2 class=post-toc-title>文章目录</h2><div class=post-toc-content><nav id=TableOfContents><ul><li><a href=#背景>背景</a></li><li><a href=#截屏>截屏</a></li><li><a href=#触发>触发</a></li></ul></nav></div></div><script type=text/javascript>$(document).ready(function(){if(e=$(".post-toc"),e.length){t=$("#main").offset().left,t<220&&e.css({width:t-10,"margin-left":0-t});var e,t,n=e.offset().top-20,s={start:{position:"absolute",top:n},process:{position:"fixed",top:20}};$(window).scroll(function(){var t=$(window).scrollTop();t<n?e.css(s.start):e.css(s.process)})}})</script><article class=post><header><h1 class=post-title>Android 远程截图</h1></header><date class="post-meta meta-date">2021年8月6日</date><div class=post-meta><span>|</span>
-<span class=meta-category><a href=/categories/network>Network</a></span>
-<span class=meta-category><a href=/categories/android>Android</a></span></div><div class=post-content><p>某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。</p><h2 id=背景>背景</h2><p>云闪付公交乘车码，每周使用三次可以获得一张 6-5 消费券，但那一个帐号一周只能领一次，需要多个帐号。</p><p>家里有个老华为手机，上面登录的有老人的云闪付帐号，但是注册帐号的手机号失效，无法更换新手机号，新设备登录需要短信验证码，只有拿这个手机去刷。</p><p>不想带多个手机出门，开启折腾之路。</p><h2 id=截屏>截屏</h2><p>系统自带 <code>screencap</code> 命令，桌面和别的 app 可以截屏，云闪付不行，应该是云闪付设置了<code>FLAG_SECURE</code>。</p><p><a href=https://github.com/Genymobile/scrcpy>scrcpy</a> 可以显示云闪付内容，猜测 <a href=https://github.com/Ericwyn/Auto.js>autojs</a> 使用 cast 模式也可以截屏，实测确实可以。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-js data-lang=js><span style=display:flex><span>auto();
-</span></span><span style=display:flex><span>app.launch(<span style=color:#d14>&#34;com.unionpay&#34;</span>);
-</span></span><span style=display:flex><span>waitForPackage(<span style=color:#d14>&#34;com.unionpay&#34;</span>);
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#998;font-style:italic>// 首页点击乘车码
-</span></span></span><span style=display:flex><span><span style=color:#998;font-style:italic></span>sleep(<span style=color:#099>1500</span>)
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>if</span>(text(<span style=color:#d14>&#34;充值中心&#34;</span>).exists()){
-</span></span><span style=display:flex><span>    toastLog(<span style=color:#d14>&#34;找到 乘车码 关键字&#34;</span>);
-</span></span><span style=display:flex><span>    target <span style=color:#000;font-weight:700>=</span> text(<span style=color:#d14>&#34;乘车码&#34;</span>).findOne();
-</span></span><span style=display:flex><span>    <span style=color:#000;font-weight:700>while</span>(<span style=color:#000;font-weight:700>!</span>target.clickable()){
-</span></span><span style=display:flex><span>        target <span style=color:#000;font-weight:700>=</span> target.parent()
-</span></span><span style=display:flex><span>    }
-</span></span><span style=display:flex><span>    target.click()
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>waitForActivity(<span style=color:#d14>&#34;com.unionpay.activity.react.UPActivityReactNative&#34;</span>);
-</span></span><span style=display:flex><span>sleep(<span style=color:#099>2000</span>);
-</span></span><span style=display:flex><span><span style=color:#998;font-style:italic>// 2、请求截图
-</span></span></span><span style=display:flex><span><span style=color:#998;font-style:italic></span><span style=color:#000;font-weight:700>if</span>(<span style=color:#000;font-weight:700>!</span>requestScreenCapture()){
-</span></span><span style=display:flex><span>    toastLog(<span style=color:#d14>&#34;请求截图失败&#34;</span>);
-</span></span><span style=display:flex><span>    exit();
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#998;font-style:italic>// 3、进行截图
-</span></span></span><span style=display:flex><span><span style=color:#998;font-style:italic></span>captureScreen(<span style=color:#d14>&#34;/sdcard/img.png&#34;</span>);
-</span></span><span style=display:flex><span>toastLog(<span style=color:#d14>&#34;截图完成&#34;</span>);
-</span></span></code></pre></td></tr></table></div></div><h2 id=触发>触发</h2><p>一开始设想的是 autojs 监听通知，使用 <a href=https://github.com/Finb/Bark>Bark</a> 的安卓客户端 <a href=https://github.com/xlvecle/PushLite>PushLite</a> 来接收通知触发截图，然而 PushLite 需要 Google FCM，安装太折腾，放弃，寻求电脑端触发的方案。</p><p>一番搜索，决定用 cgi 来接收外部请求并触发截图，各种依赖最少。</p><p>电脑上连接多个安卓手机，执行 adb 命令需要指定设备 id，设备 id 用 <code>adb devices</code> 获取</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>adb devices
-</span></span><span style=display:flex><span>List of devices attached
-</span></span><span style=display:flex><span>NXTDU1xxxxxxxxx        device
-</span></span></code></pre></td></tr></table></div></div><p>NXTDU1xxxxxxxxx 就是设备 id</p><p>yunshanfu.sh</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">37
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">38
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">39
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">40
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">41
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">42
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">43
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#999;font-weight:700;font-style:italic>#!/bin/bash
-</span></span></span><span style=display:flex><span><span style=color:#999;font-weight:700;font-style:italic></span><span style=color:#0086b3>echo</span> <span style=color:#d14>&#34;Content-Type:text/html&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#0086b3>echo</span> <span style=color:#d14>&#34;&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#0086b3>echo</span> <span style=color:#d14>&#39;&lt;html&gt;&lt;meta charset=&#34;UTF-8&#34;&gt;&lt;body&gt;&#39;</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:teal>dev</span><span style=color:#000;font-weight:700>=</span>NXTDU1xxxxxxxxx
-</span></span><span style=display:flex><span><span style=color:teal>img</span><span style=color:#000;font-weight:700>=</span>/sdcard/img.png
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>adb<span style=color:#000;font-weight:700>(){</span>
-</span></span><span style=display:flex><span>    /usr/bin/adb -s <span style=color:teal>$dev</span> <span style=color:teal>$@</span>
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>}</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>cleanup<span style=color:#000;font-weight:700>(){</span>
-</span></span><span style=display:flex><span>    adb shell rm <span style=color:teal>$img</span>
-</span></span><span style=display:flex><span>    rm /tmp/ysf.png
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>}</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>unlock<span style=color:#000;font-weight:700>(){</span>
-</span></span><span style=display:flex><span>    adb shell input keyevent <span style=color:#099>224</span>
-</span></span><span style=display:flex><span>    adb shell input swipe <span style=color:#099>300</span> <span style=color:#099>500</span> <span style=color:#099>300</span> <span style=color:#099>1500</span>
-</span></span><span style=display:flex><span>    adb shell input text <span style=color:#099>12345678</span>
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>}</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>screenshoot<span style=color:#000;font-weight:700>(){</span>
-</span></span><span style=display:flex><span>     adb shell am start -n org.autojs.autojs/.external.open.RunIntentActivity -d /sdcard/Scripts/ysf.js
-</span></span><span style=display:flex><span>     sleep <span style=color:#099>3</span>
-</span></span><span style=display:flex><span>     <span style=color:#000;font-weight:700>while</span> <span style=color:#0086b3>true</span>
-</span></span><span style=display:flex><span>     <span style=color:#000;font-weight:700>do</span>
-</span></span><span style=display:flex><span>         <span style=color:#998;font-style:italic># 校验文件大小，避免 pull 回来未写完图片</span>
-</span></span><span style=display:flex><span>         adb pull <span style=color:teal>$img</span> /tmp/ysf.png <span style=color:#000;font-weight:700>&amp;&amp;</span> <span style=color:#000;font-weight:700>[</span> <span style=color:#d14>&#34;</span><span style=color:#000;font-weight:700>$(</span>stat -c %s /tmp/ysf.png<span style=color:#000;font-weight:700>)</span><span style=color:#d14>&#34;</span> -ge <span style=color:#099>300000</span> <span style=color:#000;font-weight:700>]</span> <span style=color:#000;font-weight:700>&amp;&amp;</span> <span style=color:#0086b3>break</span>
-</span></span><span style=display:flex><span>         sleep <span style=color:#099>1</span>
-</span></span><span style=display:flex><span>     <span style=color:#000;font-weight:700>done</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>     <span style=color:#998;font-style:italic># press power button</span>
-</span></span><span style=display:flex><span>     adb shell input keyevent <span style=color:#099>26</span>
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>}</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>cleanup
-</span></span><span style=display:flex><span>unlock
-</span></span><span style=display:flex><span>screenshoot
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#0086b3>echo</span> <span style=color:#d14>&#34;&lt;img src=&#39;data:image/png;base64,</span><span style=color:#000;font-weight:700>$(</span>cat /tmp/ysf.png | base64 -w 0<span style=color:#000;font-weight:700>)</span><span style=color:#d14>&#39;&gt;&#34;</span>
-</span></span><span style=display:flex><span><span style=color:#0086b3>echo</span> <span style=color:#d14>&#34;&lt;/body&gt;&lt;/html&gt;&#34;</span>
-</span></span></code></pre></td></tr></table></div></div><p>python http.server 的 cgi 脚本需要放在 <code>cgi-bin</code> 目录</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>chmod +x yunshanfu.sh
-</span></span><span style=display:flex><span>mkdir cgi-bin
-</span></span><span style=display:flex><span>mv yunshanfu.sh cgi-bin
-</span></span><span style=display:flex><span>python3 -m http.server --cgi
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。
+"><title>Android 远程截图</title><link rel=canonical href=https://4ft35t.github.io/post/android-screenshoot-remote/><link rel=stylesheet href=/scss/style.min.450926226e724574a6b936335ea06111f8aeb253d932c86cb2cc807341cd2889.css><meta property="og:title" content="Android 远程截图"><meta property="og:description" content="某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。
+"><meta property="og:url" content="https://4ft35t.github.io/post/android-screenshoot-remote/"><meta property="og:site_name" content="4ft35t blog"><meta property="og:type" content="article"><meta property="article:section" content="Post"><meta property="article:tag" content="android"><meta property="article:tag" content="screenshoot"><meta property="article:tag" content="autojs"><meta property="article:tag" content="cgi"><meta property="article:tag" content="adb"><meta property="article:tag" content="scrcpy"><meta property="article:published_time" content="2021-08-06T16:51:31+08:00"><meta property="article:modified_time" content="2021-08-06T16:51:31+08:00"><meta name=twitter:title content="Android 远程截图"><meta name=twitter:description content="某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。
+"><script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(e,o,i,a,t,n,s){e.GoogleAnalyticsObject=t,e[t]=e[t]||function(){(e[t].q=e[t].q||[]).push(arguments)},e[t].l=1*new Date,n=o.createElement(i),s=o.getElementsByTagName(i)[0],n.async=1,n.src=a,s.parentNode.insertBefore(n,s)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-163577388-1","auto"),ga("send","pageview"))</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>4ft35t blog</a></h1><h2 class=site-description>随手折腾，顺手记录</h2></div></header><ol class=menu id=main-menu><li><a href=/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg><span>Archives</span></a></li><li><a href=/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg><span>Search</span></a></li><li><a href=/links/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg><span>Links</span></a></li><li><a href=/about/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg><span>About</span></a></li><li><a href=/index.xml target=_blank><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rss" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="5" cy="19" r="1"/><path d="M4 4a16 16 0 0116 16"/><path d="M4 11a9 9 0 019 9"/></svg><span>RSS</span></a></li><div class=menu-bottom-section><li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg><span>暗色模式</span></li></div></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/network/>Network</a>
+<a href=/categories/android/>Android</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/post/android-screenshoot-remote/>Android 远程截图</a></h2></div><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg><time class=article-time--published>2021-08-06</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg><time class=article-time--reading>阅读时长: 2 分钟</time></div></footer></div></header><section class=article-content><p>某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。</p><h2 id=背景>背景</h2><p>云闪付公交乘车码，每周使用三次可以获得一张 6-5 消费券，但那一个帐号一周只能领一次，需要多个帐号。</p><p>家里有个老华为手机，上面登录的有老人的云闪付帐号，但是注册帐号的手机号失效，无法更换新手机号，新设备登录需要短信验证码，只有拿这个手机去刷。</p><p>不想带多个手机出门，开启折腾之路。</p><h2 id=截屏>截屏</h2><p>系统自带 <code>screencap</code> 命令，桌面和别的 app 可以截屏，云闪付不行，应该是云闪付设置了<code>FLAG_SECURE</code>。</p><p><a class=link href=https://github.com/Genymobile/scrcpy target=_blank rel=noopener>scrcpy</a> 可以显示云闪付内容，猜测 <a class=link href=https://github.com/Ericwyn/Auto.js target=_blank rel=noopener>autojs</a> 使用 cast 模式也可以截屏，实测确实可以。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=line><span class=cl><span class=nx>auto</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=nx>app</span><span class=p>.</span><span class=nx>launch</span><span class=p>(</span><span class=s2>&#34;com.unionpay&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nx>waitForPackage</span><span class=p>(</span><span class=s2>&#34;com.unionpay&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 首页点击乘车码
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>sleep</span><span class=p>(</span><span class=mi>1500</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=nx>text</span><span class=p>(</span><span class=s2>&#34;充值中心&#34;</span><span class=p>).</span><span class=nx>exists</span><span class=p>()){</span>
+</span></span><span class=line><span class=cl>    <span class=nx>toastLog</span><span class=p>(</span><span class=s2>&#34;找到 乘车码 关键字&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nx>target</span> <span class=o>=</span> <span class=nx>text</span><span class=p>(</span><span class=s2>&#34;乘车码&#34;</span><span class=p>).</span><span class=nx>findOne</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=k>while</span><span class=p>(</span><span class=o>!</span><span class=nx>target</span><span class=p>.</span><span class=nx>clickable</span><span class=p>()){</span>
+</span></span><span class=line><span class=cl>        <span class=nx>target</span> <span class=o>=</span> <span class=nx>target</span><span class=p>.</span><span class=nx>parent</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=nx>target</span><span class=p>.</span><span class=nx>click</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>waitForActivity</span><span class=p>(</span><span class=s2>&#34;com.unionpay.activity.react.UPActivityReactNative&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nx>sleep</span><span class=p>(</span><span class=mi>2000</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=c1>// 2、请求截图
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=nx>requestScreenCapture</span><span class=p>()){</span>
+</span></span><span class=line><span class=cl>    <span class=nx>toastLog</span><span class=p>(</span><span class=s2>&#34;请求截图失败&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nx>exit</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 3、进行截图
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>captureScreen</span><span class=p>(</span><span class=s2>&#34;/sdcard/img.png&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nx>toastLog</span><span class=p>(</span><span class=s2>&#34;截图完成&#34;</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=触发>触发</h2><p>一开始设想的是 autojs 监听通知，使用 <a class=link href=https://github.com/Finb/Bark target=_blank rel=noopener>Bark</a> 的安卓客户端 <a class=link href=https://github.com/xlvecle/PushLite target=_blank rel=noopener>PushLite</a> 来接收通知触发截图，然而 PushLite 需要 Google FCM，安装太折腾，放弃，寻求电脑端触发的方案。</p><p>一番搜索，决定用 cgi 来接收外部请求并触发截图，各种依赖最少。</p><p>电脑上连接多个安卓手机，执行 adb 命令需要指定设备 id，设备 id 用 <code>adb devices</code> 获取</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>adb devices
+</span></span><span class=line><span class=cl>List of devices attached
+</span></span><span class=line><span class=cl>NXTDU1xxxxxxxxx        device
+</span></span></code></pre></td></tr></table></div></div><p>NXTDU1xxxxxxxxx 就是设备 id</p><p>yunshanfu.sh</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=cp>#!/bin/bash
+</span></span></span><span class=line><span class=cl><span class=cp></span><span class=nb>echo</span> <span class=s2>&#34;Content-Type:text/html&#34;</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> <span class=s1>&#39;&lt;html&gt;&lt;meta charset=&#34;UTF-8&#34;&gt;&lt;body&gt;&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nv>dev</span><span class=o>=</span>NXTDU1xxxxxxxxx
+</span></span><span class=line><span class=cl><span class=nv>img</span><span class=o>=</span>/sdcard/img.png
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>adb<span class=o>(){</span>
+</span></span><span class=line><span class=cl>    /usr/bin/adb -s <span class=nv>$dev</span> <span class=nv>$@</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>cleanup<span class=o>(){</span>
+</span></span><span class=line><span class=cl>    adb shell rm <span class=nv>$img</span>
+</span></span><span class=line><span class=cl>    rm /tmp/ysf.png
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>unlock<span class=o>(){</span>
+</span></span><span class=line><span class=cl>    adb shell input keyevent <span class=m>224</span>
+</span></span><span class=line><span class=cl>    adb shell input swipe <span class=m>300</span> <span class=m>500</span> <span class=m>300</span> <span class=m>1500</span>
+</span></span><span class=line><span class=cl>    adb shell input text <span class=m>12345678</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>screenshoot<span class=o>(){</span>
+</span></span><span class=line><span class=cl>     adb shell am start -n org.autojs.autojs/.external.open.RunIntentActivity -d /sdcard/Scripts/ysf.js
+</span></span><span class=line><span class=cl>     sleep <span class=m>3</span>
+</span></span><span class=line><span class=cl>     <span class=k>while</span> <span class=nb>true</span>
+</span></span><span class=line><span class=cl>     <span class=k>do</span>
+</span></span><span class=line><span class=cl>         <span class=c1># 校验文件大小，避免 pull 回来未写完图片</span>
+</span></span><span class=line><span class=cl>         adb pull <span class=nv>$img</span> /tmp/ysf.png <span class=o>&amp;&amp;</span> <span class=o>[</span> <span class=s2>&#34;</span><span class=k>$(</span>stat -c %s /tmp/ysf.png<span class=k>)</span><span class=s2>&#34;</span> -ge <span class=m>300000</span> <span class=o>]</span> <span class=o>&amp;&amp;</span> <span class=nb>break</span>
+</span></span><span class=line><span class=cl>         sleep <span class=m>1</span>
+</span></span><span class=line><span class=cl>     <span class=k>done</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>     <span class=c1># press power button</span>
+</span></span><span class=line><span class=cl>     adb shell input keyevent <span class=m>26</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>cleanup
+</span></span><span class=line><span class=cl>unlock
+</span></span><span class=line><span class=cl>screenshoot
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> <span class=s2>&#34;&lt;img src=&#39;data:image/png;base64,</span><span class=k>$(</span>cat /tmp/ysf.png <span class=p>|</span> base64 -w 0<span class=k>)</span><span class=s2>&#39;&gt;&#34;</span>
+</span></span><span class=line><span class=cl><span class=nb>echo</span> <span class=s2>&#34;&lt;/body&gt;&lt;/html&gt;&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><p>python http.server 的 cgi 脚本需要放在 <code>cgi-bin</code> 目录</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>chmod +x yunshanfu.sh
+</span></span><span class=line><span class=cl>mkdir cgi-bin
+</span></span><span class=line><span class=cl>mv yunshanfu.sh cgi-bin
+</span></span><span class=line><span class=cl>python3 -m http.server --cgi
 </span></span></code></pre></td></tr></table></div></div><p>浏览器访问 <code>http://127.0.0.1:8000/cgi-bin/yunshanfu.sh</code>, 即可触发截图，并在当前页面展示截图。</p><p>设置端口转发，公网访问效果如图
-<img class=mx-auto alt src=https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2021/IMG_0317.jpg></p><p>最后，所有相关代码在 <a href=https://github.com/4ft35t/Android-Screenshoot-Remote>https://github.com/4ft35t/Android-Screenshoot-Remote</a></p></div><div class=post-archive><h2>See Also</h2><ul class=listing><li><a href=/post/pd-qc-dc/>PD/QC 电源转 DC 头输出</a></li><li><a href=/post/bash-exit-in-conditional/>bash 条件退出踩坑</a></li><li><a href=/post/promark3-flash-iceman-firmware/>Promark3 使用 冰人（iceman）固件</a></li><li><a href=/post/ssh-porxy/>SSH 跳板机与代理</a></li><li><a href=/post/fix-windows-store-0x80131500-error/>解决应用商店 0x80131500 错误</a></li></ul></div><div class="post-meta meta-tags"><ul class=clearfix><li><a href=/tags/android>android</a></li><li><a href=/tags/screenshoot>screenshoot</a></li><li><a href=/tags/autojs>autojs</a></li><li><a href=/tags/cgi>cgi</a></li><li><a href=/tags/adb>adb</a></li><li><a href=/tags/scrcpy>scrcpy</a></li></ul></div></article><div class="post bg-white"><script src=https://utteranc.es/client.js repo=4ft35t/4ft35t.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></div><footer id=footer><div>&copy; 2022 <a href=https://4ft35t.github.io/>4ft35t blog By af.test</a></div><br><div><div class=github-badge><a href=https://gohugo.io/ target=_black rel=nofollow><span class=badge-subject>Powered by</span><span class="badge-value bg-blue">Hugo</span></a></div><div class=github-badge><a href=https://www.flysnow.org/ target=_black><span class=badge-subject>Design by</span><span class="badge-value bg-brightgreen">飞雪无情</span></a></div><div class=github-badge><a href=https://github.com/flysnow-org/maupassant-hugo target=_black><span class=badge-subject>Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a></div></div></footer><script type=text/javascript>window.MathJax={tex2jax:{inlineMath:[["$","$"]],processEscapes:!0}}</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-<a id=rocket href=#top></a>
-<script type=text/javascript src="/js/totop.js?v=0.0.0" async></script>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-163577388-1","auto"),ga("send","pageview"))</script><script async src=https://www.google-analytics.com/analytics.js></script></div><div id=secondary><section class=widget><form id=search action=//www.google.com/search method=get accept-charset=utf-8 target=_blank _lpchecked=1><input type=text name=q maxlength=20 placeholder=Search>
-<input type=hidden name=sitesearch value=https://4ft35t.github.io/>
-<button type=submit class="submit icon-search"></button></form></section><section class=widget><h3 class=widget-title>最近文章</h3><ul class=widget-list><li><a href=https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/ title="利用 Pixel 一代的无限存储备份 NAS 照片">利用 Pixel 一代的无限存储备份 NAS 照片</a></li><li><a href=https://4ft35t.github.io/post/android-screenshoot-remote/ title="Android 远程截图">Android 远程截图</a></li><li><a href=https://4ft35t.github.io/post/pd-qc-dc/ title="PD/QC 电源转 DC 头输出">PD/QC 电源转 DC 头输出</a></li><li><a href=https://4ft35t.github.io/post/bash-exit-in-conditional/ title="bash 条件退出踩坑">bash 条件退出踩坑</a></li><li><a href=https://4ft35t.github.io/post/promark3-flash-iceman-firmware/ title="Promark3 使用 冰人（iceman）固件">Promark3 使用 冰人（iceman）固件</a></li><li><a href=https://4ft35t.github.io/post/ssh-porxy/ title="SSH 跳板机与代理">SSH 跳板机与代理</a></li><li><a href=https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/ title="解决应用商店 0x80131500 错误">解决应用商店 0x80131500 错误</a></li><li><a href=https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/ title=解决无忧行长时间显示“正在连接电话服务器”问题>解决无忧行长时间显示“正在连接电话服务器”问题</a></li><li><a href=https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/ title="使用 Github Actions 自动部署 Hugo">使用 Github Actions 自动部署 Hugo</a></li></ul></section><section class=widget><h3 class=widget-title><a href=/categories/>分类</a></h3><ul class=widget-list><li><a href=https://4ft35t.github.io/categories/android/>Android (1)</a></li><li><a href=https://4ft35t.github.io/categories/github/>Github (1)</a></li><li><a href=https://4ft35t.github.io/categories/linux/>Linux (2)</a></li><li><a href=https://4ft35t.github.io/categories/mess/>Mess (2)</a></li><li><a href=https://4ft35t.github.io/categories/network/>Network (3)</a></li><li><a href=https://4ft35t.github.io/categories/windows/>Windows (1)</a></li></ul></section><section class=widget><h3 class=widget-title><a href=/tags/>标签</a></h3><div class=tagcloud><a href=https://4ft35t.github.io/tags/0x80072efd/>0x80072EFD</a>
-<a href=https://4ft35t.github.io/tags/0x80131500/>0x80131500</a>
-<a href=https://4ft35t.github.io/tags/adb/>adb</a>
-<a href=https://4ft35t.github.io/tags/android/>android</a>
-<a href=https://4ft35t.github.io/tags/autojs/>autojs</a>
-<a href=https://4ft35t.github.io/tags/bash/>bash</a>
-<a href=https://4ft35t.github.io/tags/cgi/>cgi</a>
-<a href=https://4ft35t.github.io/tags/charger/>charger</a>
-<a href=https://4ft35t.github.io/tags/dc/>DC</a>
-<a href=https://4ft35t.github.io/tags/error/>error</a>
-<a href=https://4ft35t.github.io/tags/exit/>exit</a>
-<a href=https://4ft35t.github.io/tags/github/>github</a>
-<a href=https://4ft35t.github.io/tags/google/>google</a>
-<a href=https://4ft35t.github.io/tags/hugo/>hugo</a>
-<a href=https://4ft35t.github.io/tags/ip/>IP</a>
-<a href=https://4ft35t.github.io/tags/jegotrip/>jegotrip</a>
-<a href=https://4ft35t.github.io/tags/nas/>NAS</a>
-<a href=https://4ft35t.github.io/tags/pd/>PD</a>
-<a href=https://4ft35t.github.io/tags/photo/>photo</a>
-<a href=https://4ft35t.github.io/tags/pi-hole/>pi-hole</a>
-<a href=https://4ft35t.github.io/tags/pihole/>pihole</a>
-<a href=https://4ft35t.github.io/tags/proxmark3/>proxmark3</a>
-<a href=https://4ft35t.github.io/tags/proxy/>proxy</a>
-<a href=https://4ft35t.github.io/tags/qc/>QC</a>
-<a href=https://4ft35t.github.io/tags/rfid/>rfid</a>
-<a href=https://4ft35t.github.io/tags/scrcpy/>scrcpy</a>
-<a href=https://4ft35t.github.io/tags/screenshoot/>screenshoot</a>
-<a href=https://4ft35t.github.io/tags/shell/>shell</a>
-<a href=https://4ft35t.github.io/tags/ssh/>ssh</a>
-<a href=https://4ft35t.github.io/tags/test/>test</a>
-<a href=https://4ft35t.github.io/tags/windows/>windows</a></div></section><section class=widget><h3 class=widget-title>其它</h3><ul class=widget-list><li><a href=https://4ft35t.github.io/index.xml>文章 RSS</a></li></ul></section></div></div></div></div></body></html>
+<img src=https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2021/IMG_0317.jpg loading=lazy></p><p>最后，所有相关代码在 <a class=link href=https://github.com/4ft35t/Android-Screenshoot-Remote target=_blank rel=noopener>https://github.com/4ft35t/Android-Screenshoot-Remote</a></p></section><footer class=article-footer><section class=article-tags><a href=/tags/android/>android</a>
+<a href=/tags/screenshoot/>screenshoot</a>
+<a href=/tags/autojs/>autojs</a>
+<a href=/tags/cgi/>cgi</a>
+<a href=/tags/adb/>adb</a>
+<a href=/tags/scrcpy/>scrcpy</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg><span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-contents--wrapper><h2 class=section-title>相关文章</h2><div class=related-contents><div class="flex article-list--tile"><article><a href=/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/><div class=article-details><h2 class=article-title>利用 Pixel 一代的无限存储备份 NAS 照片</h2></div></a></article><article><a href=/post/ssh-porxy/><div class=article-details><h2 class=article-title>SSH 跳板机与代理</h2></div></a></article><article><a href=/post/jegotrip-takes-long-time-to-connect/><div class=article-details><h2 class=article-title>解决无忧行长时间显示“正在连接电话服务器”问题</h2></div></a></article></div></div></aside><script src=https://utteranc.es/client.js repo=4ft35t/4ft35t.github.io issue-term=pathname crossorigin=anonymous async></script><style>.utterances{max-width:unset}</style><script>function setUtterancesTheme(t){let e=document.querySelector(".utterances iframe");e&&e.contentWindow.postMessage({type:"set-theme",theme:`github-${t}`},"https://utteranc.es")}addEventListener("message",e=>{if(e.origin!=="https://utteranc.es")return;setUtterancesTheme(document.documentElement.dataset.scheme)}),window.addEventListener("onColorSchemeChange",e=>{setUtterancesTheme(e.detail)})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2022 4ft35t blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.11.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" crossorigin=anonymous></main><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#背景>背景</a></li><li><a href=#截屏>截屏</a></li><li><a href=#触发>触发</a></li></ol></nav></div></section></aside></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script>
+<script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

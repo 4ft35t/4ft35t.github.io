@@ -1,1 +1,23 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>windows on 4ft35t blog</title><link>https://4ft35t.github.io/tags/windows/</link><description>Recent content in windows on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><lastBuildDate>Wed, 03 Jun 2020 11:48:10 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/windows/index.xml" rel="self" type="application/rss+xml"/><item><title>解决应用商店 0x80131500 错误</title><link>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</link><pubDate>Wed, 03 Jun 2020 11:48:10 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</guid><description>&lt;p>Win 10 应用商店打开就报 0x80131500 错误，尝试各种方法都不行，最终使用 fiddler 曲线解决。&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>windows on 4ft35t blog</title><link>https://4ft35t.github.io/tags/windows/</link><description>Recent content in windows on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 03 Jun 2020 11:48:10 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/windows/index.xml" rel="self" type="application/rss+xml"/><item><title>解决应用商店 0x80131500 错误</title><link>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</link><pubDate>Wed, 03 Jun 2020 11:48:10 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</guid><description>&lt;p>Win 10 应用商店打开就报 0x80131500 错误，尝试各种方法都不行，最终使用 fiddler 曲线解决。&lt;/p>
+&lt;p>尝试过的方法来自 &lt;a class="link" href="https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b" target="_blank" rel="noopener"
+>https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>&lt;del>按 “Windows 徽标键+R”，在运行窗口中，键入“WSReset.exe” 并点击 “运行”&lt;/del>&lt;/li>
+&lt;li>&lt;del>设置→应用→找到microsoft store →高级→重置此应用&lt;/del>&lt;/li>
+&lt;li>&lt;del>打开 IE 浏览器，点击设置，打开 Internet 选项，点击高级，并勾选 “使用SSL 3.0”、”使用 TLS 1.0“、”使用 TLS 1.1“、”使用 TLS 1.2“，应用后重启电脑&lt;/del>&lt;/li>
+&lt;li>&lt;del>卸载并重装应用商店&lt;/del>&lt;/li>
+&lt;/ul>
+&lt;p>最终靠知乎的这条答案曲线解决。&lt;/p>
+&lt;p>&lt;a class="link" href="https://www.zhihu.com/question/310873087/answer/1127300614" target="_blank" rel="noopener"
+>https://www.zhihu.com/question/310873087/answer/1127300614&lt;/a>&lt;/p>
+&lt;h3 id="操作步骤">操作步骤&lt;/h3>
+&lt;ol>
+&lt;li>下载安装 fiddler &lt;a class="link" href="https://telerik-fiddler.s3.amazonaws.com/fiddler/FiddlerSetup.exe" target="_blank" rel="noopener"
+>https://telerik-fiddler.s3.amazonaws.com/fiddler/FiddlerSetup.exe&lt;/a>&lt;/li>
+&lt;li>打开fiddler&amp;mdash;点击左上角winconfig&amp;mdash;给 Microsoft Store 打勾&amp;mdash;点save changes&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200603120719.png"
+loading="lazy"
+alt="image-20200603120155534"
+>&lt;/p>
+&lt;p>再次打开应用商店就能正常使用。唯一的缺陷是需要打开 fiddler 才能使用应用商店，不然会报 0x80072EFD 错误。&lt;/p></description></item></channel></rss>

@@ -1,193 +1,168 @@
-<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><title>Promark3 使用 冰人（iceman）固件 | 4ft35t blog</title><meta property="og:title" content="Promark3 使用 冰人（iceman）固件 - 4ft35t blog"><meta property="og:type" content="article"><meta property="article:published_time" content="2020-06-04T19:21:59+08:00"><meta property="article:modified_time" content="2020-06-04T19:21:59+08:00"><meta name=Keywords content="openwrt,lede,router,android,linux"><meta name=description content="Promark3 使用 冰人（iceman）固件"><meta name=author content="af.test"><meta property="og:url" content="https://4ft35t.github.io/post/promark3-flash-iceman-firmware/"><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><link rel=stylesheet href=/css/normalize.css><link rel=stylesheet href=/css/style.css><script type=text/javascript src=//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js></script></head><body><header id=header class=clearfix><div class=container><div class=col-group><div class=site-name><a id=logo href=https://4ft35t.github.io/>4ft35t blog</a><p class=description>折腾笔记</p></div><div><nav id=nav-menu class=clearfix><a class=current href=https://4ft35t.github.io/>首页</a>
-<a href=https://4ft35t.github.io/archives/ title=归档>归档</a>
-<a href=https://4ft35t.github.io/about/ title=关于>关于</a></nav></div></div></div></header><div id=body><div class=container><div class=col-group><div class=col-8 id=main><div class=res-cons><style type=text/css>.post-toc{position:fixed;width:200px;margin-left:-210px;padding:5px 10px;font-family:Athelas,STHeiti,Microsoft Yahei,serif;font-size:12px;border:1px solid rgba(0,0,0,7%);border-radius:5px;background-color:rgba(255,255,255,.98);background-clip:padding-box;-webkit-box-shadow:1px 1px 2px rgba(0,0,0,.125);box-shadow:1px 1px 2px rgba(0,0,0,.125);word-wrap:break-word;white-space:nowrap;-webkit-box-sizing:border-box;box-sizing:border-box;z-index:999;cursor:pointer;max-height:70%;overflow-y:auto;overflow-x:hidden}.post-toc .post-toc-title{width:100%;margin:0 auto;font-size:20px;font-weight:400;text-transform:uppercase;text-align:center}.post-toc .post-toc-content{font-size:15px}.post-toc .post-toc-content>nav>ul{margin:10px 0}.post-toc .post-toc-content ul{padding-left:20px;list-style:square;margin:.5em;line-height:1.8em}.post-toc .post-toc-content ul ul{padding-left:15px;display:none}@media print,screen and (max-width:1057px){.post-toc{display:none}}</style><div class=post-toc style=position:absolute;top:188px><h2 class=post-toc-title>文章目录</h2><div class=post-toc-content><nav id=TableOfContents><ul><li><a href=#编译安装>编译安装</a></li><li><a href=#刷预编译固件>刷预编译固件</a></li><li><a href=#解决方案>解决方案</a></li><li><a href=#参考链接>参考链接</a></li></ul></nav></div></div><script type=text/javascript>$(document).ready(function(){if(e=$(".post-toc"),e.length){t=$("#main").offset().left,t<220&&e.css({width:t-10,"margin-left":0-t});var e,t,n=e.offset().top-20,s={start:{position:"absolute",top:n},process:{position:"fixed",top:20}};$(window).scroll(function(){var t=$(window).scrollTop();t<n?e.css(s.start):e.css(s.process)})}})</script><article class=post><header><h1 class=post-title>Promark3 使用 冰人（iceman）固件</h1></header><date class="post-meta meta-date">2020年6月4日</date><div class=post-meta><span>|</span>
-<span class=meta-category><a href=/categories/mess>Mess</a></span></div><div class=post-content><p>淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 <code>Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error</code>。</p><p>官方固件编译、烧录、使用都没问题，看到冰人的固件有两条命令很心动，把重复工作自动化，节约时间。</p><ul><li><code>auto</code> 自动识别卡类型</li><li><code>hf mf autopwn</code> 自动破解 IC 卡密码</li></ul><h2 id=编译安装>编译安装</h2><p>win 10 的 WSL 可以直接访问串口，很方便。win 10 上的 COM3， 自动映射到 WSL 的 /dev/ttyS3。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">5
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>sudo apt-get install --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>git clone https://github.com/RfidResearchGroup/proxmark3.git
-</span></span><span style=display:flex><span><span style=color:#0086b3>cd</span> proxmark3
-</span></span><span style=display:flex><span>make clean <span style=color:#000;font-weight:700>&amp;&amp;</span> make all
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description content="淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error。
+"><title>Promark3 使用 冰人（iceman）固件</title><link rel=canonical href=https://4ft35t.github.io/post/promark3-flash-iceman-firmware/><link rel=stylesheet href=/scss/style.min.450926226e724574a6b936335ea06111f8aeb253d932c86cb2cc807341cd2889.css><meta property="og:title" content="Promark3 使用 冰人（iceman）固件"><meta property="og:description" content="淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error。
+"><meta property="og:url" content="https://4ft35t.github.io/post/promark3-flash-iceman-firmware/"><meta property="og:site_name" content="4ft35t blog"><meta property="og:type" content="article"><meta property="article:section" content="Post"><meta property="article:tag" content="rfid"><meta property="article:tag" content="error"><meta property="article:tag" content="proxmark3"><meta property="article:published_time" content="2020-06-04T19:21:59+08:00"><meta property="article:modified_time" content="2020-06-04T19:21:59+08:00"><meta name=twitter:title content="Promark3 使用 冰人（iceman）固件"><meta name=twitter:description content="淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error。
+"><script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(e,o,i,a,t,n,s){e.GoogleAnalyticsObject=t,e[t]=e[t]||function(){(e[t].q=e[t].q||[]).push(arguments)},e[t].l=1*new Date,n=o.createElement(i),s=o.getElementsByTagName(i)[0],n.async=1,n.src=a,s.parentNode.insertBefore(n,s)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-163577388-1","auto"),ga("send","pageview"))</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>4ft35t blog</a></h1><h2 class=site-description>随手折腾，顺手记录</h2></div></header><ol class=menu id=main-menu><li><a href=/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg><span>Archives</span></a></li><li><a href=/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg><span>Search</span></a></li><li><a href=/links/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg><span>Links</span></a></li><li><a href=/about/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg><span>About</span></a></li><li><a href=/index.xml target=_blank><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-rss" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="5" cy="19" r="1"/><path d="M4 4a16 16 0 0116 16"/><path d="M4 11a9 9 0 019 9"/></svg><span>RSS</span></a></li><div class=menu-bottom-section><li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg><span>暗色模式</span></li></div></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/mess/>Mess</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/post/promark3-flash-iceman-firmware/>Promark3 使用 冰人（iceman）固件</a></h2></div><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg><time class=article-time--published>2020-06-04</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg><time class=article-time--reading>阅读时长: 2 分钟</time></div></footer></div></header><section class=article-content><p>淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 <code>Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error</code>。</p><p>官方固件编译、烧录、使用都没问题，看到冰人的固件有两条命令很心动，把重复工作自动化，节约时间。</p><ul><li><code>auto</code> 自动识别卡类型</li><li><code>hf mf autopwn</code> 自动破解 IC 卡密码</li></ul><h2 id=编译安装>编译安装</h2><p>win 10 的 WSL 可以直接访问串口，很方便。win 10 上的 COM3， 自动映射到 WSL 的 /dev/ttyS3。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>sudo apt-get install --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>git clone https://github.com/RfidResearchGroup/proxmark3.git
+</span></span><span class=line><span class=cl><span class=nb>cd</span> proxmark3
+</span></span><span class=line><span class=cl>make clean <span class=o>&amp;&amp;</span> make all
 </span></span></code></pre></td></tr></table></div></div><p>修改 /dev/ttyS3 为所有用户可读写，设备拔插后需要再次执行</p><p><code>sudo chmod 666 /dev/ttyS3</code></p><p>同时刷 bootimg 和 fullimage</p><p><code>./pm3-flash-all</code></p><p>bootimg 刷成功，刷 fullimage 出错</p><blockquote><p>Error: Unexpected reply 0x00fe NACK (expected ACK)
-Lock Error</p></blockquote><p><img class=mx-auto alt=image-20200604192556929 src=https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200604192557.png></p><h2 id=刷预编译固件>刷预编译固件</h2><p>在冰人固件的 wiki 中找到 windows 的预编译非 RDV4 版本下载，Generice Proxmark3 devices (non RDV4) [<a href="https://drive.google.com/open?id=1PI3Xr1mussPBPnYGu4ZjWzGPARK4N7JR">Precompiled builds for RRG / Iceman repository x64</a></p><p>提取 fullimage.elf 后，顺利刷入。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash  ./fullimage.elf
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[=]</span> Session log /home/kali/.proxmark3/log_20200604.txt
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[=]</span> Loading Preferences...
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> loaded from JSON file /home/kali/.proxmark3/preferences.json
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> About to use the following file:
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span>    ./fullimage.elf
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> Waiting <span style=color:#000;font-weight:700>for</span> Proxmark3 to appear on /dev/ttyS5
-</span></span><span style=display:flex><span> 🕑  <span style=color:#099>59</span> found
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[=]</span> Available memory on this board: 512K bytes
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[=]</span> Permitted flash range: 0x00102000-0x00180000
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> Loading ELF file ./fullimage.elf
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> Loading usable ELF segments:
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span>    0: V 0x00102000 P 0x00102000 <span style=color:#000;font-weight:700>(</span>0x0003b4d0-&gt;0x0003b4d0<span style=color:#000;font-weight:700>)</span> <span style=color:#000;font-weight:700>[</span>R X<span style=color:#000;font-weight:700>]</span> @0x94
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span>    1: V 0x00200000 P 0x0013d4d0 <span style=color:#000;font-weight:700>(</span>0x00001370-&gt;0x00001370<span style=color:#000;font-weight:700>)</span> <span style=color:#000;font-weight:700>[</span>RW <span style=color:#000;font-weight:700>]</span> @0x3b564
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[=]</span> Note: Extending previous segment from 0x3b4d0 to 0x3c840 bytes
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> Flashing...
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> Writing segments <span style=color:#000;font-weight:700>for</span> file: ./fullimage.elf
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span>  0x00102000..0x0013e83f <span style=color:#000;font-weight:700>[</span>0x3c840 / <span style=color:#099>485</span> blocks<span style=color:#000;font-weight:700>]</span>
-</span></span><span style=display:flex><span>...................................................................
-</span></span><span style=display:flex><span>        @@@  @@@@@@@ @@@@@@@@ @@@@@@@@@@   @@@@@@  @@@  @@@
-</span></span><span style=display:flex><span>        @@! !@@      @@!      @@! @@! @@! @@!  @@@ @@!@!@@@
-</span></span><span style=display:flex><span>        !!@ !@!      @!!!:!   @!! !!@ @!@ @!@!@!@! @!@@!!@!
-</span></span><span style=display:flex><span>        !!: :!!      !!:      !!:     !!: !!:  !!! !!:  !!!
-</span></span><span style=display:flex><span>        :    :: :: : : :: :::  :      :    :   : : ::    :
-</span></span><span style=display:flex><span>        .    .. .. . . .. ...  .      .    .   . . ..    .
-</span></span><span style=display:flex><span>................................................ OK
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> All <span style=color:#000;font-weight:700>done</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>Have a nice day!
-</span></span></code></pre></td></tr></table></div></div><h2 id=解决方案>解决方案</h2><p>到这一步可以确认是关键编译参数问题，而非硬件缩水问题233。</p><p>查阅文档后，默认编译的目标平台是 PM3RDV4，非 PM3RDV4 需要设置为 PM3OTHER。</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">2
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#0086b3>echo</span> <span style=color:#d14>&#39;PLATFORM=PM3OTHER&#39;</span> &gt; Makefile.platform
-</span></span><span style=display:flex><span>make clean <span style=color:#000;font-weight:700>&amp;&amp;</span> make all
-</span></span></code></pre></td></tr></table></div></div><p>再刷固件就一切顺利</p><div class=highlight><div style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">21
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">22
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">23
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">24
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">25
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">26
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">27
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">28
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">29
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">30
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">31
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">32
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">33
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">34
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">35
-</span><span style="white-space:pre;user-select:none;margin-right:.4em;padding:0 .4em;color:#7f7f7f">36
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash-fullimage
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[=]</span> Session log /home/kali/.proxmark3/logs/log_20200604.txt
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[=]</span> Loading preferences...
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> loaded from JSON file /home/kali/.proxmark3/preferences.json
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> About to use the following file:
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span>    /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> Waiting <span style=color:#000;font-weight:700>for</span> Proxmark3 to appear on /dev/ttyS5
-</span></span><span style=display:flex><span> 🕑  <span style=color:#099>59</span> found
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> Entering bootloader...
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> <span style=color:#000;font-weight:700>(</span>Press and release the button only to abort<span style=color:#000;font-weight:700>)</span>
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> Waiting <span style=color:#000;font-weight:700>for</span> Proxmark3 to appear on /dev/ttyS5
-</span></span><span style=display:flex><span> 🕒  <span style=color:#099>48</span> found
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[=]</span> Available memory on this board: 512K bytes
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[=]</span> Permitted flash range: 0x00102000-0x00180000
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> Loading ELF file /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> Loading usable ELF segments:
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span>    0: V 0x00102000 P 0x00102000 <span style=color:#000;font-weight:700>(</span>0x0003b240-&gt;0x0003b240<span style=color:#000;font-weight:700>)</span> <span style=color:#000;font-weight:700>[</span>R X<span style=color:#000;font-weight:700>]</span> @0x94
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span>    1: V 0x00200000 P 0x0013d240 <span style=color:#000;font-weight:700>(</span>0x00001360-&gt;0x00001360<span style=color:#000;font-weight:700>)</span> <span style=color:#000;font-weight:700>[</span>RW <span style=color:#000;font-weight:700>]</span> @0x3b2d4
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[=]</span> Note: Extending previous segment from 0x3b240 to 0x3c5a0 bytes
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> Flashing...
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> Writing segments <span style=color:#000;font-weight:700>for</span> file: /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span>  0x00102000..0x0013e59f <span style=color:#000;font-weight:700>[</span>0x3c5a0 / <span style=color:#099>483</span> blocks<span style=color:#000;font-weight:700>]</span>
-</span></span><span style=display:flex><span>...................................................................
-</span></span><span style=display:flex><span>        @@@  @@@@@@@ @@@@@@@@ @@@@@@@@@@   @@@@@@  @@@  @@@
-</span></span><span style=display:flex><span>        @@! !@@      @@!      @@! @@! @@! @@!  @@@ @@!@!@@@
-</span></span><span style=display:flex><span>        !!@ !@!      @!!!:!   @!! !!@ @!@ @!@!@!@! @!@@!!@!
-</span></span><span style=display:flex><span>        !!: :!!      !!:      !!:     !!: !!:  !!! !!:  !!!
-</span></span><span style=display:flex><span>        :    :: :: : : :: :::  :      :    :   : : ::    :
-</span></span><span style=display:flex><span>        .    .. .. . . .. ...  .      .    .   . . ..    .
-</span></span><span style=display:flex><span>.............................................. OK
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#000;font-weight:700>[</span>+<span style=color:#000;font-weight:700>]</span> All <span style=color:#000;font-weight:700>done</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>Have a nice day!
+Lock Error</p></blockquote><p><img src=https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200604192557.png loading=lazy alt=image-20200604192556929></p><h2 id=刷预编译固件>刷预编译固件</h2><p>在冰人固件的 wiki 中找到 windows 的预编译非 RDV4 版本下载，Generice Proxmark3 devices (non RDV4) [<a class=link href="https://drive.google.com/open?id=1PI3Xr1mussPBPnYGu4ZjWzGPARK4N7JR" target=_blank rel=noopener>Precompiled builds for RRG / Iceman repository x64</a></p><p>提取 fullimage.elf 后，顺利刷入。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash  ./fullimage.elf
+</span></span><span class=line><span class=cl><span class=o>[=]</span> Session log /home/kali/.proxmark3/log_20200604.txt
+</span></span><span class=line><span class=cl><span class=o>[=]</span> Loading Preferences...
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> loaded from JSON file /home/kali/.proxmark3/preferences.json
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> About to use the following file:
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span>    ./fullimage.elf
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> Waiting <span class=k>for</span> Proxmark3 to appear on /dev/ttyS5
+</span></span><span class=line><span class=cl> 🕑  <span class=m>59</span> found
+</span></span><span class=line><span class=cl><span class=o>[=]</span> Available memory on this board: 512K bytes
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>[=]</span> Permitted flash range: 0x00102000-0x00180000
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> Loading ELF file ./fullimage.elf
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> Loading usable ELF segments:
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span>    0: V 0x00102000 P 0x00102000 <span class=o>(</span>0x0003b4d0-&gt;0x0003b4d0<span class=o>)</span> <span class=o>[</span>R X<span class=o>]</span> @0x94
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span>    1: V 0x00200000 P 0x0013d4d0 <span class=o>(</span>0x00001370-&gt;0x00001370<span class=o>)</span> <span class=o>[</span>RW <span class=o>]</span> @0x3b564
+</span></span><span class=line><span class=cl><span class=o>[=]</span> Note: Extending previous segment from 0x3b4d0 to 0x3c840 bytes
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> Flashing...
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> Writing segments <span class=k>for</span> file: ./fullimage.elf
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span>  0x00102000..0x0013e83f <span class=o>[</span>0x3c840 / <span class=m>485</span> blocks<span class=o>]</span>
+</span></span><span class=line><span class=cl>...................................................................
+</span></span><span class=line><span class=cl>        @@@  @@@@@@@ @@@@@@@@ @@@@@@@@@@   @@@@@@  @@@  @@@
+</span></span><span class=line><span class=cl>        @@! !@@      @@!      @@! @@! @@! @@!  @@@ @@!@!@@@
+</span></span><span class=line><span class=cl>        !!@ !@!      @!!!:!   @!! !!@ @!@ @!@!@!@! @!@@!!@!
+</span></span><span class=line><span class=cl>        !!: :!!      !!:      !!:     !!: !!:  !!! !!:  !!!
+</span></span><span class=line><span class=cl>        :    :: :: : : :: :::  :      :    :   : : ::    :
+</span></span><span class=line><span class=cl>        .    .. .. . . .. ...  .      .    .   . . ..    .
+</span></span><span class=line><span class=cl>................................................ OK
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> All <span class=k>done</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Have a nice day!
+</span></span></code></pre></td></tr></table></div></div><h2 id=解决方案>解决方案</h2><p>到这一步可以确认是关键编译参数问题，而非硬件缩水问题233。</p><p>查阅文档后，默认编译的目标平台是 PM3RDV4，非 PM3RDV4 需要设置为 PM3OTHER。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=nb>echo</span> <span class=s1>&#39;PLATFORM=PM3OTHER&#39;</span> &gt; Makefile.platform
+</span></span><span class=line><span class=cl>make clean <span class=o>&amp;&amp;</span> make all
+</span></span></code></pre></td></tr></table></div></div><p>再刷固件就一切顺利</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash-fullimage
+</span></span><span class=line><span class=cl><span class=o>[=]</span> Session log /home/kali/.proxmark3/logs/log_20200604.txt
+</span></span><span class=line><span class=cl><span class=o>[=]</span> Loading preferences...
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> loaded from JSON file /home/kali/.proxmark3/preferences.json
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> About to use the following file:
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span>    /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> Waiting <span class=k>for</span> Proxmark3 to appear on /dev/ttyS5
+</span></span><span class=line><span class=cl> 🕑  <span class=m>59</span> found
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> Entering bootloader...
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> <span class=o>(</span>Press and release the button only to abort<span class=o>)</span>
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> Waiting <span class=k>for</span> Proxmark3 to appear on /dev/ttyS5
+</span></span><span class=line><span class=cl> 🕒  <span class=m>48</span> found
+</span></span><span class=line><span class=cl><span class=o>[=]</span> Available memory on this board: 512K bytes
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>[=]</span> Permitted flash range: 0x00102000-0x00180000
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> Loading ELF file /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> Loading usable ELF segments:
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span>    0: V 0x00102000 P 0x00102000 <span class=o>(</span>0x0003b240-&gt;0x0003b240<span class=o>)</span> <span class=o>[</span>R X<span class=o>]</span> @0x94
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span>    1: V 0x00200000 P 0x0013d240 <span class=o>(</span>0x00001360-&gt;0x00001360<span class=o>)</span> <span class=o>[</span>RW <span class=o>]</span> @0x3b2d4
+</span></span><span class=line><span class=cl><span class=o>[=]</span> Note: Extending previous segment from 0x3b240 to 0x3c5a0 bytes
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> Flashing...
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> Writing segments <span class=k>for</span> file: /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span>  0x00102000..0x0013e59f <span class=o>[</span>0x3c5a0 / <span class=m>483</span> blocks<span class=o>]</span>
+</span></span><span class=line><span class=cl>...................................................................
+</span></span><span class=line><span class=cl>        @@@  @@@@@@@ @@@@@@@@ @@@@@@@@@@   @@@@@@  @@@  @@@
+</span></span><span class=line><span class=cl>        @@! !@@      @@!      @@! @@! @@! @@!  @@@ @@!@!@@@
+</span></span><span class=line><span class=cl>        !!@ !@!      @!!!:!   @!! !!@ @!@ @!@!@!@! @!@@!!@!
+</span></span><span class=line><span class=cl>        !!: :!!      !!:      !!:     !!: !!:  !!! !!:  !!!
+</span></span><span class=line><span class=cl>        :    :: :: : : :: :::  :      :    :   : : ::    :
+</span></span><span class=line><span class=cl>        .    .. .. . . .. ...  .      .    .   . . ..    .
+</span></span><span class=line><span class=cl>.............................................. OK
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>[</span>+<span class=o>]</span> All <span class=k>done</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Have a nice day!
 </span></span></code></pre></td></tr></table></div></div><p>刷完固件后的版本信息</p><blockquote><p>[ ARM ]
 bootrom: RRG/Iceman/master/v4.9237-188-gbd5aa92a 2020-06-04 16:05:12
 os: RRG/Iceman/master/v4.9237-188-gbd5aa92a 2020-06-04 21:01:01
-compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]</p></blockquote><h2 id=参考链接>参考链接</h2><ul><li><p><a href=https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1>https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1</a></p></li><li><p><a href=https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md>https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md</a></p></li></ul></div><div class=post-archive><h2>See Also</h2><ul class=listing><li><a href=/post/fix-windows-store-0x80131500-error/>解决应用商店 0x80131500 错误</a></li><li><a href=/post/ssh-porxy/>SSH 跳板机与代理</a></li><li><a href=/post/jegotrip-takes-long-time-to-connect/>解决无忧行长时间显示“正在连接电话服务器”问题</a></li><li><a href=/post/hugo-auto-deploy-with-github-actions/>使用 Github Actions 自动部署 Hugo</a></li><li><a href=/about/>关于我</a></li></ul></div><div class="post-meta meta-tags"><ul class=clearfix><li><a href=/tags/rfid>rfid</a></li><li><a href=/tags/error>error</a></li><li><a href=/tags/proxmark3>proxmark3</a></li></ul></div></article><div class="post bg-white"><script src=https://utteranc.es/client.js repo=4ft35t/4ft35t.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></div><footer id=footer><div>&copy; 2022 <a href=https://4ft35t.github.io/>4ft35t blog By af.test</a></div><br><div><div class=github-badge><a href=https://gohugo.io/ target=_black rel=nofollow><span class=badge-subject>Powered by</span><span class="badge-value bg-blue">Hugo</span></a></div><div class=github-badge><a href=https://www.flysnow.org/ target=_black><span class=badge-subject>Design by</span><span class="badge-value bg-brightgreen">飞雪无情</span></a></div><div class=github-badge><a href=https://github.com/flysnow-org/maupassant-hugo target=_black><span class=badge-subject>Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a></div></div></footer><script type=text/javascript>window.MathJax={tex2jax:{inlineMath:[["$","$"]],processEscapes:!0}}</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-<a id=rocket href=#top></a>
-<script type=text/javascript src="/js/totop.js?v=0.0.0" async></script>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-163577388-1","auto"),ga("send","pageview"))</script><script async src=https://www.google-analytics.com/analytics.js></script></div><div id=secondary><section class=widget><form id=search action=//www.google.com/search method=get accept-charset=utf-8 target=_blank _lpchecked=1><input type=text name=q maxlength=20 placeholder=Search>
-<input type=hidden name=sitesearch value=https://4ft35t.github.io/>
-<button type=submit class="submit icon-search"></button></form></section><section class=widget><h3 class=widget-title>最近文章</h3><ul class=widget-list><li><a href=https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/ title="利用 Pixel 一代的无限存储备份 NAS 照片">利用 Pixel 一代的无限存储备份 NAS 照片</a></li><li><a href=https://4ft35t.github.io/post/android-screenshoot-remote/ title="Android 远程截图">Android 远程截图</a></li><li><a href=https://4ft35t.github.io/post/pd-qc-dc/ title="PD/QC 电源转 DC 头输出">PD/QC 电源转 DC 头输出</a></li><li><a href=https://4ft35t.github.io/post/bash-exit-in-conditional/ title="bash 条件退出踩坑">bash 条件退出踩坑</a></li><li><a href=https://4ft35t.github.io/post/promark3-flash-iceman-firmware/ title="Promark3 使用 冰人（iceman）固件">Promark3 使用 冰人（iceman）固件</a></li><li><a href=https://4ft35t.github.io/post/ssh-porxy/ title="SSH 跳板机与代理">SSH 跳板机与代理</a></li><li><a href=https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/ title="解决应用商店 0x80131500 错误">解决应用商店 0x80131500 错误</a></li><li><a href=https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/ title=解决无忧行长时间显示“正在连接电话服务器”问题>解决无忧行长时间显示“正在连接电话服务器”问题</a></li><li><a href=https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/ title="使用 Github Actions 自动部署 Hugo">使用 Github Actions 自动部署 Hugo</a></li></ul></section><section class=widget><h3 class=widget-title><a href=/categories/>分类</a></h3><ul class=widget-list><li><a href=https://4ft35t.github.io/categories/android/>Android (1)</a></li><li><a href=https://4ft35t.github.io/categories/github/>Github (1)</a></li><li><a href=https://4ft35t.github.io/categories/linux/>Linux (2)</a></li><li><a href=https://4ft35t.github.io/categories/mess/>Mess (2)</a></li><li><a href=https://4ft35t.github.io/categories/network/>Network (3)</a></li><li><a href=https://4ft35t.github.io/categories/windows/>Windows (1)</a></li></ul></section><section class=widget><h3 class=widget-title><a href=/tags/>标签</a></h3><div class=tagcloud><a href=https://4ft35t.github.io/tags/0x80072efd/>0x80072EFD</a>
-<a href=https://4ft35t.github.io/tags/0x80131500/>0x80131500</a>
-<a href=https://4ft35t.github.io/tags/adb/>adb</a>
-<a href=https://4ft35t.github.io/tags/android/>android</a>
-<a href=https://4ft35t.github.io/tags/autojs/>autojs</a>
-<a href=https://4ft35t.github.io/tags/bash/>bash</a>
-<a href=https://4ft35t.github.io/tags/cgi/>cgi</a>
-<a href=https://4ft35t.github.io/tags/charger/>charger</a>
-<a href=https://4ft35t.github.io/tags/dc/>DC</a>
-<a href=https://4ft35t.github.io/tags/error/>error</a>
-<a href=https://4ft35t.github.io/tags/exit/>exit</a>
-<a href=https://4ft35t.github.io/tags/github/>github</a>
-<a href=https://4ft35t.github.io/tags/google/>google</a>
-<a href=https://4ft35t.github.io/tags/hugo/>hugo</a>
-<a href=https://4ft35t.github.io/tags/ip/>IP</a>
-<a href=https://4ft35t.github.io/tags/jegotrip/>jegotrip</a>
-<a href=https://4ft35t.github.io/tags/nas/>NAS</a>
-<a href=https://4ft35t.github.io/tags/pd/>PD</a>
-<a href=https://4ft35t.github.io/tags/photo/>photo</a>
-<a href=https://4ft35t.github.io/tags/pi-hole/>pi-hole</a>
-<a href=https://4ft35t.github.io/tags/pihole/>pihole</a>
-<a href=https://4ft35t.github.io/tags/proxmark3/>proxmark3</a>
-<a href=https://4ft35t.github.io/tags/proxy/>proxy</a>
-<a href=https://4ft35t.github.io/tags/qc/>QC</a>
-<a href=https://4ft35t.github.io/tags/rfid/>rfid</a>
-<a href=https://4ft35t.github.io/tags/scrcpy/>scrcpy</a>
-<a href=https://4ft35t.github.io/tags/screenshoot/>screenshoot</a>
-<a href=https://4ft35t.github.io/tags/shell/>shell</a>
-<a href=https://4ft35t.github.io/tags/ssh/>ssh</a>
-<a href=https://4ft35t.github.io/tags/test/>test</a>
-<a href=https://4ft35t.github.io/tags/windows/>windows</a></div></section><section class=widget><h3 class=widget-title>其它</h3><ul class=widget-list><li><a href=https://4ft35t.github.io/index.xml>文章 RSS</a></li></ul></section></div></div></div></div></body></html>
+compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]</p></blockquote><h2 id=参考链接>参考链接</h2><ul><li><p><a class=link href=https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1 target=_blank rel=noopener>https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1</a></p></li><li><p><a class=link href=https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md target=_blank rel=noopener>https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md</a></p></li></ul></section><footer class=article-footer><section class=article-tags><a href=/tags/rfid/>rfid</a>
+<a href=/tags/error/>error</a>
+<a href=/tags/proxmark3/>proxmark3</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg><span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-contents--wrapper><h2 class=section-title>相关文章</h2><div class=related-contents><div class="flex article-list--tile"><article><a href=/post/pd-qc-dc/><div class=article-details><h2 class=article-title>PD/QC 电源转 DC 头输出</h2></div></a></article></div></div></aside><script src=https://utteranc.es/client.js repo=4ft35t/4ft35t.github.io issue-term=pathname crossorigin=anonymous async></script><style>.utterances{max-width:unset}</style><script>function setUtterancesTheme(t){let e=document.querySelector(".utterances iframe");e&&e.contentWindow.postMessage({type:"set-theme",theme:`github-${t}`},"https://utteranc.es")}addEventListener("message",e=>{if(e.origin!=="https://utteranc.es")return;setUtterancesTheme(document.documentElement.dataset.scheme)}),window.addEventListener("onColorSchemeChange",e=>{setUtterancesTheme(e.detail)})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2022 4ft35t blog</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.11.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css integrity="sha256-c0uckgykQ9v5k+IqViZOZKc47Jn7KQil4/MP3ySA3F8=" crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE=" crossorigin=anonymous></main><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#编译安装>编译安装</a></li><li><a href=#刷预编译固件>刷预编译固件</a></li><li><a href=#解决方案>解决方案</a></li><li><a href=#参考链接>参考链接</a></li></ol></nav></div></section></aside></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script>
+<script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>
