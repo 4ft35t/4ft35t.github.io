@@ -10,11 +10,8 @@ googleAnalytics = "UA-163577388-1"
 [params]
   author = '4ft35t'
   subtitle = "折腾笔记"
-  keywords = "openwrt, lede, router"
+  keywords = "openwrt, lede, router, android, linux"
   description = "随手折腾，顺手记录"
-
-  customCSS = ['add-copy-btn.css']
-  customJS = ['add-copy-btn.js']
 
 [menu]
   [[menu.main]]
