@@ -445,7 +445,7 @@
 &lt;li>&lt;code>auto&lt;/code> 自动识别卡类型&lt;/li>
 &lt;li>&lt;code>hf mf autopwn&lt;/code> 自动破解 IC 卡密码&lt;/li>
 &lt;/ul>
-&lt;h3 id="编译安装">编译安装&lt;/h3>
+&lt;h2 id="编译安装">编译安装&lt;/h2>
 &lt;p>win 10 的 WSL 可以直接访问串口，很方便。win 10 上的 COM3， 自动映射到 WSL 的 /dev/ttyS3。&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 &lt;table style="border-spacing:0;padding:0;margin:0;border:0;">&lt;tr>&lt;td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -475,7 +475,7 @@ Lock Error&lt;/p>
 &lt;p>
 &lt;img class="mx-auto" alt="image-20200604192556929" src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200604192557.png" />
 &lt;/p>
-&lt;h3 id="刷预编译固件">刷预编译固件&lt;/h3>
+&lt;h2 id="刷预编译固件">刷预编译固件&lt;/h2>
 &lt;p>在冰人固件的 wiki 中找到 windows 的预编译非 RDV4 版本下载，Generice Proxmark3 devices (non RDV4) [&lt;a href="https://drive.google.com/open?id=1PI3Xr1mussPBPnYGu4ZjWzGPARK4N7JR">Precompiled builds for RRG / Iceman repository x64&lt;/a>&lt;/p>
 &lt;p>提取 fullimage.elf 后，顺利刷入。&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
@@ -548,7 +548,7 @@ Lock Error&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Have a nice day!
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="解决方案">解决方案&lt;/h3>
+&lt;/div>&lt;h2 id="解决方案">解决方案&lt;/h2>
 &lt;p>到这一步可以确认是关键编译参数问题，而非硬件缩水问题233。&lt;/p>
 &lt;p>查阅文档后，默认编译的目标平台是 PM3RDV4，非 PM3RDV4 需要设置为 PM3OTHER。&lt;/p>
 &lt;div class="highlight">&lt;div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
@@ -647,7 +647,7 @@ bootrom: RRG/Iceman/master/v4.9237-188-gbd5aa92a 2020-06-04 16:05:12
 os: RRG/Iceman/master/v4.9237-188-gbd5aa92a 2020-06-04 21:01:01
 compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p>
 &lt;/blockquote>
-&lt;h3 id="参考链接">参考链接&lt;/h3>
+&lt;h2 id="参考链接">参考链接&lt;/h2>
 &lt;ul>
 &lt;li>
 &lt;p>&lt;a href="https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1">https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1&lt;/a>&lt;/p>
