@@ -1,0 +1,141 @@
+baseurl: "https://4ft35t.github.io/"
+languageCode: zh-cn
+theme: hugo-theme-stack
+paginate: 10
+title: "4ft35t blog"
+
+languages:
+    zh-cn:
+        languageName: 中文
+        title: "4ft35t blog"
+        weight: 2
+
+googleAnalytics: "UA-163577388-1"
+
+# Available values: ar, ca, de, el, en, es, fr, id, it, ja, ko, nl, pt-br, th, uk, zh-cn, zh-hk, zh-tw
+DefaultContentLanguage: zh-cn
+
+# Set hasCJKLanguage to true if DefaultContentLanguage is in [zh-cn ja ko]
+# This will make .Summary and .WordCount behave correctly for CJK languages.
+hasCJKLanguage: true
+
+permalinks:
+    post: /post/:filename/
+    page: /:slug/
+
+params:
+    mainSections:
+        - post
+    featuredImageField: image
+    rssFullContent: true
+
+    footer:
+        since: 2020
+        customText:
+
+    dateFormat:
+        published: 2006-01-02
+        lastUpdated: 2006-01-02 15:04 CST
+
+    sidebar:
+        emoji:
+        subtitle: "随手折腾，顺手记录"
+        avatar:
+            enabled: false
+            local: true
+            src: img/avatar.png
+
+    article:
+        math: false
+        toc: true
+        readingTime: true
+        license:
+            enabled: true
+            default: Licensed under CC BY-NC-SA 4.0
+
+    comments:
+        enabled: true
+        provider: utterances
+
+        utterances:
+            repo: "4ft35t/4ft35t.github.io"    # 存储评论的Repo，格式为 owner/repo
+            issueTerm: pathname
+            label:
+
+    widgets:
+        homepage:
+            - type: search
+            - type: archives
+              params:
+                  limit: 5
+                  path: /archives
+            - type: categories
+              params:
+                  limit: 10
+            - type: tag-cloud
+              params:
+                  limit: 10
+        page:
+            - type: toc
+
+    defaultImage:
+        opengraph:
+            enabled: false
+            local: false
+            src:
+
+    colorScheme:
+        # Display toggle
+        toggle: true
+
+        # Available values: auto, light, dark
+        default: auto
+
+    imageProcessing:
+        cover:
+            enabled: true
+        content:
+            enabled: true
+
+### Custom menu
+### See https://docs.stack.jimmycai.com/configuration/custom-menu.html
+### To remove about, archive and search page menu item, remove `menu` field from their FrontMatter
+menu:
+    main:
+        - identifier: rss
+          name: RSS
+          url: /index.xml
+          weight: -10
+          params:
+              ### For demonstration purpose, the home link will be open in a new tab
+              newTab: true
+              icon: rss
+
+related:
+    includeNewer: true
+    threshold: 60
+    toLower: false
+    indices:
+        - name: tags
+          weight: 100
+
+        - name: categories
+          weight: 200
+
+markup:
+    goldmark:
+        renderer:
+            ## Set to true if you have HTML content inside Markdown
+            unsafe: false
+    tableOfContents:
+        endLevel: 4
+        ordered: true
+        startLevel: 2
+    highlight:
+        noClasses: false
+        codeFences: true
+        guessSyntax: true
+        lineNoStart: 1
+        lineNos: true
+        lineNumbersInTable: true
+        tabWidth: 4
