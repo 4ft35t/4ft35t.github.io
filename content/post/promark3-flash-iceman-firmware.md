@@ -19,7 +19,7 @@ draft: false
 
 
 
-### 编译安装
+## 编译安装
 
 win 10 的 WSL 可以直接访问串口，很方便。win 10 上的 COM3， 自动映射到 WSL 的 /dev/ttyS3。
 
@@ -48,7 +48,7 @@ bootimg 刷成功，刷 fullimage 出错
 
 
 
-### 刷预编译固件
+## 刷预编译固件
 
 在冰人固件的 wiki 中找到 windows 的预编译非 RDV4 版本下载，Generice Proxmark3 devices (non RDV4) [[Precompiled builds for RRG / Iceman repository x64](https://drive.google.com/open?id=1PI3Xr1mussPBPnYGu4ZjWzGPARK4N7JR)
 
@@ -89,7 +89,7 @@ kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash  ./fullimage.elf
 Have a nice day!
 ```
 
-### 解决方案
+## 解决方案
 
 到这一步可以确认是关键编译参数问题，而非硬件缩水问题233。
 
@@ -148,7 +148,7 @@ Have a nice day!
 >        os: RRG/Iceman/master/v4.9237-188-gbd5aa92a 2020-06-04 21:01:01
 >   compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]
 
-### 参考链接
+## 参考链接
 
 - https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1
 
