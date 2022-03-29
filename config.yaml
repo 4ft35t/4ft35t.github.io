@@ -1,4 +1,4 @@
-baseurl: "https://4ft35t.github.io/"
+baseURL: https://4ft35t.github.io
 languageCode: zh-cn
 theme: hugo-theme-stack
 paginate: 10
@@ -64,6 +64,7 @@ params:
 
     widgets:
         homepage:
+            - type: search
             - type: archives
               params:
                   limit: 5

@@ -1,0 +1,10 @@
+<form id="search" class="search-form widget" action='//www.google.com/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+    <p>
+        <label>{{ T "search.title" }}</label>
+        <input type="text" name="q" required placeholder="{{ T `search.placeholder` }}" />
+        <input type="hidden" name="sitesearch" value='{{ "/"| absURL }}'>
+        <button title="{{ T `search.title` }}">
+            {{ partial "helper/icon" "search" }}
+        </button>
+    </p>
+</form>
