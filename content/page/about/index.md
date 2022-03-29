@@ -7,6 +7,7 @@ aliases:
   - contact
 license: CC BY-NC-ND
 lastmod: '2022-03-28'
+comments: false
 menu:
     main: 
         weight: -10
