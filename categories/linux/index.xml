@@ -1,4 +1,254 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 4ft35t blog</title><link>https://4ft35t.github.io/categories/linux/</link><description>Recent content in Linux on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 27 Feb 2022 23:41:49 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;p>Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 4ft35t blog</title><link>https://4ft35t.github.io/categories/linux/</link><description>Recent content in Linux on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 21 Apr 2022 19:22:21 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>群晖 NAS 上运行 PaddleOCR</title><link>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</link><pubDate>Thu, 21 Apr 2022 19:22:21 +0800</pubDate><guid>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</guid><description>&lt;p>本文的起因是 Manjaro 的 python 版本升级到 3.10 后，PaddleOCR 无法运行。尝试用 pyenv 安装 3.9.10 版 python 后，执行命令 &lt;code>paddleocr&lt;/code> 报错&lt;/p>
+&lt;blockquote>
+&lt;p>ImportError: /opt/github/ocr/venv3910/lib/python3.9/site-packages/paddle/fluid/core_avx.so: undefined symbol: _dl_sym, version GLIBC_PRIVATE&lt;/p>
+&lt;/blockquote>
+&lt;p>这个报错，在 PaddleOCR 官方的 github 仓库 issue 有人发过, ubuntu 20.10 上遇到此报错，https://github.com/PaddlePaddle/Paddle/issues/36801 。&lt;/p>
+&lt;p>只能把 PaddleOCR 放在 Docker 运行了。不过官方镜像的体积高达 11G，我只需要 OCR 功能，不做样本训练，应该有很大的精简空间。&lt;/p>
+&lt;p>此前在 VPS 上的 ubuntu 20.04 里用过 PaddleOCR，故选择 ubuntu 20.04 做基础镜像。群晖 NAS 上有多个 Docker 服务，PaddleOCR 同样丢群晖跑。&lt;/p>
+&lt;h2 id="运行-ubuntu-2004">运行 ubuntu 20.04&lt;/h2>
+&lt;p>ssh 登录群晖后，执行 &lt;code>sudo su&lt;/code>，输入当前用户的密码，切换到 &lt;strong>root&lt;/strong>。&lt;/p>
+&lt;p>执行下面命令，进入 ubuntu 的 bash 终端&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">docker pull ubuntu:20.04
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker run -it ubuntu:20.04 bash
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="系统的软件源换成阿里云">系统的软件源换成阿里云&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">cp /etc/apt/sources.list{,.bak}
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sed -i &amp;#39;s/archive.ubuntu.com/mirrors.aliyun.com/&amp;#39; /etc/apt/sources.list
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">apt-get update
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="安装-python-环境">安装 python 环境&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">apt-get install python3 python3-pip wget
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mkdir /root/.pip
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">echo &amp;#39;[global]&amp;#39; &amp;gt; /root/.pip/pip.conf
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">echo &amp;#39;index-url = https://pypi.doubanio.com/simple&amp;#39; &amp;gt;&amp;gt; /root/.pip/pip.conf
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="安装-paddleocr">安装 PaddleOCR&lt;/h2>
+&lt;p>按官方文档操作，https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.4/doc/doc_ch/quickstart.md&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">pip install paddlepaddle -i https://mirror.baidu.com/pypi/simple
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pip install paddleocr
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>一切进展顺利，下面开始踩坑&lt;/p>
+&lt;h2 id="填坑过程">填坑过程&lt;/h2>
+&lt;p>执行 &lt;code>paddleocr -h&lt;/code>, 看是否有报错信息。错误一个接一个的来，下面安出现顺序解决&lt;/p>
+&lt;h3 id="modulenotfounderror-no-module-named-paddlefluidcore_noavx">ModuleNotFoundError: No module named &amp;lsquo;paddle.fluid.core_noavx&amp;rsquo;&lt;/h3>
+&lt;p>群晖的 CPU 太古老了，不支持 AVX(Advanced Vector Extensions) 指令集, 需要 noavx 的预编译包。
+在这个 issue &lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
+>https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a> 中找到线索，官方的预先编译 whl 列表 &lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
+>https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a>&lt;/p>
+&lt;p>&lt;code>cpu-mkl-noavx&lt;/code> 版本的预编译 whl 只有 python 3.8 的，正好和 ubuntu 20.04 的 python 版本一致。&lt;/p>
+&lt;p>下载地址&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;a class="link" href="https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl" target="_blank" rel="noopener"
+>https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;p>当前版本已是 2.2.2, 把连接中 2.2.1 全部替换成 2.2.2&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">echo https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl | sed &amp;#39;s/2.2.1/2.2.2/g&amp;#39;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>下载安装, 此问题解决&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">wget https://paddle-wheel.bj.bcebos.com/2.2.2/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.2-cp38-cp38-linux_x86_64.whl
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pip install --force-reinstal paddlepaddle-2.2.2-cp38-cp38-linux_x86_64.whl
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="importerror-libglso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libGL.so.1: cannot open shared object file: No such file or directory&lt;/h3>
+&lt;p>&lt;code>pip install opencv-python-headless==4.2.0.32&lt;/code>&lt;/p>
+&lt;h3 id="importerror-libgthread-20so0-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgthread-2.0.so.0: cannot open shared object file: No such file or directory&lt;/h3>
+&lt;p>&lt;code>apt-get install libglib2.0-0 libsm6 libxrender1 libxext6&lt;/code>&lt;/p>
+&lt;p>中途会出现选择时区的交互，依次选择 &lt;code>6. Asia&lt;/code> - &lt;code>19. Chongqing&lt;/code>&lt;/p>
+&lt;h3 id="importerror-libgompso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgomp.so.1: cannot open shared object file: No such file or directory&lt;/h3>
+&lt;p>&lt;code>apt-get install libgomp1&lt;/code>&lt;/p>
+&lt;p>至此，paddleocr 可以正常运行。&lt;/p>
+&lt;h2 id="添加-api">添加 API&lt;/h2>
+&lt;p>使用 flask 提供简单的 ocr 识别 API，可以上传图片或者从 url 下载图片，输出格式可选 text 或者 json，默认 text。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@app&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">route&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/ocr&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">methods&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;PUT&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;POST&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">ocr_text&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">files&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;img&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">img&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img_url&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;imgurl&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">requests&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">img_url&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">content&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">BytesIO&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">img&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">file_obj&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">BytesIO&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">save&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">file_obj&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">file_obj&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Image&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">open&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">img&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">convert&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;RGB&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">ocr&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ocr&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">array&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">img&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">det&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">rec&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">cls&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">text&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">join&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">result&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">output_format&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;outtype&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;text&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">output_format&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s1">&amp;#39;text&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">text&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ret&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="s1">&amp;#39;success&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">True&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;results&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[]}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">each&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">result&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">item&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;confidence&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">each&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">(),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;text&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">each&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;text_region&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">each&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ret&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;results&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">append&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">ret&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="api-使用">API 使用&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>上传文件识别, 输出 text 格式&lt;/p>
+&lt;p>&lt;code> curl 127.0.0.1:5000/ocr -F img=@/tmp/img.png&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>从图片url识别, 并输出 json 格式
+&lt;code>curl 127.0.0.1:5000/ocr -F imgurl=https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/doc/imgs_en/254.jpg -F outtype=json&lt;/code>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="创建-dockerfile">创建 Dockerfile&lt;/h2>
+&lt;p>上面提到的安装过程中需要交互选择时区，会中断 docker 编译，通过设置 &lt;code>ENV DEBIAN_FRONTEND=noninteractive&lt;/code> 来规避&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">FROM ubuntu:20.04
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">EXPOSE 5000
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ENV TZ=Asia/Shanghai
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ENV DEBIAN_FRONTEND=noninteractive
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">ARG PADDLE_VER=2.2.2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">COPY app.py /
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">COPY requirements.txt /tmp
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">RUN apt-get update \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;amp;&amp;amp; apt-get install -y python3 python3-pip libgomp1 libglib2.0-0 libsm6 libxrender1 libxext6 \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;amp;&amp;amp; pip install -r /tmp/requirements.txt \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;amp;&amp;amp; wget --directory-prefix /tmp/ https://paddle-wheel.bj.bcebos.com/${PADDLE_VER}/linux/linux-cpu-mkl-noavx/paddlepaddle-${PADDLE_VER}-cp38-cp38-linux_x86_64.whl \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;amp;&amp;amp; pip install --force-reinstall /tmp/paddlepaddle-${PADDLE_VER}-cp38-cp38-linux_x86_64.whl
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">RUN apt-get -y remove python3-pip \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;amp;&amp;amp; apt-get -y autoremove \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;amp;&amp;amp; apt-get -y install --no-install-recommends python3-setuptools \
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;amp;&amp;amp; rm -rf /var/lib/{apt,dpkg,cache,log}/ /root/.cache /tmp/*
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">CMD [&amp;#34;python3&amp;#34;, &amp;#34;/app.py&amp;#34;]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Dockerfile 及其它文件在 Github Repo &lt;a class="link" href="https://github.com/4ft35t/Paddleocr-docker" target="_blank" rel="noopener"
+>https://github.com/4ft35t/Paddleocr-docker&lt;/a>&lt;/p>
+&lt;p>Docker Hub 地址 &lt;a class="link" href="https://hub.docker.com/r/c403/paddleocr" target="_blank" rel="noopener"
+>https://hub.docker.com/r/c403/paddleocr&lt;/a>&lt;/p>
+&lt;p>最后吐槽一下，PaddleOCR 的文档太混乱了, 很多内容在 issues 里，不在文档。&lt;/p>
+&lt;h2 id="参考链接">参考链接&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
+>https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
+>https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.csdn.net/Max_ZhangJF/article/details/108920050" target="_blank" rel="noopener"
+>https://blog.csdn.net/Max_ZhangJF/article/details/108920050&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/1735" target="_blank" rel="noopener"
+>https://github.com/PaddlePaddle/PaddleOCR/issues/1735&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o" target="_blank" rel="noopener"
+>https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://github.com/explosion/spaCy/issues/1110" target="_blank" rel="noopener"
+>https://github.com/explosion/spaCy/issues/1110&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai" target="_blank" rel="noopener"
+>https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;p>Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p>
 &lt;h2 id="tldr">TLDR&lt;/h2>
 &lt;h3 id="手机端设置">手机端设置&lt;/h3>
 &lt;ol>
