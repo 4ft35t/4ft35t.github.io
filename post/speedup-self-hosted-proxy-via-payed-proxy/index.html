@@ -20,21 +20,21 @@
 </span><span class=lnt>19
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>+-----------+      +---------------+
 </span></span><span class=line><span class=cl>|           |      |               |
-</span></span><span class=line><span class=cl>| 墙内机器  +--①---&gt;  机场国内中转 |
+</span></span><span class=line><span class=cl>| 墙内机器  +--①---&gt;  机场国内中转  |
 </span></span><span class=line><span class=cl>|           |      |               |
 </span></span><span class=line><span class=cl>+-----------+      +-------+-------+
 </span></span><span class=line><span class=cl>                           |
 </span></span><span class=line><span class=cl>                           |②
 </span></span><span class=line><span class=cl>+------------+     +-------v-------+
 </span></span><span class=line><span class=cl>|            |     |               |
-</span></span><span class=line><span class=cl>| Cloudflare &lt;--③--+ 机场国外节点  |
+</span></span><span class=line><span class=cl>| Cloudflare &lt;--③--+ 机场国外节点   |
 </span></span><span class=line><span class=cl>|            |     |               |
 </span></span><span class=line><span class=cl>+------+-----+     +---------------+
 </span></span><span class=line><span class=cl>       |
 </span></span><span class=line><span class=cl>       |④
 </span></span><span class=line><span class=cl>+------v-----+     +---------------+
 </span></span><span class=line><span class=cl>|            |     |               |
-</span></span><span class=line><span class=cl>|  自建梯子  +--⑤--&gt;  目标网站     |
+</span></span><span class=line><span class=cl>|  自建梯子  +--⑤--&gt;  目标网站      |
 </span></span><span class=line><span class=cl>|            |     |               |
 </span></span><span class=line><span class=cl>+------------+     +---------------+
 </span></span></code></pre></td></tr></table></div></div><h3 id=部署要点>部署要点</h3><ol><li>自建梯子用 tsl+websocket 协议，各种工具都可以，ss+v2ray-plugin、v2ray、gost 等都可以。这一步目的是为了能用 Cloudflare 的 CDN。</li><li>需要有自己的域名，把域名接入 Cloudflare。</li><li>在本地用 clash 控制流量走向</li></ol><h2 id=方案优势>方案优势</h2><ol><li>国内运营商在链路①的位置只能看到你访问了机场的国内 IP</li><li>机场在链路②③只能看到你在用 tls 流量访问 Cloudflare 节点，目标网站就是你接入 Cloudflare 的域名。</li><li><strong>只要你不用代理访问国内网站，运营商和机场都不知道你的自建梯子的出口 IP</strong></li><li>和直连自建梯子比，大幅提升速度和稳定性；和单独使用机场相比，机场无法知道你的访问信息，安全性很大提升</li></ol><h2 id=方案实施>方案实施</h2><ol><li>各代理软件都有详细文档，如何开启tsl+websocket 协议，此处略</li><li>域名接入 cloudflare， 略</li><li>购买机场，略</li><li>clash 配置</li></ol><h3 id=clash-简介>Clash 简介</h3><p><a class=link href=https://github.com/Dreamacro/clash target=_blank rel=noopener>Clash</a>是一款用 Go 开发的多平台的代理工具，使用强大的策略组来管理节点;可以自动选择节点，不同的网站，在同一时间，可以使用不同的节点去访问。</p><p>我们用 Clash 强大的策略组功能来套娃。</p><p>官方文档有示例 <a class=link href=https://github.com/Dreamacro/clash/wiki/configuration target=_blank rel=noopener>https://github.com/Dreamacro/clash/wiki/configuration</a></p><blockquote><p>relay chains the proxies. proxies shall not contain a relay. No UDP support.
