@@ -94,6 +94,14 @@ __ProxyCommand 与 ProxyJump__
 
 __corkscrew 在代理不稳定时比 nc 可靠__ 
 
+### 特别注意
+
+本文提到的 nc 是 **BSD 版本的 netcat**， GNU 版本的 natcat 没有代理功能。
+
+更多 netcat 版本见 https://wiki.archlinux.org/title/Network_tools#Netcat
+
+
+
 ### 参考链接
 
 - https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts
