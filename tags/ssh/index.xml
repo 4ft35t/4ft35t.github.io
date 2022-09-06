@@ -99,6 +99,10 @@
 &lt;/li>
 &lt;/ul>
 &lt;p>&lt;strong>corkscrew 在代理不稳定时比 nc 可靠&lt;/strong>&lt;/p>
+&lt;h3 id="特别注意">特别注意&lt;/h3>
+&lt;p>本文提到的 nc 是 &lt;strong>BSD 版本的 netcat&lt;/strong>， GNU 版本的 natcat 没有代理功能。&lt;/p>
+&lt;p>更多 netcat 版本见 &lt;a class="link" href="https://wiki.archlinux.org/title/Network_tools#Netcat" target="_blank" rel="noopener"
+>https://wiki.archlinux.org/title/Network_tools#Netcat&lt;/a>&lt;/p>
 &lt;h3 id="参考链接">参考链接&lt;/h3>
 &lt;ul>
 &lt;li>&lt;a class="link" href="https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts" target="_blank" rel="noopener"
