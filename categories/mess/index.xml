@@ -1,4 +1,22 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Mess on 4ft35t blog</title><link>https://4ft35t.github.io/categories/mess/</link><description>Recent content in Mess on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 13 Jul 2020 14:35:25 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/categories/mess/index.xml" rel="self" type="application/rss+xml"/><item><title>PD/QC 电源转 DC 头输出</title><link>https://4ft35t.github.io/post/pd-qc-dc/</link><pubDate>Mon, 13 Jul 2020 14:35:25 +0800</pubDate><guid>https://4ft35t.github.io/post/pd-qc-dc/</guid><description>&lt;p>最初了解到 PD 电源 type-c 输出转 DC 圆头输出，是在 twitter 上，当时作者说从淘宝买了 PD 诱骗器，可以用 PD 头给 NUC 供电，省了 NUC 自带电源占的空间。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Mess on 4ft35t blog</title><link>https://4ft35t.github.io/categories/mess/</link><description>Recent content in Mess on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 18 Sep 2022 11:13:39 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/categories/mess/index.xml" rel="self" type="application/rss+xml"/><item><title>Kodi 设置调整笔记</title><link>https://4ft35t.github.io/post/kodi-note/</link><pubDate>Sun, 18 Sep 2022 11:13:39 +0800</pubDate><guid>https://4ft35t.github.io/post/kodi-note/</guid><description>&lt;img src="https://kodi.tv/images/kodi-logo-with-text.svg" alt="Featured image of post Kodi 设置调整笔记" />&lt;p>Kodi是由XBMC基金会开发的开源媒体播放器，原名XBMC，Kodi可以运行在多种操作系统和硬件平台。Kodi支持硬件解码，可以在硬件的很便宜的、低功耗的系统上播放高清视频&lt;/p>
+&lt;h2 id="字幕移动到视频外黑框">字幕移动到视频外黑框&lt;/h2>
+&lt;p>电视分辨率一般16:9, 比如1920x1080, 遇到比例不一致的视频，会填充黑框。&lt;/p>
+&lt;p>Kodi 默认字幕显示在视频内底部， 播放1918x802美剧时，视频上下有黑边，字幕在视频内底部。把字幕位置移动到黑框内，可以获得更好体验。&lt;/p>
+&lt;h3 id="设置方法">设置方法&lt;/h3>
+&lt;p>设置-播放器-语言-字幕在屏幕上位置，从&lt;code>固定&lt;/code>切换到&lt;code>视频外下方&lt;/code>&lt;/p>
+&lt;h2 id="coreelec-自动唤醒电视问题">CoreELEC 自动唤醒电视问题&lt;/h2>
+&lt;p>CoreELEC 19.x 在斐讯 N1 上存在电视关机后自动唤醒问题，需要调整 HDMI CEC 相关设置&lt;/p>
+&lt;h3 id="设置方法-1">设置方法&lt;/h3>
+&lt;p>设置-系统-输入-外设-cec adapter-电视关闭时, 从&lt;code>待机&lt;/code>切换到&lt;code>暂停播放&lt;/code>&lt;/p>
+&lt;h2 id="参考链接">参考链接&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://www.hao4k.cn/thread-24008-1-1.html" target="_blank" rel="noopener"
+>请问有谁知道哪个版本的kodi能设置字幕的显示位置？（已自解决，方法在7楼）&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://kodi.wiki/view/Settings/Player/Language#Subtitles" target="_blank" rel="noopener"
+>Settings/Player/Language&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://github.com/RuralHunter/CoreELEC/issues/84" target="_blank" rel="noopener"
+>[BUG] 19.x 会自动唤醒电视 #84&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>PD/QC 电源转 DC 头输出</title><link>https://4ft35t.github.io/post/pd-qc-dc/</link><pubDate>Mon, 13 Jul 2020 14:35:25 +0800</pubDate><guid>https://4ft35t.github.io/post/pd-qc-dc/</guid><description>&lt;p>最初了解到 PD 电源 type-c 输出转 DC 圆头输出，是在 twitter 上，当时作者说从淘宝买了 PD 诱骗器，可以用 PD 头给 NUC 供电，省了 NUC 自带电源占的空间。&lt;/p>
 &lt;p>PD 和 QC 是两种电源快充协议，一般 PD 充电头都支持 QC 协议，反之则不行；与之相对应的，PD 充电头的价格要比 QC 贵很多。&lt;/p>
 &lt;p>我也量了一下笔记本充电头的外径 4mm，然后在淘宝看到的参数有两种：&lt;/p>
 &lt;ul>
