@@ -8,7 +8,7 @@ hidden: false
 comments: true
 tags: [kodi, hdmi]
 categories: [Mess]
-draft: true
+draft: false
 ---
 
 Kodi是由XBMC基金会开发的开源媒体播放器，原名XBMC，Kodi可以运行在多种操作系统和硬件平台。Kodi支持硬件解码，可以在硬件的很便宜的、低功耗的系统上播放高清视频
