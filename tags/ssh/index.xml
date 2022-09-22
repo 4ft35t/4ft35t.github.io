@@ -62,7 +62,7 @@
 &lt;ul>
 &lt;li>
 &lt;p>远古 SSH 客户端，OpenSSH &amp;lt; 5.4&lt;/p>
-&lt;p>&lt;code>ProxyCommand ssh jumpserver exec nc %h %p&lt;/code>&lt;/p>
+&lt;p>&lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code>&lt;/p>
 &lt;p>或者
 &lt;code>ssh -tt usr1@Jumphost ssh -tt usr2@FooServer&lt;/code>&lt;/p>
 &lt;/li>
@@ -103,10 +103,65 @@
 &lt;p>本文提到的 nc 是 &lt;strong>BSD 版本的 netcat&lt;/strong>， GNU 版本的 natcat 没有代理功能。&lt;/p>
 &lt;p>更多 netcat 版本见 &lt;a class="link" href="https://wiki.archlinux.org/title/Network_tools#Netcat" target="_blank" rel="noopener"
 >https://wiki.archlinux.org/title/Network_tools#Netcat&lt;/a>&lt;/p>
+&lt;h3 id="使用-socat-突破某些堡垒机">使用 socat 突破某些堡垒机&lt;/h3>
+&lt;p>某堡垒机的OpenSSH版本是&lt;code>OpenSSH_7.8p1&lt;/code>, 使用&lt;code>ssh -J jumpserver user@dst-host&lt;/code>无法连接，从报错信息来看，堡垒机禁止了 SSH 转发功能&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">debug1: Local version string SSH-2.0-OpenSSH_8.1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Stdio forwarding request failed: Session open refused by peer
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">kex_exchange_identification: Connection closed by remote host
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>ssh -tt&lt;/code> 和 &lt;code>ssh -W&lt;/code> 也是同样错误，SSH 自身转发走不通，需要借助第三方软件。&lt;/p>
+&lt;h4 id="尝试1---使用-nc-转发">尝试1 - 使用 nc 转发&lt;/h4>
+&lt;p>使用 &lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code> 连接失败，报错, 跳板机上没有 nc&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">debug1: Local version string SSH-2.0-OpenSSH_8.1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">bash: nc: &lt;span class="nb">command&lt;/span> not found
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>用包管理器安装 netcat, 提供的只有 nmap 版本，没有代理功能。&lt;/p>
+&lt;h4 id="尝试1---使用-socat-转发">尝试1 - 使用 socat 转发&lt;/h4>
+&lt;p>Socat 是 Linux 下的一个多功能的网络工具，名字来由是 「Socket CAT」。其功能与有瑞士军刀之称的 Netcat 类似，可以看做是 Netcat 的加强版。Socat 的主要特点就是在两个数据流之间建立通道，支持众多协议和链接方式，如 IP、TCP、 UDP、IPv6、PIPE、EXEC、System、Open、Proxy、Openssl、Socket等。&lt;/p>
+&lt;p>使用 &lt;code>ProxyCommand ssh jumpserver socat - tcp:%h:%p&lt;/code> 成功通过堡垒机连接目标机器。&lt;/p>
+&lt;h3 id="socat-在proxycommand-中与-netcat-等效用法">socat 在ProxyCommand 中与 netcat 等效用法&lt;/h3>
+&lt;p>socat 稳定版 1.7，beta 版 2 的代理功能更丰富。&lt;/p>
+&lt;h4 id="跳板机堡垒机">跳板机/堡垒机&lt;/h4>
+&lt;p>&lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code> -&amp;gt; &lt;code>ProxyCommand ssh jumpserver socat - tcp:%h:%p&lt;/code>&lt;/p>
+&lt;h4 id="socks-代理-1">socks 代理&lt;/h4>
+&lt;p>&lt;code>ProxyCommand nc -x 127.0.0.1:1080 %h %p&lt;/code> -&amp;gt;&lt;/p>
+&lt;ul>
+&lt;li>socat1 &lt;code>ProxyCommand socat - &amp;quot;SOCKS4:127.0.0.1:%h:%p,socksport=1080&amp;quot;&lt;/code>&lt;/li>
+&lt;li>socat2 &lt;code>ProxyCommand socat - &amp;quot;SOCKS5:%h:%p|tcp:127.0.0.1:1080&amp;quot;&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h4 id="httphttps-代理-1">HTTP/HTTPS 代理&lt;/h4>
+&lt;p>&lt;code>ProxyCommand nc -X connect -x proxyhost:proxyport %h %p&lt;/code> -&amp;gt;&lt;/p>
+&lt;ul>
+&lt;li>socat1 &lt;code>ProxyCommand socat - &amp;quot;PROXY:proxyhost:%h:%p,proxyport=proxyport&amp;quot;&lt;/code>&lt;/li>
+&lt;li>socat2 &lt;code>ProxyCommand socat - &amp;quot;PROXY:%h:%p|tcp:myproxy:80&amp;quot;&lt;/code>&lt;/li>
+&lt;/ul>
 &lt;h3 id="参考链接">参考链接&lt;/h3>
 &lt;ul>
 &lt;li>&lt;a class="link" href="https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts" target="_blank" rel="noopener"
 >https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/" target="_blank" rel="noopener"
 >https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.endpointdev.com/blog/2013/04/socat-and-netcat-proxycommand-ssh/" target="_blank" rel="noopener"
+>https://www.endpointdev.com/blog/2013/04/socat-and-netcat-proxycommand-ssh/&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://unix.stackexchange.com/questions/68826/connecting-to-host-by-ssh-client-in-linux-by-proxy" target="_blank" rel="noopener"
+>https://unix.stackexchange.com/questions/68826/connecting-to-host-by-ssh-client-in-linux-by-proxy&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://gitolite.com/git-over-proxy.html" target="_blank" rel="noopener"
+>https://gitolite.com/git-over-proxy.html&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://linux.die.net/man/1/socat" target="_blank" rel="noopener"
+>https://linux.die.net/man/1/socat&lt;/a>&lt;/li>
 &lt;/ul></description></item></channel></rss>
