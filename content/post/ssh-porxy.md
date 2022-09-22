@@ -1,8 +1,8 @@
 ---
 title: "SSH 跳板机与代理"
 date: 2020-06-03T16:55:35+08:00
-tags: ["ssh", "proxy"]
-categories: ["Network"]
+tags: [ssh, proxy, netcat, socat, connect, corkscrew]
+categories: [Network]
 draft: false
 ---
 
@@ -88,9 +88,9 @@ __ProxyCommand 与 ProxyJump__
 
 #### HTTP/HTTPS 代理
 
-- nc `ProxyCommand nc -X connect -x proxyhost:proxyport %h %p`
+- nc `ProxyCommand nc -X connect -x 1.2.3.4:3128 %h %p`
 
-- https://github.com/bryanpkc/corkscrew `ProxyCommand /usr/local/bin/corkscrew proxyhost proxyport %h %p`
+- https://github.com/bryanpkc/corkscrew `ProxyCommand /usr/local/bin/corkscrew 1.2.3.4 3128 %h %p`
 
 __corkscrew 在代理不稳定时比 nc 可靠__ 
 
@@ -117,7 +117,7 @@ bash: nc: command not found
 ```
 用包管理器安装 netcat, 提供的只有 nmap 版本，没有代理功能。
 
-#### 尝试1 - 使用 socat 转发
+#### 尝试2 - 使用 socat 转发
 Socat 是 Linux 下的一个多功能的网络工具，名字来由是 「Socket CAT」。其功能与有瑞士军刀之称的 Netcat 类似，可以看做是 Netcat 的加强版。Socat 的主要特点就是在两个数据流之间建立通道，支持众多协议和链接方式，如 IP、TCP、 UDP、IPv6、PIPE、EXEC、System、Open、Proxy、Openssl、Socket等。
 
 
@@ -135,11 +135,9 @@ socat 稳定版 1.7，beta 版 2 的代理功能更丰富。
 - socat2 `ProxyCommand socat - "SOCKS5:%h:%p|tcp:127.0.0.1:1080"`
 
 #### HTTP/HTTPS 代理
-`ProxyCommand nc -X connect -x proxyhost:proxyport %h %p` ->
-- socat1 `ProxyCommand socat - "PROXY:proxyhost:%h:%p,proxyport=proxyport"`
-- socat2 `ProxyCommand socat - "PROXY:%h:%p|tcp:myproxy:80"`
-
-
+`ProxyCommand nc -X connect -x 1.2.3.4:3128 %h %p` ->
+- socat1 `ProxyCommand socat - "PROXY:1.2.3.4:%h:%p,proxyport=3128"`
+- socat2 `ProxyCommand socat - "PROXY:%h:%p|tcp:1.2.3.4:3128"`
 
 ### 参考链接
 - https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts
