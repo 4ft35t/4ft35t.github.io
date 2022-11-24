@@ -185,6 +185,11 @@ opkg install shadowsocks-libev
   ```bash
   iptables -t nat -I OUTPUT -p tcp -d 1.1.1.1 -j REDIRECT --to-ports 12346
   ```
+  等效 nftables 指令
+  ```bash
+  nft add chain inet fw4 jichang_rules_out '{type nat hook output priority filter -2;}'
+  nft add rule inet fw4 jichang_rules_out ip protocol tcp ip daddr == 172.67.134.143 redirect to :12346
+  ```
 
   **机场的 ss-redir 需要后启动，shadowsocks 默认策略是插入 OUTPUT 链首位，后启动的在首位**
 
