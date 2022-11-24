@@ -344,6 +344,17 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">iptables -t nat -I OUTPUT -p tcp -d 1.1.1.1 -j REDIRECT --to-ports &lt;span class="m">12346&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
+&lt;/div>&lt;p>等效 nftables 指令&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">nft add chain inet fw4 jichang_rules_out &lt;span class="s1">&amp;#39;{type nat hook output priority filter -2;}&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">nft add rule inet fw4 jichang_rules_out ip protocol tcp ip &lt;span class="nv">daddr&lt;/span> &lt;span class="o">==&lt;/span> 172.67.134.143 redirect to :12346
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
 &lt;/div>&lt;p>&lt;strong>机场的 ss-redir 需要后启动，shadowsocks 默认策略是插入 OUTPUT 链首位，后启动的在首位&lt;/strong>&lt;/p>
 &lt;h2 id="参考链接">参考链接&lt;/h2>
 &lt;ul>
