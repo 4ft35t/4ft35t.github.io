@@ -2,7 +2,7 @@
 title: "低成本 mesh 组网"
 description: 偶然在什么值得买看到“最便宜的组Aimesh的方案”，正好有网件6300V2，动手实践一番
 date: 2022-12-04T17:57:03+08:00
-image: 
+image: https://cdn.unwire.hk/wp-content/uploads/2018/03/999-1.png
 math: 
 hidden: false
 comments: true
