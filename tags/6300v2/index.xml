@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>6300v2 on 4ft35t blog</title><link>https://4ft35t.github.io/tags/6300v2/</link><description>Recent content in 6300v2 on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 04 Dec 2022 17:57:03 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/6300v2/index.xml" rel="self" type="application/rss+xml"/><item><title>低成本 mesh 组网</title><link>https://4ft35t.github.io/post/lowcast-mesh/</link><pubDate>Sun, 04 Dec 2022 17:57:03 +0800</pubDate><guid>https://4ft35t.github.io/post/lowcast-mesh/</guid><description>&lt;img src="https://cdn.unwire.hk/wp-content/uploads/2018/03/999-1.png" alt="Featured image of post 低成本 mesh 组网" />&lt;p>上一次主动看 mesh 路由，单台成本 2000 左右，最近在什么值得买上看到用网件6300V2刷机后租mesh的，二手价格单台不到80，立马买两台来组网。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>6300v2 on 4ft35t blog</title><link>https://4ft35t.github.io/tags/6300v2/</link><description>Recent content in 6300v2 on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 04 Dec 2022 17:57:03 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/6300v2/index.xml" rel="self" type="application/rss+xml"/><item><title>低成本 mesh 组网</title><link>https://4ft35t.github.io/post/lowcast-mesh/</link><pubDate>Sun, 04 Dec 2022 17:57:03 +0800</pubDate><guid>https://4ft35t.github.io/post/lowcast-mesh/</guid><description>&lt;img src="https://cdn.unwire.hk/wp-content/uploads/2018/03/999-1.png" alt="Featured image of post 低成本 mesh 组网" />&lt;p>上一次主动看 mesh 路由，单台成本 2000 左右，最近在什么值得买上看到用网件 6300V2 刷机后组 mesh 的，原理是网件6300V2 和华硕 AC68U 使用相同的硬件，修改 CEF 中相关配置，即可伪装成华硕 AC68U，使用华硕固件和功能。&lt;/p>
+&lt;p>6300V2 二手价格单台不到80，立马买两台来组网。&lt;/p>
 &lt;h2 id="硬件成本">硬件成本&lt;/h2>
-&lt;p>自有一台服役多年的 6300V2, 淘宝新买2台二手，75.99 一台包邮。&lt;/p>
+&lt;p>自有一台服役多年的 6300V2，淘宝新买2台二手，75.99 一台包邮。&lt;/p>
 &lt;p>不想折腾的可以买刷好梅林386版本的机器，跳过刷机部分，直达 mesh 组网部分。&lt;/p>
 &lt;ul>
 &lt;li>75.99 包邮，原厂固件 &lt;a class="link" href="https://item.taobao.com/item.htm?id=654468086454" target="_blank" rel="noopener"
@@ -15,7 +16,7 @@
 &lt;p>路由器关机，按住reset开机，15秒后松开&lt;/p>
 &lt;p>浏览器打开 192.168.1.1，admin/password 登录，固件升级选择 R6300V2_380.70_0-X7.9.1-koolshare.chk&lt;/p>
 &lt;h3 id="2-备份-cfe-和-board_data">2. 备份 CFE 和 board_data&lt;/h3>
-&lt;p>刷梅林 380 版本后，路由器地址变成 192.168.50.1。登录路由器, 帐号密码沿用 admin/password, 打开 SSH 服务&lt;/p>
+&lt;p>刷梅林 380 版本后，路由器地址变成 192.168.50.1。登录路由器，帐号密码沿用 admin/password，打开 SSH 服务&lt;/p>
 &lt;p>系统管理 - 系统设置 - 启用 SSH- LAN only - 应用本页面设置&lt;/p>
 &lt;p>使用 ssh 登录路由器，Windows 可以用 putty 或者 wsl。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -43,7 +44,7 @@
 >https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/cfe_2.4Gfix.bin&lt;/a>&lt;/p>
 &lt;p>下载 CEF 修改器 &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/CFEEdit.exe" target="_blank" rel="noopener"
 >https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/CFEEdit.exe&lt;/a>&lt;/p>
-&lt;p>打开 CFEEdit.exe, 把 MAC 地址修改成华硕的地址段&lt;/p>
+&lt;p>打开 CFEEdit.exe，把 MAC 地址修改成华硕的地址段&lt;/p>
 &lt;p>需要修改五个位置&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -62,7 +63,7 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>另存为 cfe-1.bin&lt;/p>
-&lt;p>继续修改，把上面内容 MAC 地址中倒数第二段的 &lt;code>F1&lt;/code> 分别修改成 &lt;code>F2&lt;/code> 和 &lt;code>F3&lt;/code>，同时 &lt;code>secret_code&lt;/code> 最后的 &lt;code>17&lt;/code> 改成 &lt;code>27&lt;/code> 和 &lt;code>37&lt;/code>, 另存为 cfe-2.bin 和 cfe-3.bin， 分别对应三台机器。&lt;/p>
+&lt;p>继续修改，把上面内容 MAC 地址中倒数第二段的 &lt;code>F1&lt;/code> 分别修改成 &lt;code>F2&lt;/code> 和 &lt;code>F3&lt;/code>，同时 &lt;code>secret_code&lt;/code> 最后的 &lt;code>17&lt;/code> 改成 &lt;code>27&lt;/code> 和 &lt;code>37&lt;/code>，另存为 cfe-2.bin 和 cfe-3.bin，分别对应三台机器。&lt;/p>
 &lt;p>scp 把 CFE 传送到路由器&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -91,11 +92,11 @@
 >https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_386/Netgear/R6300v2/RT-AC6300v2_386.2_4-20210628-91625500b.trx&lt;/a>&lt;/p>
 &lt;p>Windows 电脑安装自带的 tftp 客户端&lt;/p>
 &lt;p>Win+r - 输入 appwiz.cpl - 打开或关闭Windows功能 - 勾选TFTP客户端 - 重启&lt;/p>
-&lt;p>打开一个 cmd 窗口，执行 &lt;code>ping -t 192.168.1.1&lt;/code> 观察 TTL，TTL 值为 100 即表示路由器处于 tftp 刷机状态，如果不是 100，重启路由器
-打开第二个 cmd 窗口, 执行 &lt;code>tftp -i 192.168.1.1 put RT-AC6300v2_386.2_4-20210628-91625500b.trx&lt;/code>&lt;/p>
+&lt;p>打开一个 cmd 窗口，执行 &lt;code>ping -t 192.168.1.1&lt;/code> 观察 TTL，TTL 值为 100 即表示路由器处于 tftp 刷机状态，如果不是 100，重启路由器。&lt;/p>
+&lt;p>打开第二个 cmd 窗口，执行 &lt;code>tftp -i 192.168.1.1 put RT-AC6300v2_386.2_4-20210628-91625500b.trx&lt;/code>&lt;/p>
 &lt;p>等 tftp 传输完成后，路由器会在3分钟内重启多次，最后完成刷机。&lt;/p>
-&lt;p>当 ping 的 TTL 变成 64， 即表示路由器正常启动。如果 tftp 传输完成后5分钟，TTL 还没变成 64，重启路由器。&lt;/p>
-&lt;p>如果重启后 ping TTL 值一直保持 100，浏览器访问 192.168.1.1， 进入 CFE miniWeb，点击 &amp;ldquo;Restore default NVRAM values&amp;rdquo;, 然后重启。&lt;/p>
+&lt;p>当 ping 的 TTL 变成 64，即表示路由器正常启动。如果 tftp 传输完成后5分钟，TTL 还没变成 64，重启路由器。&lt;/p>
+&lt;p>如果重启后 ping TTL 值一直保持 100，浏览器访问 192.168.1.1，进入 CFE miniWeb，点击 &amp;ldquo;Restore default NVRAM values&amp;rdquo;，然后重启。&lt;/p>
 &lt;h3 id="4-刷机后存在问题">4. 刷机后存在问题&lt;/h3>
 &lt;p>刷机后，WAN 口的位置会发生变化&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -123,7 +124,7 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;h2 id="mesh-组网">mesh 组网&lt;/h2>
-&lt;p>路由1 做为 mesh 路由，访问 192.168.1.1，按向导完成 pppoe 拨号设置, 选路由器模式。&lt;/p>
+&lt;p>路由1 做为 mesh 路由，访问 192.168.1.1，按向导完成 pppoe 拨号设置，选路由器模式。&lt;/p>
 &lt;p>路由器2，作为 AiMesh 节点，按向导完成动态动态 IP 设置；然后&lt;/p>
 &lt;p>系统管理 - 操作模式 - AiMesh 节点 - 保存&lt;/p>
 &lt;p>等界面显示重置完成，路由器2的设置完成。&lt;/p>
@@ -134,6 +135,8 @@
 &lt;p>现在可以享受 mesh 组网的无缝切换了，不用再像用扩展器一样手动切换。&lt;/p>
 &lt;h3 id="有线回程">有线回程&lt;/h3>
 &lt;p>路由器1 LAN 连接路由器2 WAN，即可让路由器2 变成有线回程。路由器3 同理。&lt;/p>
+&lt;h2 id="加散热风扇">加散热风扇&lt;/h2>
+&lt;p>使用 3007 风扇，可以藏在机器内，用杜邦接口插在 ttl 针上，VCC 接红线，GND 接黑线。&lt;/p>
 &lt;h2 id="参考链接">参考链接&lt;/h2>
 &lt;ul>
 &lt;li>&lt;a class="link" href="https://post.smzdm.com/p/a4dk3zgk/" target="_blank" rel="noopener"
@@ -144,4 +147,6 @@
 >网件路由器 R6300v2 刷机教程和固件大全&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://zhuanlan.zhihu.com/p/386867842" target="_blank" rel="noopener"
 >无线路由器Mesh组网教程：华硕Aimesh组网篇&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.right.com.cn/forum/forum.php?mod=redirect&amp;amp;goto=findpost&amp;amp;ptid=1686743&amp;amp;pid=5735198" target="_blank" rel="noopener"
+>6300v2主动散热加usb风扇问题&lt;/a>&lt;/li>
 &lt;/ul></description></item></channel></rss>
