@@ -174,7 +174,7 @@
 >Settings/Player/Language&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://github.com/RuralHunter/CoreELEC/issues/84" target="_blank" rel="noopener"
 >[BUG] 19.x 会自动唤醒电视 #84&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>修复 Chromecast YouTube 投屏失败问题</title><link>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</link><pubDate>Fri, 29 Jul 2022 01:38:00 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</guid><description>&lt;h2 id="问题分析">问题分析&lt;/h2>
+&lt;/ul></description></item><item><title>修复 Chromecast YouTube 投屏失败问题</title><link>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</link><pubDate>Fri, 29 Jul 2022 01:38:00 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</guid><description>&lt;img src="https://www.right.com.cn/forum/data/attachment/forum/201803/08/102522uwh6r70ssbuh01r5.jpg" alt="Featured image of post 修复 Chromecast YouTube 投屏失败问题" />&lt;h2 id="问题分析">问题分析&lt;/h2>
 &lt;p>软路由 OpenWrt 做网关，同时用 SS 透明代理所有国外 IP 的 TCP 连接，手机、电脑都无感翻墙。&lt;/p>
 &lt;p>Chromecast 在多个境外网站上投屏正常工作，Google Photos 投屏也正常，唯独 YouTube 无法投屏。&lt;/p>
 &lt;p>使用关键词 &amp;ldquo;chromecast youtube something went wrong&amp;rdquo; 没找到有用信息，把 ChromeCast 的语言改成中文后，用中文的报错信息一下就找到了，果然是天朝特有问题。Google 搜 &lt;code>chromecast youtube &amp;quot;出问题了&amp;quot;&lt;/code>。&lt;/p>
@@ -524,7 +524,7 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 >v2ay 配置透明代理规则&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="http://openwrt-dist.sourceforge.net/" target="_blank" rel="noopener"
 >aa65535 维护的 shadowsocks for openwrt&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>群晖 NAS 上运行 PaddleOCR</title><link>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</link><pubDate>Thu, 21 Apr 2022 19:22:21 +0800</pubDate><guid>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</guid><description>&lt;p>本文的起因是 Manjaro 的 python 版本升级到 3.10 后，PaddleOCR 无法运行。尝试用 pyenv 安装 3.9.10 版 python 后，执行命令 &lt;code>paddleocr&lt;/code> 报错&lt;/p>
+&lt;/ul></description></item><item><title>群晖 NAS 上运行 PaddleOCR</title><link>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</link><pubDate>Thu, 21 Apr 2022 19:22:21 +0800</pubDate><guid>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</guid><description>&lt;img src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.6/doc/PaddleOCR_log.png" alt="Featured image of post 群晖 NAS 上运行 PaddleOCR" />&lt;p>本文的起因是 Manjaro 的 python 版本升级到 3.10 后，PaddleOCR 无法运行。尝试用 pyenv 安装 3.9.10 版 python 后，执行命令 &lt;code>paddleocr&lt;/code> 报错&lt;/p>
 &lt;blockquote>
 &lt;p>ImportError: /opt/github/ocr/venv3910/lib/python3.9/site-packages/paddle/fluid/core_avx.so: undefined symbol: _dl_sym, version GLIBC_PRIVATE&lt;/p>
 &lt;/blockquote>
@@ -774,7 +774,7 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 >https://github.com/explosion/spaCy/issues/1110&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai" target="_blank" rel="noopener"
 >https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;p>Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p>
+&lt;/ul></description></item><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;img src="https://oss-cn-hangzhou.aliyuncs.com/codingsky/cdn/img/2019-07-25/dc29fbcc14b8c4acce61ba33a7f2af63.jpg" alt="Featured image of post 利用 Pixel 一代的无限存储备份 NAS 照片" />&lt;p>Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p>
 &lt;h2 id="tldr">TLDR&lt;/h2>
 &lt;h3 id="手机端设置">手机端设置&lt;/h3>
 &lt;ol>
@@ -925,7 +925,7 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 >rclone SFTP configuration&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://pmiku.com/note/mount-cifs-in-android.html" target="_blank" rel="noopener"
 >mount-cifs-in-android&lt;/a>&lt;/li>
-&lt;/ol></description></item><item><title>Android 远程截图</title><link>https://4ft35t.github.io/post/android-screenshoot-remote/</link><pubDate>Fri, 06 Aug 2021 16:51:31 +0800</pubDate><guid>https://4ft35t.github.io/post/android-screenshoot-remote/</guid><description>&lt;p>某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。&lt;/p>
+&lt;/ol></description></item><item><title>Android 远程截图</title><link>https://4ft35t.github.io/post/android-screenshoot-remote/</link><pubDate>Fri, 06 Aug 2021 16:51:31 +0800</pubDate><guid>https://4ft35t.github.io/post/android-screenshoot-remote/</guid><description>&lt;img src="https://img1.mydrivers.com/img/20210226/s_ff489bbf9a884b83a72837c099f23e97.jpg" alt="Featured image of post Android 远程截图" />&lt;p>某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。&lt;/p>
 &lt;h2 id="背景">背景&lt;/h2>
 &lt;p>云闪付公交乘车码，每周使用三次可以获得一张 6-5 消费券，但那一个帐号一周只能领一次，需要多个帐号。&lt;/p>
 &lt;p>家里有个老华为手机，上面登录的有老人的云闪付帐号，但是注册帐号的手机号失效，无法更换新手机号，新设备登录需要短信验证码，只有拿这个手机去刷。&lt;/p>
@@ -1126,7 +1126,7 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 loading="lazy"
 >&lt;/p>
 &lt;p>最后，所有相关代码在 &lt;a class="link" href="https://github.com/4ft35t/Android-Screenshoot-Remote" target="_blank" rel="noopener"
->https://github.com/4ft35t/Android-Screenshoot-Remote&lt;/a>&lt;/p></description></item><item><title>PD/QC 电源转 DC 头输出</title><link>https://4ft35t.github.io/post/pd-qc-dc/</link><pubDate>Mon, 13 Jul 2020 14:35:25 +0800</pubDate><guid>https://4ft35t.github.io/post/pd-qc-dc/</guid><description>&lt;p>最初了解到 PD 电源 type-c 输出转 DC 圆头输出，是在 twitter 上，当时作者说从淘宝买了 PD 诱骗器，可以用 PD 头给 NUC 供电，省了 NUC 自带电源占的空间。&lt;/p>
+>https://github.com/4ft35t/Android-Screenshoot-Remote&lt;/a>&lt;/p></description></item><item><title>PD/QC 电源转 DC 头输出</title><link>https://4ft35t.github.io/post/pd-qc-dc/</link><pubDate>Mon, 13 Jul 2020 14:35:25 +0800</pubDate><guid>https://4ft35t.github.io/post/pd-qc-dc/</guid><description>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2015.10.09.png" alt="Featured image of post PD/QC 电源转 DC 头输出" />&lt;p>最初了解到 PD 电源 type-c 输出转 DC 圆头输出，是在 twitter 上，当时作者说从淘宝买了 PD 诱骗器，可以用 PD 头给 NUC 供电，省了 NUC 自带电源占的空间。&lt;/p>
 &lt;p>PD 和 QC 是两种电源快充协议，一般 PD 充电头都支持 QC 协议，反之则不行；与之相对应的，PD 充电头的价格要比 QC 贵很多。&lt;/p>
 &lt;p>我也量了一下笔记本充电头的外径 4mm，然后在淘宝看到的参数有两种：&lt;/p>
 &lt;ul>
@@ -1162,7 +1162,7 @@ loading="lazy"
 loading="lazy"
 >&lt;/p>
 &lt;h3 id="趣事">趣事&lt;/h3>
-&lt;p>家里有个硕方的标签打印机，自带电源是 9v 2.5a，直接插笔记本诱骗器的 19v 供电居然可以正常工作。&lt;/p></description></item><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;p>一个小脚本，&lt;code>[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code>,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p>
+&lt;p>家里有个硕方的标签打印机，自带电源是 9v 2.5a，直接插笔记本诱骗器的 19v 供电居然可以正常工作。&lt;/p></description></item><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;img src="https://pic1.zhimg.com/v2-6101b6f0fb5664fd5f959332faefb38f_1440w.jpg" alt="Featured image of post bash 条件退出踩坑" />&lt;p>一个小脚本，&lt;code>[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code>,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p>
 &lt;h3 id="排查">排查&lt;/h3>
 &lt;p>这个写法以前在脚本里经常写，稳定运行未出错。对比之前的脚本后发现差异，之前的脚本 exit 是提前退出，后面还有内容；这个脚本exit是上层调用脚本反馈最终结果，exit 是最后一行。&lt;/p>
 &lt;p>修改脚本后一切正常&lt;/p>
@@ -1232,7 +1232,7 @@ loading="lazy"
 &lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> &lt;span class="nv">$status&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;success&amp;#34;&lt;/span> &lt;span class="o">]&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div></description></item><item><title>Promark3 使用 冰人（iceman）固件</title><link>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</link><pubDate>Thu, 04 Jun 2020 19:21:59 +0800</pubDate><guid>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</guid><description>&lt;p>淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 &lt;code>Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error&lt;/code>。&lt;/p>
+&lt;/div></description></item><item><title>Promark3 使用 冰人（iceman）固件</title><link>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</link><pubDate>Thu, 04 Jun 2020 19:21:59 +0800</pubDate><guid>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</guid><description>&lt;img src="http://img-blog.csdnimg.cn/20200307161927634.jpg" alt="Featured image of post Promark3 使用 冰人（iceman）固件" />&lt;p>淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 &lt;code>Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error&lt;/code>。&lt;/p>
 &lt;p>官方固件编译、烧录、使用都没问题，看到冰人的固件有两条命令很心动，把重复工作自动化，节约时间。&lt;/p>
 &lt;ul>
 &lt;li>&lt;code>auto&lt;/code> 自动识别卡类型&lt;/li>
@@ -1452,7 +1452,7 @@ compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p>
 &lt;p>&lt;a class="link" href="https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md" target="_blank" rel="noopener"
 >https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md&lt;/a>&lt;/p>
 &lt;/li>
-&lt;/ul></description></item><item><title>SSH 跳板机与代理</title><link>https://4ft35t.github.io/post/ssh-porxy/</link><pubDate>Wed, 03 Jun 2020 16:55:35 +0800</pubDate><guid>https://4ft35t.github.io/post/ssh-porxy/</guid><description>&lt;p>基于各种复杂环境，ssh 无法直接连接目标主机，需要借助中间的跳板机或者代理来连接。通常使用 ssh-agent 来通过跳板机连接目标主机，使用 ProxyCommand 或者 ProxyJump 连接更方便。&lt;/p>
+&lt;/ul></description></item><item><title>SSH 跳板机与代理</title><link>https://4ft35t.github.io/post/ssh-porxy/</link><pubDate>Wed, 03 Jun 2020 16:55:35 +0800</pubDate><guid>https://4ft35t.github.io/post/ssh-porxy/</guid><description>&lt;img src="https://www.openssh.com/images/openssh.gif" alt="Featured image of post SSH 跳板机与代理" />&lt;p>基于各种复杂环境，ssh 无法直接连接目标主机，需要借助中间的跳板机或者代理来连接。通常使用 ssh-agent 来通过跳板机连接目标主机，使用 ProxyCommand 或者 ProxyJump 连接更方便。&lt;/p>
 &lt;h3 id="跳板机">跳板机&lt;/h3>
 &lt;p>在　&lt;code>~/.ssh/config&lt;/code> 中给跳板机一个方便记忆的别名，比如　jumpserver&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -1618,7 +1618,7 @@ compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p>
 >https://gitolite.com/git-over-proxy.html&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://linux.die.net/man/1/socat" target="_blank" rel="noopener"
 >https://linux.die.net/man/1/socat&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>解决应用商店 0x80131500 错误</title><link>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</link><pubDate>Wed, 03 Jun 2020 11:48:10 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</guid><description>&lt;p>Win 10 应用商店打开就报 0x80131500 错误，尝试各种方法都不行，最终使用 fiddler 曲线解决。&lt;/p>
+&lt;/ul></description></item><item><title>解决应用商店 0x80131500 错误</title><link>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</link><pubDate>Wed, 03 Jun 2020 11:48:10 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</guid><description>&lt;img src="https://img-blog.csdnimg.cn/20190629132640532.png" alt="Featured image of post 解决应用商店 0x80131500 错误" />&lt;p>Win 10 应用商店打开就报 0x80131500 错误，尝试各种方法都不行，最终使用 fiddler 曲线解决。&lt;/p>
 &lt;p>尝试过的方法来自 &lt;a class="link" href="https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b" target="_blank" rel="noopener"
 >https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b&lt;/a>&lt;/p>
 &lt;ul>
@@ -1640,7 +1640,7 @@ compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p>
 loading="lazy"
 alt="image-20200603120155534"
 >&lt;/p>
-&lt;p>再次打开应用商店就能正常使用。唯一的缺陷是需要打开 fiddler 才能使用应用商店，不然会报 0x80072EFD 错误。&lt;/p></description></item><item><title>解决无忧行长时间显示“正在连接电话服务器”问题</title><link>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</link><pubDate>Thu, 09 Apr 2020 21:48:15 +0800</pubDate><guid>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</guid><description>&lt;p>无忧行(JegoTrip)APP是中国移动专门为出境游用户量身打造的APP。在境内也可以使用，移动号码可以在 APP 内接电话和收短信, 轻松实现一机双号。&lt;/p>
+&lt;p>再次打开应用商店就能正常使用。唯一的缺陷是需要打开 fiddler 才能使用应用商店，不然会报 0x80072EFD 错误。&lt;/p></description></item><item><title>解决无忧行长时间显示“正在连接电话服务器”问题</title><link>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</link><pubDate>Thu, 09 Apr 2020 21:48:15 +0800</pubDate><guid>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</guid><description>&lt;img src="https://www.jegotrip.cn/m/img/favicon.ico" alt="Featured image of post 解决无忧行长时间显示“正在连接电话服务器”问题" />&lt;p>无忧行(JegoTrip)APP是中国移动专门为出境游用户量身打造的APP。在境内也可以使用，移动号码可以在 APP 内接电话和收短信, 轻松实现一机双号。&lt;/p>
 &lt;h2 id="具体症状">具体症状&lt;/h2>
 &lt;p>家里路由器上部署梯子, 国内 IP 直连，其余 IP 走梯子, 国内 IP 库用的 &lt;a class="link" href="https://github.com/17mon/china_ip_list" target="_blank" rel="noopener"
 >https://github.com/17mon/china_ip_list&lt;/a>。连接家里 WIFI，无忧行 APP 启动后，显示“正在连接电话服务器”, 持续 30 秒以上才能连接到服务器，之后才能收到短信；用 4G 则没有这个提示，启动 APP 瞬间就能收到短信。猜测是无忧行服务器的香港 IP 走梯子后比直连慢很多所致。&lt;/p>
@@ -1682,7 +1682,7 @@ cp.jegotrip.com.cn&lt;/p>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">223.121.0.0/16
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;p>重启梯子服务后问题解决。&lt;/p></description></item><item><title>使用 Github Actions 自动部署 Hugo</title><link>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</link><pubDate>Tue, 07 Apr 2020 14:03:04 +0800</pubDate><guid>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</guid><description>&lt;p>Hugo 是一款开源的使用 go 语言写的静态网站生成器，生成的静态页面可以轻松部署到 github pages。&lt;/p>
+&lt;/div>&lt;p>重启梯子服务后问题解决。&lt;/p></description></item><item><title>使用 Github Actions 自动部署 Hugo</title><link>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</link><pubDate>Tue, 07 Apr 2020 14:03:04 +0800</pubDate><guid>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</guid><description>&lt;img src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg" alt="Featured image of post 使用 Github Actions 自动部署 Hugo" />&lt;p>Hugo 是一款开源的使用 go 语言写的静态网站生成器，生成的静态页面可以轻松部署到 github pages。&lt;/p>
 &lt;p>GitHub Actions 是 GitHub 的持续集成服务，持续集成由很多操作组成，比如抓取代码、运行测试、登录远程服务器，发布到第三方服务等等。GitHub 把这些操作就称为 actions。如果你需要某个 action，不必自己写复杂的脚本，直接引用他人写好的 action 即可，整个持续集成过程，就变成了一个 actions 的组合。&lt;a class="link" href="https://github.com/marketplace?type=actions" target="_blank" rel="noopener"
 >Github actions 市场&lt;/a>，可以搜索别人提交的 actions。&lt;/p>
 &lt;h2 id="自动部署要点">自动部署要点&lt;/h2>

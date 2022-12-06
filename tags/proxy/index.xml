@@ -325,7 +325,7 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 >v2ay 配置透明代理规则&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="http://openwrt-dist.sourceforge.net/" target="_blank" rel="noopener"
 >aa65535 维护的 shadowsocks for openwrt&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>SSH 跳板机与代理</title><link>https://4ft35t.github.io/post/ssh-porxy/</link><pubDate>Wed, 03 Jun 2020 16:55:35 +0800</pubDate><guid>https://4ft35t.github.io/post/ssh-porxy/</guid><description>&lt;p>基于各种复杂环境，ssh 无法直接连接目标主机，需要借助中间的跳板机或者代理来连接。通常使用 ssh-agent 来通过跳板机连接目标主机，使用 ProxyCommand 或者 ProxyJump 连接更方便。&lt;/p>
+&lt;/ul></description></item><item><title>SSH 跳板机与代理</title><link>https://4ft35t.github.io/post/ssh-porxy/</link><pubDate>Wed, 03 Jun 2020 16:55:35 +0800</pubDate><guid>https://4ft35t.github.io/post/ssh-porxy/</guid><description>&lt;img src="https://www.openssh.com/images/openssh.gif" alt="Featured image of post SSH 跳板机与代理" />&lt;p>基于各种复杂环境，ssh 无法直接连接目标主机，需要借助中间的跳板机或者代理来连接。通常使用 ssh-agent 来通过跳板机连接目标主机，使用 ProxyCommand 或者 ProxyJump 连接更方便。&lt;/p>
 &lt;h3 id="跳板机">跳板机&lt;/h3>
 &lt;p>在　&lt;code>~/.ssh/config&lt;/code> 中给跳板机一个方便记忆的别名，比如　jumpserver&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
