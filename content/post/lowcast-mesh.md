@@ -11,10 +11,12 @@ categories: [Network]
 draft: false
 ---
 
-上一次主动看 mesh 路由，单台成本 2000 左右，最近在什么值得买上看到用网件6300V2刷机后租mesh的，二手价格单台不到80，立马买两台来组网。
+上一次主动看 mesh 路由，单台成本 2000 左右，最近在什么值得买上看到用网件 6300V2 刷机后组 mesh 的，原理是网件6300V2 和华硕 AC68U 使用相同的硬件，修改 CEF 中相关配置，即可伪装成华硕 AC68U，使用华硕固件和功能。
+
+6300V2 二手价格单台不到80，立马买两台来组网。
 
 ## 硬件成本
-自有一台服役多年的 6300V2, 淘宝新买2台二手，75.99 一台包邮。
+自有一台服役多年的 6300V2，淘宝新买2台二手，75.99 一台包邮。
 
 不想折腾的可以买刷好梅林386版本的机器，跳过刷机部分，直达 mesh 组网部分。
 
@@ -32,7 +34,7 @@ draft: false
 浏览器打开 192.168.1.1，admin/password 登录，固件升级选择 R6300V2_380.70_0-X7.9.1-koolshare.chk
 
 ### 2. 备份 CFE 和 board_data
-刷梅林 380 版本后，路由器地址变成 192.168.50.1。登录路由器, 帐号密码沿用 admin/password, 打开 SSH 服务
+刷梅林 380 版本后，路由器地址变成 192.168.50.1。登录路由器，帐号密码沿用 admin/password，打开 SSH 服务
 
 系统管理 - 系统设置 - 启用 SSH- LAN only - 应用本页面设置
 
@@ -55,7 +57,7 @@ scp -O admin@192.168.50.1:/tmp/backup_cfe.bin .
 
 下载 CEF 修改器 https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/CFEEdit.exe
 
-打开 CFEEdit.exe, 把 MAC 地址修改成华硕的地址段
+打开 CFEEdit.exe，把 MAC 地址修改成华硕的地址段
 
 需要修改五个位置
 ```
@@ -67,7 +69,7 @@ odmpid=RT-AC68U
 ```
 另存为 cfe-1.bin
 
-继续修改，把上面内容 MAC 地址中倒数第二段的 `F1` 分别修改成 `F2` 和 `F3`，同时 `secret_code` 最后的 `17` 改成 `27` 和 `37`, 另存为 cfe-2.bin 和 cfe-3.bin， 分别对应三台机器。
+继续修改，把上面内容 MAC 地址中倒数第二段的 `F1` 分别修改成 `F2` 和 `F3`，同时 `secret_code` 最后的 `17` 改成 `27` 和 `37`，另存为 cfe-2.bin 和 cfe-3.bin，分别对应三台机器。
 
 scp 把 CFE 传送到路由器
 ```
@@ -90,14 +92,15 @@ Windows 电脑安装自带的 tftp 客户端
 
 Win+r - 输入 appwiz.cpl - 打开或关闭Windows功能 - 勾选TFTP客户端 - 重启
 
-打开一个 cmd 窗口，执行 `ping -t 192.168.1.1` 观察 TTL，TTL 值为 100 即表示路由器处于 tftp 刷机状态，如果不是 100，重启路由器
-打开第二个 cmd 窗口, 执行 `tftp -i 192.168.1.1 put RT-AC6300v2_386.2_4-20210628-91625500b.trx`
+打开一个 cmd 窗口，执行 `ping -t 192.168.1.1` 观察 TTL，TTL 值为 100 即表示路由器处于 tftp 刷机状态，如果不是 100，重启路由器。
+
+打开第二个 cmd 窗口，执行 `tftp -i 192.168.1.1 put RT-AC6300v2_386.2_4-20210628-91625500b.trx`
 
 等 tftp 传输完成后，路由器会在3分钟内重启多次，最后完成刷机。
 
-当 ping 的 TTL 变成 64， 即表示路由器正常启动。如果 tftp 传输完成后5分钟，TTL 还没变成 64，重启路由器。
+当 ping 的 TTL 变成 64，即表示路由器正常启动。如果 tftp 传输完成后5分钟，TTL 还没变成 64，重启路由器。
 
-如果重启后 ping TTL 值一直保持 100，浏览器访问 192.168.1.1， 进入 CFE miniWeb，点击 "Restore default NVRAM values", 然后重启。
+如果重启后 ping TTL 值一直保持 100，浏览器访问 192.168.1.1，进入 CFE miniWeb，点击 "Restore default NVRAM values"，然后重启。
 
 ### 4. 刷机后存在问题
 刷机后，WAN 口的位置会发生变化
@@ -114,7 +117,7 @@ Win+r - 输入 appwiz.cpl - 打开或关闭Windows功能 - 勾选TFTP客户端 -
 ```
 
 ## mesh 组网
-路由1 做为 mesh 路由，访问 192.168.1.1，按向导完成 pppoe 拨号设置, 选路由器模式。
+路由1 做为 mesh 路由，访问 192.168.1.1，按向导完成 pppoe 拨号设置，选路由器模式。
 
 
 路由器2，作为 AiMesh 节点，按向导完成动态动态 IP 设置；然后
@@ -137,10 +140,14 @@ Win+r - 输入 appwiz.cpl - 打开或关闭Windows功能 - 勾选TFTP客户端 -
 ### 有线回程
 路由器1 LAN 连接路由器2 WAN，即可让路由器2 变成有线回程。路由器3 同理。
 
+## 加散热风扇
+使用 3007 风扇，可以藏在机器内，用杜邦接口插在 ttl 针上，VCC 接红线，GND 接黑线。
+
 
 ## 参考链接
 - [最便宜的组Aimesh的方案——R6300V2最后的荣光](https://post.smzdm.com/p/a4dk3zgk/)
 - [网件NETGEAR R6300V2(国行版本) 原厂固件直刷380_X7.9.1梅林成功 附升级梅林386教程 ](https://www.right.com.cn/forum/thread-7613019-1-1.html)
 - [网件路由器 R6300v2 刷机教程和固件大全](https://wkings.blog/archives/875)
 - [无线路由器Mesh组网教程：华硕Aimesh组网篇](https://zhuanlan.zhihu.com/p/386867842)
+- [6300v2主动散热加usb风扇问题](https://www.right.com.cn/forum/forum.php?mod=redirect&goto=findpost&ptid=1686743&pid=5735198)
 
