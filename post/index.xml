@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 4ft35t blog</title><link>https://4ft35t.github.io/post/</link><description>Recent content in Posts on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 04 Dec 2022 17:57:03 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>低成本 mesh 组网</title><link>https://4ft35t.github.io/post/lowcast-mesh/</link><pubDate>Sun, 04 Dec 2022 17:57:03 +0800</pubDate><guid>https://4ft35t.github.io/post/lowcast-mesh/</guid><description>&lt;img src="https://cdn.unwire.hk/wp-content/uploads/2018/03/999-1.png" alt="Featured image of post 低成本 mesh 组网" />&lt;p>上一次主动看 mesh 路由，单台成本 2000 左右，最近在什么值得买上看到用网件6300V2刷机后租mesh的，二手价格单台不到80，立马买两台来组网。&lt;/p>
 &lt;h2 id="硬件成本">硬件成本&lt;/h2>
-&lt;p>自有一台服役多年的 6300V2, 淘宝新买2台二手，77.99 一台包邮。&lt;/p>
+&lt;p>自有一台服役多年的 6300V2, 淘宝新买2台二手，75.99 一台包邮。&lt;/p>
+&lt;p>不想折腾的可以买刷好梅林386版本的机器，跳过刷机部分，直达 mesh 组网部分。&lt;/p>
+&lt;ul>
+&lt;li>75.99 包邮，原厂固件 &lt;a class="link" href="https://item.taobao.com/item.htm?id=654468086454" target="_blank" rel="noopener"
+>https://item.taobao.com/item.htm?id=654468086454&lt;/a>&lt;/li>
+&lt;li>138 包邮，梅林386固件 &lt;a class="link" href="https://item.taobao.com/item.htm?id=690054031769" target="_blank" rel="noopener"
+>https://item.taobao.com/item.htm?id=690054031769&lt;/a>&lt;/li>
+&lt;/ul>
 &lt;h2 id="刷机">刷机&lt;/h2>
 &lt;h3 id="1-从官方固件刷梅林">1. 从官方固件刷梅林&lt;/h3>
 &lt;p>下载 380 版本梅林固件，https://fw.koolcenter.com/KoolCenter_Merlin_Legacy_380/Netgear/R6300V2/X7.9.1/R6300V2_380.70_0-X7.9.1-koolshare.chk&lt;/p>
