@@ -1,5 +1,6 @@
 ---
 title: "Android 远程截图"
+image: https://img1.mydrivers.com/img/20210226/s_ff489bbf9a884b83a72837c099f23e97.jpg
 date: 2021-08-06T16:51:31+08:00
 tags: ["android", "screenshoot", "autojs", "cgi", "adb", "scrcpy"]
 categories: ["Network", "Android"]

@@ -1,5 +1,6 @@
 ---
 title: "SSH 跳板机与代理"
+image: https://www.openssh.com/images/openssh.gif
 date: 2020-06-03T16:55:35+08:00
 tags: [ssh, proxy, netcat, socat, connect, corkscrew]
 categories: [Network]

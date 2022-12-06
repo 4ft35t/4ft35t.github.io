@@ -1,5 +1,6 @@
 ---
 title: "使用 Github Actions 自动部署 Hugo"
+image: https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg
 date: 2020-04-07T14:03:04+08:00
 tags: ["hugo", "github"]
 categories: ["Github"]

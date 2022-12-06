@@ -2,7 +2,7 @@
 title: "修复 Chromecast YouTube 投屏失败问题"
 description: 路由器翻墙，ChromeCast 播放别的网站都没问题，唯独 YouTube 出错
 date: 2022-07-29T01:38:00+08:00
-image: 
+image: https://www.right.com.cn/forum/data/attachment/forum/201803/08/102522uwh6r70ssbuh01r5.jpg
 math: 
 hidden: false
 comments: true

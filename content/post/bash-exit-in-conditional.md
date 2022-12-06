@@ -1,5 +1,6 @@
 ---
 title: "bash 条件退出踩坑"
+image: https://pic1.zhimg.com/v2-6101b6f0fb5664fd5f959332faefb38f_1440w.jpg
 date: 2020-06-19T17:55:19+08:00
 tags: ["bash", "exit", "test", "shell"]
 categories: ["Linux"]

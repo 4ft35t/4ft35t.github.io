@@ -1,5 +1,6 @@
 ---
 title: "Promark3 使用 冰人（iceman）固件"
+image: http://img-blog.csdnimg.cn/20200307161927634.jpg
 date: 2020-06-04T19:21:59+08:00
 tags: ["rfid", "error", "proxmark3"]
 categories: ["Mess"]

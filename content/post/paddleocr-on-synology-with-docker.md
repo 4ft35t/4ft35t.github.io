@@ -2,7 +2,7 @@
 title: "群晖 NAS 上运行 PaddleOCR"
 description: 在群晖 NAS 上折腾百度 PaddleOCR 的踩坑过程
 date: 2022-04-21T19:22:21+08:00
-image: 
+image: https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.6/doc/PaddleOCR_log.png
 math: 
 hidden: false
 comments: true

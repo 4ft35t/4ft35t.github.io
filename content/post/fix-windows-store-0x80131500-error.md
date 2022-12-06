@@ -1,5 +1,6 @@
 ---
 title: "解决应用商店 0x80131500 错误"
+image: https://img-blog.csdnimg.cn/20190629132640532.png
 date: 2020-06-03T11:48:10+08:00
 tags: ["0x80131500", "0x80072EFD", "error", "windows"]
 categories: ["Windows"]

@@ -1,5 +1,6 @@
 ---
 title: "PD/QC 电源转 DC 头输出"
+image: https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2015.10.09.png
 date: 2020-07-13T14:35:25+08:00
 tags: ["PD", "QC", "DC", "charger"]
 categories: ["Mess"]

@@ -1,5 +1,6 @@
 ---
 title: "利用 Pixel 一代的无限存储备份 NAS 照片"
+image: https://oss-cn-hangzhou.aliyuncs.com/codingsky/cdn/img/2019-07-25/dc29fbcc14b8c4acce61ba33a7f2af63.jpg
 date: 2022-02-27T23:41:49+08:00
 tags: ["bash", "NAS", "photo", "shell", "google", "android", "autojs"]
 categories: ["Linux"]

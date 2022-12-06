@@ -1,5 +1,6 @@
 ---
 title: "解决无忧行长时间显示“正在连接电话服务器”问题"
+image: https://www.jegotrip.cn/m/img/favicon.ico
 date: 2020-04-09T21:48:15+08:00
 tags: ["jegotrip", "IP", "pi-hole", "pihole"]
 categories: ["Network"]
