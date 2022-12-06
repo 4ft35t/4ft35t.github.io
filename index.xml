@@ -10,6 +10,7 @@
 >https://item.taobao.com/item.htm?id=690054031769&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="刷机">刷机&lt;/h2>
+&lt;p>电脑和路由器用网线连接，推荐使用路由器的 LAN1-LAN3，不要用 LAN4，具体原因下文会提到。&lt;/p>
 &lt;h3 id="1-从官方固件刷梅林">1. 从官方固件刷梅林&lt;/h3>
 &lt;p>下载 380 版本梅林固件，https://fw.koolcenter.com/KoolCenter_Merlin_Legacy_380/Netgear/R6300V2/X7.9.1/R6300V2_380.70_0-X7.9.1-koolshare.chk&lt;/p>
 &lt;p>路由器恢复出厂设置:&lt;/p>
@@ -92,6 +93,8 @@
 >https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_386/Netgear/R6300v2/RT-AC6300v2_386.2_4-20210628-91625500b.trx&lt;/a>&lt;/p>
 &lt;p>Windows 电脑安装自带的 tftp 客户端&lt;/p>
 &lt;p>Win+r - 输入 appwiz.cpl - 打开或关闭Windows功能 - 勾选TFTP客户端 - 重启&lt;/p>
+&lt;p>&lt;strong>手动设置电到有线网卡的 IP，此时的路由器没有 DHCP 功能。&lt;/strong>&lt;/p>
+&lt;p>IP 192.168.1.2, 子网掩码会自动生成，网关不用填。&lt;/p>
 &lt;p>打开一个 cmd 窗口，执行 &lt;code>ping -t 192.168.1.1&lt;/code> 观察 TTL，TTL 值为 100 即表示路由器处于 tftp 刷机状态，如果不是 100，重启路由器。&lt;/p>
 &lt;p>打开第二个 cmd 窗口，执行 &lt;code>tftp -i 192.168.1.1 put RT-AC6300v2_386.2_4-20210628-91625500b.trx&lt;/code>&lt;/p>
 &lt;p>等 tftp 传输完成后，路由器会在3分钟内重启多次，最后完成刷机。&lt;/p>
@@ -101,22 +104,26 @@
 &lt;p>刷机后，WAN 口的位置会发生变化&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;span class="lnt">6
-&lt;/span>&lt;span class="lnt">7
-&lt;/span>&lt;span class="lnt">8
-&lt;/span>&lt;span class="lnt">9
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
 &lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">+------+------+------+------+ +------+
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">刷机前
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------+------+------+------+ +------+
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| LAN4 |LAN3 | LAN2 | LAN1 | | WAN |
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| | | | | | |
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------+------+------+------+ +------+
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">刷机后
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------+------+------+------+ +------+
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| WAN |LAN1 |LAN2 |LAN3 | |LAN4 |
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| | | | | | |
