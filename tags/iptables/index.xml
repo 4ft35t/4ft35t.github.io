@@ -1,4 +1,112 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>iptables on 4ft35t blog</title><link>https://4ft35t.github.io/tags/iptables/</link><description>Recent content in iptables on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 29 Jul 2022 01:38:00 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/iptables/index.xml" rel="self" type="application/rss+xml"/><item><title>修复 Chromecast YouTube 投屏失败问题</title><link>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</link><pubDate>Fri, 29 Jul 2022 01:38:00 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</guid><description>&lt;img src="https://www.right.com.cn/forum/data/attachment/forum/201803/08/102522uwh6r70ssbuh01r5.jpg" alt="Featured image of post 修复 Chromecast YouTube 投屏失败问题" />&lt;h2 id="问题分析">问题分析&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>iptables on 4ft35t blog</title><link>https://4ft35t.github.io/tags/iptables/</link><description>Recent content in iptables on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 17 Feb 2023 10:36:40 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/iptables/index.xml" rel="self" type="application/rss+xml"/><item><title>Ubuntu 20.04 server iptables 持久化</title><link>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</link><pubDate>Fri, 17 Feb 2023 10:36:40 +0800</pubDate><guid>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</guid><description>&lt;img src="https://i.stack.imgur.com/gZm6i.png" alt="Featured image of post Ubuntu 20.04 server iptables 持久化" />&lt;p>有一批服务器需要做 iptables 持久化，开机自动加载。&lt;/p>
+&lt;p>在 Ubuntu 12.04 时代, 可以把加载脚本写到 &lt;code>/etc/rc.local&lt;/code> 开机自动加载，Ubuntu 20.04 要启用 rc.local 太麻烦，用 &lt;code>netfilter-persistent&lt;/code> 来实现自动加载。&lt;/p>
+&lt;p>&lt;code>netfilter-persistent&lt;/code> 加载 &lt;code>ipset-persistent&lt;/code> 和 &lt;code>iptables-persistent&lt;/code> 保存的规则。&lt;/p>
+&lt;h2 id="tldr">TLDR&lt;/h2>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># noninteractive install&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo debconf-set-selections &lt;span class="s">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">iptables-persistent iptables-persistent/autosave_v4 boolean true
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">iptables-persistent iptables-persistent/autosave_v6 boolean true
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">ipset-persistent ipset-persistent/autosave boolean true
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">EOF&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt update &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> sudo apt install netfilter-persistent ipset-persistent iptables-persistent -y
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo netfilter-persistent save
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl &lt;span class="nb">enable&lt;/span> netfilter-persistent
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl start netfilter-persistent
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="静默安装">静默安装&lt;/h2>
+&lt;p>ipset-persistent 和 iptables-persistent 安装过程中会弹出交互窗，选择是否自动保存规则。&lt;/p>
+&lt;p>交互会打断服务器上脚本安装，需要无交互静默安装。&lt;/p>
+&lt;p>Ubuntu 上软件包安装配置项归 &lt;code>debconf&lt;/code> 管理，在一台机器上交互安装完成后，用 &lt;code>debconf-show&lt;/code> 查看软件包的配置项。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo debconf-show ipset-persistent
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* ipset-persistent/autosave: &lt;span class="nb">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo debconf-show iptables-persistent
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* iptables-persistent/autosave_v4: &lt;span class="nb">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* iptables-persistent/autosave_v6: &lt;span class="nb">true&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>在安装前，用 &lt;code>debconf-set-selections&lt;/code> 在 debconf 数据库中插入对应的内容，即可实现无交互静默安装。&lt;/p>
+&lt;p>debconf-set-selections 配置语法&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">{包名} {配置项key} {配置项类型} {配置项value}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>生成的配置如下&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo debconf-set-selections &lt;span class="s">&amp;lt;&amp;lt;EOF
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">ipset-persistent ipset-persistent/autosave boolean true
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">iptables-persistent iptables-persistent/autosave_v4 boolean true
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">iptables-persistent iptables-persistent/autosave_v6 boolean true
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">EOF&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>执行 &lt;code> sudo apt install netfilter-persistent ipset-persistent iptables-persistent -y&lt;/code> 即可静默安装。&lt;/p>
+&lt;h3 id="持久化">持久化&lt;/h3>
+&lt;h4 id="保存规则">保存规则&lt;/h4>
+&lt;p>&lt;code>sudo netfilter-persistent save&lt;/code>&lt;/p>
+&lt;h4 id="自动加载">自动加载&lt;/h4>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo systemctl &lt;span class="nb">enable&lt;/span> netfilter-persistent
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl start netfilter-persistent
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="参考链接">参考链接&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://dhtar.com/make-ipset-and-iptables-configurations-persistent-in-debianubuntu.html" target="_blank" rel="noopener"
+>Make ipset and iptables configurations persistent in Debian/Ubuntu&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://gist.github.com/alonisser/a2c19f5362c2091ac1e7" target="_blank" rel="noopener"
+>Installing iptables-persistent on ubuntu without manual input&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.51cto.com/u_13791715/2308514" target="_blank" rel="noopener"
+>Linux下实现软件的静默安装&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://sleeplessbeastie.eu/2018/09/17/how-to-read-and-insert-new-values-into-the-debconf-database/" target="_blank" rel="noopener"
+>How to read and insert new values into the debconf database&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>修复 Chromecast YouTube 投屏失败问题</title><link>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</link><pubDate>Fri, 29 Jul 2022 01:38:00 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</guid><description>&lt;img src="https://www.right.com.cn/forum/data/attachment/forum/201803/08/102522uwh6r70ssbuh01r5.jpg" alt="Featured image of post 修复 Chromecast YouTube 投屏失败问题" />&lt;h2 id="问题分析">问题分析&lt;/h2>
 &lt;p>软路由 OpenWrt 做网关，同时用 SS 透明代理所有国外 IP 的 TCP 连接，手机、电脑都无感翻墙。&lt;/p>
 &lt;p>Chromecast 在多个境外网站上投屏正常工作，Google Photos 投屏也正常，唯独 YouTube 无法投屏。&lt;/p>
 &lt;p>使用关键词 &amp;ldquo;chromecast youtube something went wrong&amp;rdquo; 没找到有用信息，把 ChromeCast 的语言改成中文后，用中文的报错信息一下就找到了，果然是天朝特有问题。Google 搜 &lt;code>chromecast youtube &amp;quot;出问题了&amp;quot;&lt;/code>。&lt;/p>
