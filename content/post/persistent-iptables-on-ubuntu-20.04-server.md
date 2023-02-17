@@ -1,6 +1,6 @@
 ---
 title: "Ubuntu 20.04 server iptables 持久化"
-description: 
+description: "Ubuntu 20.04 上 iptables 持久化操作"
 date: 2023-02-17T10:36:40+08:00
 image: https://i.stack.imgur.com/gZm6i.png
 math: 
