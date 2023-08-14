@@ -11,6 +11,7 @@ languages:
         weight: 2
 
 googleAnalytics: "UA-163577388-1"
+enableRobotsTXT: true
 
 # Available values: ar, ca, de, el, en, es, fr, id, it, ja, ko, nl, pt-br, th, uk, zh-cn, zh-hk, zh-tw
 DefaultContentLanguage: zh-cn
