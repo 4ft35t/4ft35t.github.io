@@ -8,7 +8,7 @@ hidden: false
 comments: true
 tags: ["office365", "onedrive", "webdav", "docker", "rclone", "sharepoint"]
 categories: ["network"]
-draft: true
+draft: false
 ---
 
 教育版 A1 订阅的 Onedrive 可以用 rclone 以 webdav 方式挂载。 但这不是标准的 webdav 协议，无法在群晖中使用。
