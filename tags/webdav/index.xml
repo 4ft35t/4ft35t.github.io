@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Webdav on 4ft35t blog</title><link>https://4ft35t.github.io/tags/webdav/</link><description>Recent content in Webdav on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 19 Mar 2024 11:22:46 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/webdav/index.xml" rel="self" type="application/rss+xml"/><item><title>群晖使用 A1 订阅版 Onedrive</title><link>https://4ft35t.github.io/post/use-office365-a1-onedrive-in-synology/</link><pubDate>Tue, 19 Mar 2024 11:22:46 +0800</pubDate><guid>https://4ft35t.github.io/post/use-office365-a1-onedrive-in-synology/</guid><description>&lt;p>教育版 A1 订阅的 Onedrive 可以用 rclone 以 webdav 方式挂载。 但这不是标准的 webdav 协议，无法在群晖中使用。&lt;/p>
+&lt;p>群晖的 Cloud Sync 支持同步 Microsoft OneDrive for Business 和 Microsoft SharePoint，但是这个帐号使用 edu 邮箱自己注册的，没有管理员，登陆后报错&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>&lt;span class="nt">&amp;#34;error&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="s2">&amp;#34;invalid_client&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nt">&amp;#34;error_description&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="s2">&amp;#34;AADSTS650051: Using application &amp;#39;Cloud Sync&amp;#39; is currently not supported for your organization xxx.edu.cn because it is in an unmanaged state. An administrator needs to claim ownership of the company by DNS validation of xxx.edu.cn before the application Cloud Sync can be provisioned. Trace ID: a4ec2174-8d9f-4281-9f5b-7d782c060601 Correlation ID: c6bdc0ff-5a6c-4597-9060-af9c981610e2 Timestamp: 2024-03-15 02:00:57Z&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="实现方案">实现方案&lt;/h2>
+&lt;h3 id="skleeschultebasic-to-sharepoint-auth-http-proxy-方案">skleeschulte/basic-to-sharepoint-auth-http-proxy 方案&lt;/h3>
+&lt;p>使用 &lt;a class="link" href="https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy" target="_blank" rel="noopener"
+>https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy&lt;/a> 中转请求，最终以 webdav 协议使用。&lt;/p>
+&lt;h3 id="rclone-方案">rclone 方案&lt;/h3>
+&lt;p>rclone 也是转为 webdav 服务&lt;/p>
+&lt;p>&lt;code>rclone serve webdav remote:path [flags]&lt;/code>&lt;/p>
+&lt;h3 id="方案效果对比">方案效果对比&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>应用程序&lt;/th>
+&lt;th>basic-to-sharepoint-auth-http-proxy&lt;/th>
+&lt;th>rclone&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>File Station&lt;/td>
+&lt;td>N&lt;/td>
+&lt;td>Y&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Cloud Sync&lt;/td>
+&lt;td>Y&lt;/td>
+&lt;td>Y&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Hyper Backup&lt;/td>
+&lt;td>Y&lt;/td>
+&lt;td>Y&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>对比后 rclone 方案有明显优势:&lt;/p>
+&lt;ol>
+&lt;li>支持在 File Station 挂载&lt;/li>
+&lt;li>rclone 是是个活跃项目，basic-to-sharepoint-auth-http-proxy 已经 2 年无更新&lt;/li>
+&lt;/ol>
+&lt;h2 id="操作方法">操作方法&lt;/h2>
+&lt;h3 id="basic-to-sharepoint-auth-http-proxy-方案">basic-to-sharepoint-auth-http-proxy 方案&lt;/h3>
+&lt;p>&lt;code>sudo docker run --name sharepoint-proxy -d -p 13000:3000 -e PROXY_TARGET=https://xxx-my.sharepoint.com/ --restart always skleeschulte/basic-to-passport-auth-http-proxy:v0.1.4&lt;/code>&lt;/p>
+&lt;p>之后 webdav url 是 http://127.0.0.1:13000/personal/[YOUR-EMAIL]/Documents, 用户名和密码是 onedrive 的信息。&lt;/p>
+&lt;h3 id="rclone-方案-1">rclone 方案&lt;/h3>
+&lt;p>rclone 我本地也在用，没用 docker。&lt;/p>
+&lt;h4 id="1-配置-rclone-访问-onedrive">1. 配置 rclone 访问 onedrive&lt;/h4>
+&lt;p>教育版 Onedrive 登陆后的地址是 &lt;code>https://[YOUR-DOMAIN]-my.sharepoint.com/personal/[YOUR-EMAIL]/_layouts/15/onedrive.aspx&lt;/code>, 只需要把 &lt;code>_layouts/15/onedrive.aspx&lt;/code> 换成 &lt;code>Documents&lt;/code> 就是 webdav 地址。&lt;/p>
+&lt;p>&lt;code>rclone confige - n) New remote - 随便起个名字 - 51 / WebDAV - https://[YOUR-DOMAIN]-my.sharepoint.com/personal/[YOUR-EMAIL]/Documents - 4 / Sharepoint Online, authenticated by Microsoft account - 用户名 - y) Yes, type in my own password - 密码 - 确认密码 - 回车跳过 - y) Yes this is OK (default)&lt;/code>&lt;/p>
+&lt;h4 id="2-rclone-开启-webadv-服务">2. rclone 开启 webadv 服务&lt;/h4>
+&lt;p>以上一步起的名字 1dr-sharepoint 为例, 执行下面命令即可开启 webdav 服务。
+&lt;code>rclone rclone serve webdav 1dr-sharepoint:/ --user user --pass password --addr 192.168.1.101:8080&lt;/code>&lt;/p>
+&lt;p>webdav url http://192.168.1.101:8080/&lt;/p>
+&lt;p>rclone 支持开启的服务列表如下:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl"> dlna Serve remote:path over DLNA
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> docker Serve any remote on docker&lt;span class="s1">&amp;#39;s volume plugin API.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s1"> ftp Serve remote:path over FTP.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s1"> http Serve the remote over HTTP.
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s1"> nfs Serve the remote as an NFS mount
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s1"> restic Serve the remote for restic&amp;#39;&lt;/span>s REST API.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> s3 Serve remote:path over s3.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> sftp Serve the remote over SFTP.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> webdav Serve remote:path over WebDAV.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="3-群晖-file-station-挂载">3. 群晖 File Station 挂载&lt;/h4>
+&lt;p>File Station - Tools - Remote Connection - Connection Setup - WebDAV&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ip: 192.168.1.101
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">port: 8080
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">path: /
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">account name: user
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">passowrd: pssword
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="参考链接">参考链接&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://blog.edmond.work/2023/02/19/dsm-hyper-backup-onedrive-%E5%82%99%E4%BB%BD%E6%95%99%E5%AD%B8/" target="_blank" rel="noopener"
+>DSM Hyper Backup OneDrive 備份教學&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://hostloc.com/thread-785905-1-1.html" target="_blank" rel="noopener"
+>使群晖 CloudSync 支持同步世纪互联 OneDrive&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://tongjunsz.gitee.io/2020/10/29/%E9%80%9A%E8%BF%87Synology%E7%9A%84Hyper-Backup%E5%A4%87%E4%BB%BD%E5%88%B0Microsoft-OneDrive-for-Business-SharePoint/" target="_blank" rel="noopener"
+>通过synology的hyper backup备份到microsoft onedrive for business（sharepoint)&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://blog.ty-wu.com/posts/synohyperbksharepoint/" target="_blank" rel="noopener"
+>Synology Hyper Backup 備份到 OneDrive&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://rclone.org/webdav/" target="_blank" rel="noopener"
+> WebDAV&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://rclone.org/commands/rclone_serve_webdav/" target="_blank" rel="noopener"
+>rclone serve webdav&lt;/a>&lt;/li>
+&lt;/ul></description></item></channel></rss>
