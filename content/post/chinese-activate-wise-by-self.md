@@ -23,6 +23,15 @@ __国内地址激活的 wise 无法申请 wise 卡。__
 4. 在 bitfinex 把 usdt 换成欧元，使用 openpayd 通道超低手续费提现到杜高
 4. 杜高同名转欧元到 wise
 
+### 2024 更新
+中国居民已无法在 bitfinex 获得个人 IBAN, 境外交易所不再推荐 bitfinex。
+
+kraken.com 交易所提现欧元费用, 单笔 1 欧元，推荐使用。
+
+当前路径
+`人民币 -> OKX USDT -> Kraken USDT -> EUR -> 杜高 -> wise`
+
+
 ### 我的邀请链接
 - 我邀请你在一家瑞士银行开户！使用此JER-LXV促销代码并通过以下链接获得5DUK+：https://www.dukascopy.bank/swiss/open-mca-account/?ref=JER-LXV&lang=cn
 - https://www.bitfinex.com/sign-up?refcode=5-_prc0oV
