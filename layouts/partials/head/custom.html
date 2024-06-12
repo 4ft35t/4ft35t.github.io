@@ -1,0 +1,13 @@
+<!-- https://finisky.github.io/hugoaddcssjs/ -->
+
+{{ range .Site.Params.customcss }}
+    <link rel="stylesheet" href="{{ . | absURL }}">
+{{- end }}
+
+{{ range .Site.Params.customjs }}
+    <script type="text/javascript" src="{{ . | absURL }}"></script>
+{{- end }}
+
+{{ range $elem := .Site.Params.customjscssraw }}
+    {{ $elem | safeHTML }}
+{{- end }}
