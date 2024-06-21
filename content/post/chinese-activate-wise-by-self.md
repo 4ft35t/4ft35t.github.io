@@ -23,7 +23,7 @@ __国内地址激活的 wise 无法申请 wise 卡。__
 4. 在 bitfinex 把 usdt 换成欧元，使用 openpayd 通道超低手续费提现到杜高
 4. 杜高同名转欧元到 wise
 
-### 2024 更新
+### 2024.03 更新
 中国居民已无法在 bitfinex 获得个人 IBAN, 境外交易所不再推荐 bitfinex。
 
 kraken.com 交易所提现欧元费用, 单笔 1 欧元，推荐使用。
@@ -31,10 +31,29 @@ kraken.com 交易所提现欧元费用, 单笔 1 欧元，推荐使用。
 当前路径
 `人民币 -> OKX USDT -> Kraken USDT -> EUR -> 杜高 -> wise`
 
+### 2024.06 更新
+1. 全套国内资料可以开奕丰集团的[iFast](https://www.iFastgb.com/), 替代杜高，iFast 汇出英镑免费。视频验证选中文客服，首次入金需要同名，可以用兴业银行寰宇人生借记卡直接汇英镑，<=100 英镑，全程免费。
+
+  __有案例反映，iFast 的银行地址被外汇管理局拉黑，汇款时需要修改银行的地址，银行地址中间随便加几个字母可以汇出。__ 国际汇款地址不影响收款。
+
+  当前路径
+  `兴业银行人民币 -> iFast 英镑 -> wise`
+
+
+  iFast 注册参考 https://blog.xiaoz.org/archives/19069
+
+
+2. 有案例反映, 兴业寰宇可以直接汇款激活 wise。
+
+  汇出给 wise，同样需要修改银行地址
+
+  当前路径
+  `兴业银行人民币 ->  wise 英镑`
+
 
 ### 我的邀请链接
-- 我邀请你在一家瑞士银行开户！使用此JER-LXV促销代码并通过以下链接获得5DUK+：https://www.dukascopy.bank/swiss/open-mca-account/?ref=JER-LXV&lang=cn
-- https://www.bitfinex.com/sign-up?refcode=5-_prc0oV
+- 杜高 https://www.dukascopy.bank/swiss/open-mca-account/?ref=JER-LXV&lang=cn
+- bitfinex https://www.bitfinex.com/sign-up?refcode=5-_prc0oV
 
 ## 注册瑞士杜高斯贝银行
 杜高斯贝免开户费、免账户管理费及年费，用全套国内资料可以0成本注册一个正规银行账户。
