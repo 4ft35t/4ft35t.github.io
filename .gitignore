@@ -1,3 +1,4 @@
 public
 gh-pages*
 .hugo_build.lock
+resources/
