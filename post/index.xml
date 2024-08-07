@@ -1,4 +1,112 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 4ft35t blog</title><link>https://4ft35t.github.io/post/</link><description>Recent content in Posts on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 19 Mar 2024 11:22:46 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>群晖使用 A1 订阅版 Onedrive</title><link>https://4ft35t.github.io/post/use-office365-a1-onedrive-in-synology/</link><pubDate>Tue, 19 Mar 2024 11:22:46 +0800</pubDate><guid>https://4ft35t.github.io/post/use-office365-a1-onedrive-in-synology/</guid><description>&lt;p>教育版 A1 订阅的 Onedrive 可以用 rclone 以 webdav 方式挂载。 但这不是标准的 webdav 协议，无法在群晖中使用。&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on 4ft35t blog</title><link>https://4ft35t.github.io/post/</link><description>Recent content in Posts on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 07 Aug 2024 21:24:32 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>按人的思维方式解开数独</title><link>https://4ft35t.github.io/post/solve-soduku-like-human-without-backtracking/</link><pubDate>Wed, 07 Aug 2024 21:24:32 +0800</pubDate><guid>https://4ft35t.github.io/post/solve-soduku-like-human-without-backtracking/</guid><description>&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Sudoku_Puzzle_by_L2G-20050714_standardized_layout.svg/722px-Sudoku_Puzzle_by_L2G-20050714_standardized_layout.svg.png" alt="Featured image of post 按人的思维方式解开数独" />&lt;p>数独是一种逻辑游戏，目标是填充一个 9x9 的网格，使得每一行、每一列和每一个 3x3 的子网格中的数字都是 1 到 9。&lt;/p>
+&lt;p>数独的规则非常简单，但是解决数独问题却是一个复杂的任务。在这篇文章中，我们将介绍一种按照人的思维方式解开数独的方法，而不是使用传统的回溯算法。&lt;/p>
+&lt;h2 id="人是如何解开数独的">人是如何解开数独的&lt;/h2>
+&lt;p>我自己解数独的时候，通常会按照以下步骤进行：&lt;/p>
+&lt;ul>
+&lt;li>先找已有 5 个数字的行、列、块，看看是否有数字只能填在某个位置&lt;/li>
+&lt;li>已出现次数较多的某个特定数字，利用行和列的关系，综合确定其在剩余块中的位置&lt;/li>
+&lt;/ul>
+&lt;p>以下图为例，&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Sudoku_Puzzle_by_L2G-20050714_standardized_layout.svg/722px-Sudoku_Puzzle_by_L2G-20050714_standardized_layout.svg.png"
+loading="lazy"
+>&lt;/p>
+&lt;p>一眼看过去，&lt;code>5&lt;/code> 比较多&lt;/p>
+&lt;ol>
+&lt;li>上边的三个块，左边块的 5 在第一行，中间块的 5 在第二行，所以右边块的 5 只能在第三行&lt;/li>
+&lt;li>右边第三行中间已有数字，只有左右可以填&lt;/li>
+&lt;li>再看右边的三个块，有没有 5 出现，右下角的 5 在最右侧，所以右上角的 5 只能在最左侧&lt;/li>
+&lt;/ol>
+&lt;p>人解题的过程，实际是用排除法，逐步缩小数字的可能位置，直到确定唯一位置。&lt;/p>
+&lt;h2 id="用-python-实现">用 Python 实现&lt;/h2>
+&lt;h3 id="设计思路">设计思路&lt;/h3>
+&lt;ol>
+&lt;li>初始化时，每个格子的可能值都是 1-9&lt;/li>
+&lt;li>当一个格子确定了数字 n，那么这个格子所在的行、列、块中的其他格子, 都不能填 n, 从它们的可能值中删除 n&lt;/li>
+&lt;li>当一个格子的可能值只有一个时，填入这个数字&lt;/li>
+&lt;li>重复 2 和 3，直到所有格子都填满&lt;/li>
+&lt;/ol>
+&lt;h3 id="伪代码">伪代码&lt;/h3>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Cell&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">y&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">x&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">x&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">y&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">y&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">None&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">values&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">list&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">10&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">set_value&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">n&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">values&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">del_near_value&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">del_near_value&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">cell&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">near_cells&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cell&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">values&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">remove&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">Sudoku&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">matrix&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sells&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">y&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">row&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">enumerate&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">matrix&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">enumerate&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">row&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cell&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Cell&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">y&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sells&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">append&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">cell&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">solve&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">while&lt;/span> &lt;span class="kc">True&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">cell&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">cell_with_one_value&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cell&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">set_value&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">cell&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">values&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="nb">all&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">cell&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">cell&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">sells&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">break&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cells&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="存在的问题">存在的问题&lt;/h3>
+&lt;p>上面的方法在处理初始数字比较多的数独时，效果很好。但是对于初始数字比较少的数独，可能会陷入死循环。因为这种方法只能处理确定的数字，而不能处理可能的数字。&lt;/p>
+&lt;h3 id="解决方案">解决方案&lt;/h3>
+&lt;p>在每次的 while 循环中，增加一个判断，如果没有任何一个格子的可能值只有一个，那么就选择可能值最少的一个格子，填入可能值的第一个数字。&lt;/p>
+&lt;p>这么做的原因是，这种初始数字少的数独，可能会有多个解，我们只需要找到一个解即可。&lt;/p>
+&lt;h3 id="完整代码">完整代码&lt;/h3>
+&lt;p>&lt;a class="link" href="https://gist.github.com/4ft35t/d284860ff96ddc4d7aae5a4262af907a" target="_blank" rel="noopener"
+>https://gist.github.com/4ft35t/d284860ff96ddc4d7aae5a4262af907a&lt;/a>&lt;/p></description></item><item><title>群晖使用 A1 订阅版 Onedrive</title><link>https://4ft35t.github.io/post/use-office365-a1-onedrive-in-synology/</link><pubDate>Tue, 19 Mar 2024 11:22:46 +0800</pubDate><guid>https://4ft35t.github.io/post/use-office365-a1-onedrive-in-synology/</guid><description>&lt;p>教育版 A1 订阅的 Onedrive 可以用 rclone 以 webdav 方式挂载。 但这不是标准的 webdav 协议，无法在群晖中使用。&lt;/p>
 &lt;p>群晖的 Cloud Sync 支持同步 Microsoft OneDrive for Business 和 Microsoft SharePoint，但是这个帐号使用 edu 邮箱自己注册的，没有管理员，登陆后报错&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -151,13 +259,13 @@
 &lt;code>人民币 -&amp;gt; OKX USDT -&amp;gt; Kraken USDT -&amp;gt; EUR -&amp;gt; 杜高 -&amp;gt; wise&lt;/code>&lt;/p>
 &lt;h3 id="202406-更新">2024.06 更新&lt;/h3>
 &lt;ol>
-&lt;li>全套国内资料可以开奕丰集团的&lt;a class="link" href="https://www.iFastgb.com/" target="_blank" rel="noopener"
->iFast&lt;/a>, 替代杜高，iFast 汇出英镑免费。视频验证选中文客服，首次入金需要同名，可以用兴业银行寰宇人生借记卡直接汇英镑，&amp;lt;=100 英镑，全程免费。&lt;/li>
+&lt;li>全套国内资料可以开奕丰集团的&lt;a class="link" href="https://www.ifastgb.com/" target="_blank" rel="noopener"
+>iFAST&lt;/a>, 替代杜高，iFAST 汇出英镑免费。视频验证选中文客服，首次入金需要同名，可以用兴业银行寰宇人生借记卡直接汇英镑，&amp;lt;=100 英镑，全程免费。&lt;/li>
 &lt;/ol>
-&lt;p>&lt;strong>有案例反映，iFast 的银行地址被外汇管理局拉黑，汇款时需要修改银行的地址，银行地址中间随便加几个字母可以汇出。&lt;/strong> 国际汇款地址不影响收款。&lt;/p>
+&lt;p>&lt;strong>有案例反映，iFAST 的银行地址被外汇管理局拉黑，汇款时需要修改银行的地址，银行地址中间随便加几个字母可以汇出。&lt;/strong> 国际汇款地址不影响收款。&lt;/p>
 &lt;p>当前路径
-&lt;code>兴业银行人民币 -&amp;gt; iFast 英镑 -&amp;gt; wise&lt;/code>&lt;/p>
-&lt;p>iFast 注册参考 &lt;a class="link" href="https://blog.xiaoz.org/archives/19069" target="_blank" rel="noopener"
+&lt;code>兴业银行人民币 -&amp;gt; iFAST 英镑 -&amp;gt; wise&lt;/code>&lt;/p>
+&lt;p>iFAST 注册参考 &lt;a class="link" href="https://blog.xiaoz.org/archives/19069" target="_blank" rel="noopener"
 >https://blog.xiaoz.org/archives/19069&lt;/a>&lt;/p>
 &lt;ol start="2">
 &lt;li>有案例反映, 兴业寰宇可以直接汇款激活 wise。&lt;/li>
