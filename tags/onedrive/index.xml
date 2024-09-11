@@ -19,26 +19,26 @@
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th>应用程序&lt;/th>
-&lt;th>basic-to-sharepoint-auth-http-proxy&lt;/th>
-&lt;th>rclone&lt;/th>
+&lt;th style="text-align: left">应用程序&lt;/th>
+&lt;th style="text-align: left">basic-to-sharepoint-auth-http-proxy&lt;/th>
+&lt;th style="text-align: left">rclone&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td>File Station&lt;/td>
-&lt;td>N&lt;/td>
-&lt;td>Y&lt;/td>
+&lt;td style="text-align: left">File Station&lt;/td>
+&lt;td style="text-align: left">N&lt;/td>
+&lt;td style="text-align: left">Y&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Cloud Sync&lt;/td>
-&lt;td>Y&lt;/td>
-&lt;td>Y&lt;/td>
+&lt;td style="text-align: left">Cloud Sync&lt;/td>
+&lt;td style="text-align: left">Y&lt;/td>
+&lt;td style="text-align: left">Y&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Hyper Backup&lt;/td>
-&lt;td>Y&lt;/td>
-&lt;td>Y&lt;/td>
+&lt;td style="text-align: left">Hyper Backup&lt;/td>
+&lt;td style="text-align: left">Y&lt;/td>
+&lt;td style="text-align: left">Y&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>

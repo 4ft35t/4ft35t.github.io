@@ -6,6 +6,9 @@
 &lt;li>选择省 - 选择市 - 随便选一个区，因为城市里同样的路名只有一条&lt;/li>
 &lt;li>输入xx路xx号，查询）&lt;/li>
 &lt;/ol>
+&lt;h3 id="ems-网站查选">EMS 网站查选&lt;/h3>
+&lt;p>&lt;a class="link" href="https://www.ems.com.cn/postcode" target="_blank" rel="noopener"
+>https://www.ems.com.cn/postcode&lt;/a> 也可以查询邮编&lt;/p>
 &lt;h2 id="邮局地址">邮局地址&lt;/h2>
 &lt;p>如果国外寄来的信地址没有中文，有可能出现片区邮局不认识地址，不配送的情况，需要自己去邮局找。
 几种找到片区邮局地址的方法&lt;/p>

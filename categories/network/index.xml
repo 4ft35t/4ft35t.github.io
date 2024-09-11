@@ -19,26 +19,26 @@
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th>应用程序&lt;/th>
-&lt;th>basic-to-sharepoint-auth-http-proxy&lt;/th>
-&lt;th>rclone&lt;/th>
+&lt;th style="text-align: left">应用程序&lt;/th>
+&lt;th style="text-align: left">basic-to-sharepoint-auth-http-proxy&lt;/th>
+&lt;th style="text-align: left">rclone&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td>File Station&lt;/td>
-&lt;td>N&lt;/td>
-&lt;td>Y&lt;/td>
+&lt;td style="text-align: left">File Station&lt;/td>
+&lt;td style="text-align: left">N&lt;/td>
+&lt;td style="text-align: left">Y&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Cloud Sync&lt;/td>
-&lt;td>Y&lt;/td>
-&lt;td>Y&lt;/td>
+&lt;td style="text-align: left">Cloud Sync&lt;/td>
+&lt;td style="text-align: left">Y&lt;/td>
+&lt;td style="text-align: left">Y&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Hyper Backup&lt;/td>
-&lt;td>Y&lt;/td>
-&lt;td>Y&lt;/td>
+&lt;td style="text-align: left">Hyper Backup&lt;/td>
+&lt;td style="text-align: left">Y&lt;/td>
+&lt;td style="text-align: left">Y&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
@@ -410,21 +410,21 @@
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th>&lt;/th>
-&lt;th>自建代理&lt;/th>
-&lt;th>机场&lt;/th>
+&lt;th style="text-align: left">&lt;/th>
+&lt;th style="text-align: left">自建代理&lt;/th>
+&lt;th style="text-align: left">机场&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td>速度&lt;/td>
-&lt;td>慢&lt;/td>
-&lt;td>快&lt;/td>
+&lt;td style="text-align: left">速度&lt;/td>
+&lt;td style="text-align: left">慢&lt;/td>
+&lt;td style="text-align: left">快&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>安全性&lt;/td>
-&lt;td>高&lt;/td>
-&lt;td>无&lt;/td>
+&lt;td style="text-align: left">安全性&lt;/td>
+&lt;td style="text-align: left">高&lt;/td>
+&lt;td style="text-align: left">无&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
