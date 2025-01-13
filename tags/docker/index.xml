@@ -8,37 +8,37 @@
 &lt;pre tabindex="0" class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>&lt;span class="nt">&amp;#34;error&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="s2">&amp;#34;invalid_client&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nt">&amp;#34;error_description&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="s2">&amp;#34;AADSTS650051: Using application &amp;#39;Cloud Sync&amp;#39; is currently not supported for your organization xxx.edu.cn because it is in an unmanaged state. An administrator needs to claim ownership of the company by DNS validation of xxx.edu.cn before the application Cloud Sync can be provisioned. Trace ID: a4ec2174-8d9f-4281-9f5b-7d782c060601 Correlation ID: c6bdc0ff-5a6c-4597-9060-af9c981610e2 Timestamp: 2024-03-15 02:00:57Z&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="实现方案">实现方案&lt;/h2>
-&lt;h3 id="skleeschultebasic-to-sharepoint-auth-http-proxy-方案">skleeschulte/basic-to-sharepoint-auth-http-proxy 方案&lt;/h3>
-&lt;p>使用 &lt;a class="link" href="https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy" target="_blank" rel="noopener"
+&lt;/div>&lt;h2 id="实现方案">实现方案
+&lt;/h2>&lt;h3 id="skleeschultebasic-to-sharepoint-auth-http-proxy-方案">skleeschulte/basic-to-sharepoint-auth-http-proxy 方案
+&lt;/h3>&lt;p>使用 &lt;a class="link" href="https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy" target="_blank" rel="noopener"
 >https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy&lt;/a> 中转请求，最终以 webdav 协议使用。&lt;/p>
-&lt;h3 id="rclone-方案">rclone 方案&lt;/h3>
-&lt;p>rclone 也是转为 webdav 服务&lt;/p>
+&lt;h3 id="rclone-方案">rclone 方案
+&lt;/h3>&lt;p>rclone 也是转为 webdav 服务&lt;/p>
 &lt;p>&lt;code>rclone serve webdav remote:path [flags]&lt;/code>&lt;/p>
-&lt;h3 id="方案效果对比">方案效果对比&lt;/h3>
-&lt;table>
+&lt;h3 id="方案效果对比">方案效果对比
+&lt;/h3>&lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th style="text-align: left">应用程序&lt;/th>
-&lt;th style="text-align: left">basic-to-sharepoint-auth-http-proxy&lt;/th>
-&lt;th style="text-align: left">rclone&lt;/th>
+&lt;th>应用程序&lt;/th>
+&lt;th>basic-to-sharepoint-auth-http-proxy&lt;/th>
+&lt;th>rclone&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td style="text-align: left">File Station&lt;/td>
-&lt;td style="text-align: left">N&lt;/td>
-&lt;td style="text-align: left">Y&lt;/td>
+&lt;td>File Station&lt;/td>
+&lt;td>N&lt;/td>
+&lt;td>Y&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align: left">Cloud Sync&lt;/td>
-&lt;td style="text-align: left">Y&lt;/td>
-&lt;td style="text-align: left">Y&lt;/td>
+&lt;td>Cloud Sync&lt;/td>
+&lt;td>Y&lt;/td>
+&lt;td>Y&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align: left">Hyper Backup&lt;/td>
-&lt;td style="text-align: left">Y&lt;/td>
-&lt;td style="text-align: left">Y&lt;/td>
+&lt;td>Hyper Backup&lt;/td>
+&lt;td>Y&lt;/td>
+&lt;td>Y&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
@@ -47,17 +47,17 @@
 &lt;li>支持在 File Station 挂载&lt;/li>
 &lt;li>rclone 是是个活跃项目，basic-to-sharepoint-auth-http-proxy 已经 2 年无更新&lt;/li>
 &lt;/ol>
-&lt;h2 id="操作方法">操作方法&lt;/h2>
-&lt;h3 id="basic-to-sharepoint-auth-http-proxy-方案">basic-to-sharepoint-auth-http-proxy 方案&lt;/h3>
-&lt;p>&lt;code>sudo docker run --name sharepoint-proxy -d -p 13000:3000 -e PROXY_TARGET=https://xxx-my.sharepoint.com/ --restart always skleeschulte/basic-to-passport-auth-http-proxy:v0.1.4&lt;/code>&lt;/p>
+&lt;h2 id="操作方法">操作方法
+&lt;/h2>&lt;h3 id="basic-to-sharepoint-auth-http-proxy-方案">basic-to-sharepoint-auth-http-proxy 方案
+&lt;/h3>&lt;p>&lt;code>sudo docker run --name sharepoint-proxy -d -p 13000:3000 -e PROXY_TARGET=https://xxx-my.sharepoint.com/ --restart always skleeschulte/basic-to-passport-auth-http-proxy:v0.1.4&lt;/code>&lt;/p>
 &lt;p>之后 webdav url 是 http://127.0.0.1:13000/personal/[YOUR-EMAIL]/Documents, 用户名和密码是 onedrive 的信息。&lt;/p>
-&lt;h3 id="rclone-方案-1">rclone 方案&lt;/h3>
-&lt;p>rclone 我本地也在用，没用 docker。&lt;/p>
-&lt;h4 id="1-配置-rclone-访问-onedrive">1. 配置 rclone 访问 onedrive&lt;/h4>
-&lt;p>教育版 Onedrive 登陆后的地址是 &lt;code>https://[YOUR-DOMAIN]-my.sharepoint.com/personal/[YOUR-EMAIL]/_layouts/15/onedrive.aspx&lt;/code>, 只需要把 &lt;code>_layouts/15/onedrive.aspx&lt;/code> 换成 &lt;code>Documents&lt;/code> 就是 webdav 地址。&lt;/p>
+&lt;h3 id="rclone-方案-1">rclone 方案
+&lt;/h3>&lt;p>rclone 我本地也在用，没用 docker。&lt;/p>
+&lt;h4 id="1-配置-rclone-访问-onedrive">1. 配置 rclone 访问 onedrive
+&lt;/h4>&lt;p>教育版 Onedrive 登陆后的地址是 &lt;code>https://[YOUR-DOMAIN]-my.sharepoint.com/personal/[YOUR-EMAIL]/_layouts/15/onedrive.aspx&lt;/code>, 只需要把 &lt;code>_layouts/15/onedrive.aspx&lt;/code> 换成 &lt;code>Documents&lt;/code> 就是 webdav 地址。&lt;/p>
 &lt;p>&lt;code>rclone confige - n) New remote - 随便起个名字 - 51 / WebDAV - https://[YOUR-DOMAIN]-my.sharepoint.com/personal/[YOUR-EMAIL]/Documents - 4 / Sharepoint Online, authenticated by Microsoft account - 用户名 - y) Yes, type in my own password - 密码 - 确认密码 - 回车跳过 - y) Yes this is OK (default)&lt;/code>&lt;/p>
-&lt;h4 id="2-rclone-开启-webadv-服务">2. rclone 开启 webadv 服务&lt;/h4>
-&lt;p>以上一步起的名字 1dr-sharepoint 为例, 执行下面命令即可开启 webdav 服务。
+&lt;h4 id="2-rclone-开启-webadv-服务">2. rclone 开启 webadv 服务
+&lt;/h4>&lt;p>以上一步起的名字 1dr-sharepoint 为例, 执行下面命令即可开启 webdav 服务。
 &lt;code>rclone rclone serve webdav 1dr-sharepoint:/ --user user --pass password --addr 192.168.1.101:8080&lt;/code>&lt;/p>
 &lt;p>webdav url http://192.168.1.101:8080/&lt;/p>
 &lt;p>rclone 支持开启的服务列表如下:&lt;/p>
@@ -85,8 +85,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> webdav Serve remote:path over WebDAV.
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h4 id="3-群晖-file-station-挂载">3. 群晖 File Station 挂载&lt;/h4>
-&lt;p>File Station - Tools - Remote Connection - Connection Setup - WebDAV&lt;/p>
+&lt;/div>&lt;h4 id="3-群晖-file-station-挂载">3. 群晖 File Station 挂载
+&lt;/h4>&lt;p>File Station - Tools - Remote Connection - Connection Setup - WebDAV&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -103,8 +103,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">passowrd: pssword
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;/div>&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://blog.edmond.work/2023/02/19/dsm-hyper-backup-onedrive-%E5%82%99%E4%BB%BD%E6%95%99%E5%AD%B8/" target="_blank" rel="noopener"
 >DSM Hyper Backup OneDrive 備份教學&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://hostloc.com/thread-785905-1-1.html" target="_blank" rel="noopener"
@@ -124,8 +124,8 @@
 &lt;p>这个报错，在 PaddleOCR 官方的 github 仓库 issue 有人发过, ubuntu 20.10 上遇到此报错，https://github.com/PaddlePaddle/Paddle/issues/36801 。&lt;/p>
 &lt;p>只能把 PaddleOCR 放在 Docker 运行了。不过官方镜像的体积高达 11G，我只需要 OCR 功能，不做样本训练，应该有很大的精简空间。&lt;/p>
 &lt;p>此前在 VPS 上的 ubuntu 20.04 里用过 PaddleOCR，故选择 ubuntu 20.04 做基础镜像。群晖 NAS 上有多个 Docker 服务，PaddleOCR 同样丢群晖跑。&lt;/p>
-&lt;h2 id="运行-ubuntu-2004">运行 ubuntu 20.04&lt;/h2>
-&lt;p>ssh 登录群晖后，执行 &lt;code>sudo su&lt;/code>，输入当前用户的密码，切换到 &lt;strong>root&lt;/strong>。&lt;/p>
+&lt;h2 id="运行-ubuntu-2004">运行 ubuntu 20.04
+&lt;/h2>&lt;p>ssh 登录群晖后，执行 &lt;code>sudo su&lt;/code>，输入当前用户的密码，切换到 &lt;strong>root&lt;/strong>。&lt;/p>
 &lt;p>执行下面命令，进入 ubuntu 的 bash 终端&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -137,8 +137,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker run -it ubuntu:20.04 bash
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="系统的软件源换成阿里云">系统的软件源换成阿里云&lt;/h2>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;/div>&lt;h2 id="系统的软件源换成阿里云">系统的软件源换成阿里云
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;span class="lnt">2
@@ -150,8 +150,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">apt-get update
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="安装-python-环境">安装 python 环境&lt;/h2>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;/div>&lt;h2 id="安装-python-环境">安装 python 环境
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;span class="lnt">2
@@ -165,8 +165,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">echo &amp;#39;index-url = https://pypi.doubanio.com/simple&amp;#39; &amp;gt;&amp;gt; /root/.pip/pip.conf
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="安装-paddleocr">安装 PaddleOCR&lt;/h2>
-&lt;p>按官方文档操作，https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.4/doc/doc_ch/quickstart.md&lt;/p>
+&lt;/div>&lt;h2 id="安装-paddleocr">安装 PaddleOCR
+&lt;/h2>&lt;p>按官方文档操作，https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.4/doc/doc_ch/quickstart.md&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -178,10 +178,10 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>一切进展顺利，下面开始踩坑&lt;/p>
-&lt;h2 id="填坑过程">填坑过程&lt;/h2>
-&lt;p>执行 &lt;code>paddleocr -h&lt;/code>, 看是否有报错信息。错误一个接一个的来，下面安出现顺序解决&lt;/p>
-&lt;h3 id="modulenotfounderror-no-module-named-paddlefluidcore_noavx">ModuleNotFoundError: No module named &amp;lsquo;paddle.fluid.core_noavx&amp;rsquo;&lt;/h3>
-&lt;p>群晖的 CPU 太古老了，不支持 AVX(Advanced Vector Extensions) 指令集, 需要 noavx 的预编译包。
+&lt;h2 id="填坑过程">填坑过程
+&lt;/h2>&lt;p>执行 &lt;code>paddleocr -h&lt;/code>, 看是否有报错信息。错误一个接一个的来，下面安出现顺序解决&lt;/p>
+&lt;h3 id="modulenotfounderror-no-module-named-paddlefluidcore_noavx">ModuleNotFoundError: No module named &amp;lsquo;paddle.fluid.core_noavx&amp;rsquo;
+&lt;/h3>&lt;p>群晖的 CPU 太古老了，不支持 AVX(Advanced Vector Extensions) 指令集, 需要 noavx 的预编译包。
 在这个 issue &lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
 >https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a> 中找到线索，官方的预先编译 whl 列表 &lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
 >https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a>&lt;/p>
@@ -211,16 +211,16 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pip install --force-reinstal paddlepaddle-2.2.2-cp38-cp38-linux_x86_64.whl
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="importerror-libglso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libGL.so.1: cannot open shared object file: No such file or directory&lt;/h3>
-&lt;p>&lt;code>pip install opencv-python-headless==4.2.0.32&lt;/code>&lt;/p>
-&lt;h3 id="importerror-libgthread-20so0-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgthread-2.0.so.0: cannot open shared object file: No such file or directory&lt;/h3>
-&lt;p>&lt;code>apt-get install libglib2.0-0 libsm6 libxrender1 libxext6&lt;/code>&lt;/p>
+&lt;/div>&lt;h3 id="importerror-libglso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libGL.so.1: cannot open shared object file: No such file or directory
+&lt;/h3>&lt;p>&lt;code>pip install opencv-python-headless==4.2.0.32&lt;/code>&lt;/p>
+&lt;h3 id="importerror-libgthread-20so0-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgthread-2.0.so.0: cannot open shared object file: No such file or directory
+&lt;/h3>&lt;p>&lt;code>apt-get install libglib2.0-0 libsm6 libxrender1 libxext6&lt;/code>&lt;/p>
 &lt;p>中途会出现选择时区的交互，依次选择 &lt;code>6. Asia&lt;/code> - &lt;code>19. Chongqing&lt;/code>&lt;/p>
-&lt;h3 id="importerror-libgompso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgomp.so.1: cannot open shared object file: No such file or directory&lt;/h3>
-&lt;p>&lt;code>apt-get install libgomp1&lt;/code>&lt;/p>
+&lt;h3 id="importerror-libgompso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgomp.so.1: cannot open shared object file: No such file or directory
+&lt;/h3>&lt;p>&lt;code>apt-get install libgomp1&lt;/code>&lt;/p>
 &lt;p>至此，paddleocr 可以正常运行。&lt;/p>
-&lt;h2 id="添加-api">添加 API&lt;/h2>
-&lt;p>使用 flask 提供简单的 ocr 识别 API，可以上传图片或者从 url 下载图片，输出格式可选 text 或者 json，默认 text。&lt;/p>
+&lt;h2 id="添加-api">添加 API
+&lt;/h2>&lt;p>使用 flask 提供简单的 ocr 识别 API，可以上传图片或者从 url 下载图片，输出格式可选 text 或者 json，默认 text。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
@@ -283,8 +283,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">ret&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="api-使用">API 使用&lt;/h3>
-&lt;ul>
+&lt;/div>&lt;h3 id="api-使用">API 使用
+&lt;/h3>&lt;ul>
 &lt;li>
 &lt;p>上传文件识别, 输出 text 格式&lt;/p>
 &lt;p>&lt;code> curl 127.0.0.1:5000/ocr -F img=@/tmp/img.png&lt;/code>&lt;/p>
@@ -294,8 +294,8 @@
 &lt;code>curl 127.0.0.1:5000/ocr -F imgurl=https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/doc/imgs_en/254.jpg -F outtype=json&lt;/code>&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;h2 id="创建-dockerfile">创建 Dockerfile&lt;/h2>
-&lt;p>上面提到的安装过程中需要交互选择时区，会中断 docker 编译，通过设置 &lt;code>ENV DEBIAN_FRONTEND=noninteractive&lt;/code> 来规避&lt;/p>
+&lt;h2 id="创建-dockerfile">创建 Dockerfile
+&lt;/h2>&lt;p>上面提到的安装过程中需要交互选择时区，会中断 docker 编译，通过设置 &lt;code>ENV DEBIAN_FRONTEND=noninteractive&lt;/code> 来规避&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
@@ -351,8 +351,8 @@
 &lt;p>Docker Hub 地址 &lt;a class="link" href="https://hub.docker.com/r/c403/paddleocr" target="_blank" rel="noopener"
 >https://hub.docker.com/r/c403/paddleocr&lt;/a>&lt;/p>
 &lt;p>最后吐槽一下，PaddleOCR 的文档太混乱了, 很多内容在 issues 里，不在文档。&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
 >https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"

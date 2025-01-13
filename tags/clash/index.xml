@@ -2,27 +2,27 @@
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th style="text-align: left">&lt;/th>
-&lt;th style="text-align: left">自建代理&lt;/th>
-&lt;th style="text-align: left">机场&lt;/th>
+&lt;th>&lt;/th>
+&lt;th>自建代理&lt;/th>
+&lt;th>机场&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td style="text-align: left">速度&lt;/td>
-&lt;td style="text-align: left">慢&lt;/td>
-&lt;td style="text-align: left">快&lt;/td>
+&lt;td>速度&lt;/td>
+&lt;td>慢&lt;/td>
+&lt;td>快&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align: left">安全性&lt;/td>
-&lt;td style="text-align: left">高&lt;/td>
-&lt;td style="text-align: left">无&lt;/td>
+&lt;td>安全性&lt;/td>
+&lt;td>高&lt;/td>
+&lt;td>无&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
 &lt;p>有没有兼顾安全性和速度的方案？&lt;/p>
-&lt;h2 id="最终方案">最终方案&lt;/h2>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h2 id="最终方案">最终方案
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
 &lt;/span>&lt;span class="lnt"> 2
@@ -66,28 +66,28 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------------+ +---------------+
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="部署要点">部署要点&lt;/h3>
-&lt;ol>
+&lt;/div>&lt;h3 id="部署要点">部署要点
+&lt;/h3>&lt;ol>
 &lt;li>自建梯子用 tsl+websocket 协议，各种工具都可以，ss+v2ray-plugin、v2ray、gost 等都可以。这一步目的是为了能用 Cloudflare 的 CDN。&lt;/li>
 &lt;li>需要有自己的域名，把域名接入 Cloudflare。&lt;/li>
 &lt;li>在本地用 clash 控制流量走向&lt;/li>
 &lt;/ol>
-&lt;h2 id="方案优势">方案优势&lt;/h2>
-&lt;ol>
+&lt;h2 id="方案优势">方案优势
+&lt;/h2>&lt;ol>
 &lt;li>国内运营商在链路①的位置只能看到你访问了机场的国内 IP&lt;/li>
 &lt;li>机场在链路②③只能看到你在用 tls 流量访问 Cloudflare 节点，目标网站就是你接入 Cloudflare 的域名。&lt;/li>
 &lt;li>&lt;strong>只要你不用代理访问国内网站，运营商和机场都不知道你的自建梯子的出口 IP&lt;/strong>&lt;/li>
 &lt;li>和直连自建梯子比，大幅提升速度和稳定性；和单独使用机场相比，机场无法知道你的访问信息，安全性很大提升&lt;/li>
 &lt;/ol>
-&lt;h2 id="方案实施">方案实施&lt;/h2>
-&lt;ol>
+&lt;h2 id="方案实施">方案实施
+&lt;/h2>&lt;ol>
 &lt;li>各代理软件都有详细文档，如何开启tsl+websocket 协议，此处略&lt;/li>
 &lt;li>域名接入 cloudflare， 略&lt;/li>
 &lt;li>购买机场，略&lt;/li>
 &lt;li>clash 配置&lt;/li>
 &lt;/ol>
-&lt;h3 id="clash-简介">Clash 简介&lt;/h3>
-&lt;p>&lt;a class="link" href="https://github.com/Dreamacro/clash" target="_blank" rel="noopener"
+&lt;h3 id="clash-简介">Clash 简介
+&lt;/h3>&lt;p>&lt;a class="link" href="https://github.com/Dreamacro/clash" target="_blank" rel="noopener"
 >Clash&lt;/a>是一款用 Go 开发的多平台的代理工具，使用强大的策略组来管理节点;可以自动选择节点，不同的网站，在同一时间，可以使用不同的节点去访问。&lt;/p>
 &lt;p>我们用 Clash 强大的策略组功能来套娃。&lt;/p>
 &lt;p>官方文档有示例 &lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
@@ -96,8 +96,8 @@
 &lt;p>relay chains the proxies. proxies shall not contain a relay. No UDP support.
 Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; ss1 &amp;lt;-&amp;gt; ss2 &amp;lt;-&amp;gt; Internet&lt;/p>
 &lt;/blockquote>
-&lt;h3 id="配置文件">配置文件&lt;/h3>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h3 id="配置文件">配置文件
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
 &lt;/span>&lt;span class="lnt"> 2
@@ -261,17 +261,17 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;li>国内 IP 直连&lt;/li>
 &lt;li>国外 IP 走代理&lt;/li>
 &lt;/ul>
-&lt;h3 id="数据流">数据流：&lt;/h3>
-&lt;ol>
+&lt;h3 id="数据流">数据流：
+&lt;/h3>&lt;ol>
 &lt;li>本机请求 -&amp;gt; clash，clash 按 relay 组的 proxies 顺序，从下往上加密，本配置中，先用自建的加密方式加密请求，再用机场的加密方式加密第二次&lt;/li>
 &lt;li>clash -&amp;gt; 机场，机场解开自己的加密，看到目标是一个 Cloudflare 上的网站&lt;/li>
 &lt;li>机场 -&amp;gt; Cloudflare, 用标准的 https 方式转发收到的数据包&lt;/li>
 &lt;li>Cloudflare -&amp;gt; vps，vps 收到 https 包后，先用域名的私钥解密数据，得到加密的 ss 数据，再用 ss 解密得到真正的目标。&lt;/li>
 &lt;/ol>
-&lt;h2 id="更古老的套娃方案">更古老的套娃方案&lt;/h2>
-&lt;p>在遇到 clash 之前，一直在 openwrt 上套娃，使用的是 shadowsocks + iptables-mod-tproxy&lt;/p>
-&lt;h3 id="环境准备">环境准备&lt;/h3>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h2 id="更古老的套娃方案">更古老的套娃方案
+&lt;/h2>&lt;p>在遇到 clash 之前，一直在 openwrt 上套娃，使用的是 shadowsocks + iptables-mod-tproxy&lt;/p>
+&lt;h3 id="环境准备">环境准备
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
@@ -279,8 +279,8 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">opkg install shadowsocks-libev
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="操作方法">操作方法&lt;/h3>
-&lt;ol>
+&lt;/div>&lt;h3 id="操作方法">操作方法
+&lt;/h3>&lt;ol>
 &lt;li>openwrt 上正常配置自建梯子，能正常使用后进入第2步&lt;/li>
 &lt;li>用 ss-redir 启动机场的 ss&lt;/li>
 &lt;/ol>
@@ -315,8 +315,8 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>&lt;strong>机场的 ss-redir 需要后启动，shadowsocks 默认策略是插入 OUTPUT 链首位，后启动的在首位&lt;/strong>&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://wanchuan.top/e9430b8345c049f8afce602db5f5f773" target="_blank" rel="noopener"
 >使用Clash工具科学上网&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"

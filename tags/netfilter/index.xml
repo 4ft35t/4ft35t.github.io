@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Netfilter on 4ft35t blog</title><link>https://4ft35t.github.io/tags/netfilter/</link><description>Recent content in Netfilter on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 17 Feb 2023 10:36:40 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/netfilter/index.xml" rel="self" type="application/rss+xml"/><item><title>Ubuntu 20.04 server iptables 持久化</title><link>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</link><pubDate>Fri, 17 Feb 2023 10:36:40 +0800</pubDate><guid>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</guid><description>&lt;img src="https://i.stack.imgur.com/gZm6i.png" alt="Featured image of post Ubuntu 20.04 server iptables 持久化" />&lt;p>有一批服务器需要做 iptables 持久化，开机自动加载。&lt;/p>
 &lt;p>在 Ubuntu 12.04 时代, 可以把加载脚本写到 &lt;code>/etc/rc.local&lt;/code> 开机自动加载，Ubuntu 20.04 要启用 rc.local 太麻烦，用 &lt;code>netfilter-persistent&lt;/code> 来实现自动加载。&lt;/p>
 &lt;p>&lt;code>netfilter-persistent&lt;/code> 加载 &lt;code>ipset-persistent&lt;/code> 和 &lt;code>iptables-persistent&lt;/code> 保存的规则。&lt;/p>
-&lt;h2 id="tldr">TLDR&lt;/h2>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h2 id="tldr">TLDR
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
 &lt;/span>&lt;span class="lnt"> 2
@@ -32,8 +32,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl start netfilter-persistent
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="静默安装">静默安装&lt;/h2>
-&lt;p>ipset-persistent 和 iptables-persistent 安装过程中会弹出交互窗，选择是否自动保存规则。&lt;/p>
+&lt;/div>&lt;h2 id="静默安装">静默安装
+&lt;/h2>&lt;p>ipset-persistent 和 iptables-persistent 安装过程中会弹出交互窗，选择是否自动保存规则。&lt;/p>
 &lt;p>交互会打断服务器上脚本安装，需要无交互静默安装。&lt;/p>
 &lt;p>Ubuntu 上软件包安装配置项归 &lt;code>debconf&lt;/code> 管理，在一台机器上交互安装完成后，用 &lt;code>debconf-show&lt;/code> 查看软件包的配置项。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -82,11 +82,11 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>执行 &lt;code> sudo apt install netfilter-persistent ipset-persistent iptables-persistent -y&lt;/code> 即可静默安装。&lt;/p>
-&lt;h3 id="持久化">持久化&lt;/h3>
-&lt;h4 id="保存规则">保存规则&lt;/h4>
-&lt;p>&lt;code>sudo netfilter-persistent save&lt;/code>&lt;/p>
-&lt;h4 id="自动加载">自动加载&lt;/h4>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h3 id="持久化">持久化
+&lt;/h3>&lt;h4 id="保存规则">保存规则
+&lt;/h4>&lt;p>&lt;code>sudo netfilter-persistent save&lt;/code>&lt;/p>
+&lt;h4 id="自动加载">自动加载
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;span class="lnt">2
@@ -96,8 +96,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl start netfilter-persistent
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;/div>&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://dhtar.com/make-ipset-and-iptables-configurations-persistent-in-debianubuntu.html" target="_blank" rel="noopener"
 >Make ipset and iptables configurations persistent in Debian/Ubuntu&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://gist.github.com/alonisser/a2c19f5362c2091ac1e7" target="_blank" rel="noopener"

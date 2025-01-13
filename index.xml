@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>4ft35t blog</title><link>https://4ft35t.github.io/</link><description>Recent content on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 07 Aug 2024 21:24:32 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>按人的思维方式解开数独</title><link>https://4ft35t.github.io/post/solve-soduku-like-human-without-backtracking/</link><pubDate>Wed, 07 Aug 2024 21:24:32 +0800</pubDate><guid>https://4ft35t.github.io/post/solve-soduku-like-human-without-backtracking/</guid><description>&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Sudoku_Puzzle_by_L2G-20050714_standardized_layout.svg/722px-Sudoku_Puzzle_by_L2G-20050714_standardized_layout.svg.png" alt="Featured image of post 按人的思维方式解开数独" />&lt;p>数独是一种逻辑游戏，目标是填充一个 9x9 的网格，使得每一行、每一列和每一个 3x3 的子网格中的数字都是 1 到 9。&lt;/p>
 &lt;p>数独的规则非常简单，但是解决数独问题却是一个复杂的任务。在这篇文章中，我们将介绍一种按照人的思维方式解开数独的方法，而不是使用传统的回溯算法。&lt;/p>
-&lt;h2 id="人是如何解开数独的">人是如何解开数独的&lt;/h2>
-&lt;p>我自己解数独的时候，通常会按照以下步骤进行：&lt;/p>
+&lt;h2 id="人是如何解开数独的">人是如何解开数独的
+&lt;/h2>&lt;p>我自己解数独的时候，通常会按照以下步骤进行：&lt;/p>
 &lt;ul>
 &lt;li>先找已有 5 个数字的行、列、块，看看是否有数字只能填在某个位置&lt;/li>
 &lt;li>已出现次数较多的某个特定数字，利用行和列的关系，综合确定其在剩余块中的位置&lt;/li>
@@ -16,8 +16,8 @@ loading="lazy"
 &lt;li>再看右边的三个块，有没有 5 出现，右下角的 5 在最右侧，所以右上角的 5 只能在最左侧&lt;/li>
 &lt;/ol>
 &lt;p>人解题的过程，实际是用排除法，逐步缩小数字的可能位置，直到确定唯一位置。&lt;/p>
-&lt;h2 id="202408-更新">2024.08 更新&lt;/h2>
-&lt;p>代码中的 matrix5 无法解开，必须要引入回溯算法。&lt;/p>
+&lt;h2 id="202408-更新">2024.08 更新
+&lt;/h2>&lt;p>代码中的 matrix5 无法解开，必须要引入回溯算法。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
@@ -46,16 +46,16 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">]&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="用-python-实现">用 Python 实现&lt;/h2>
-&lt;h3 id="设计思路">设计思路&lt;/h3>
-&lt;ol>
+&lt;/div>&lt;h2 id="用-python-实现">用 Python 实现
+&lt;/h2>&lt;h3 id="设计思路">设计思路
+&lt;/h3>&lt;ol>
 &lt;li>初始化时，每个格子的可能值都是 1-9&lt;/li>
 &lt;li>当一个格子确定了数字 n，那么这个格子所在的行、列、块中的其他格子, 都不能填 n, 从它们的可能值中删除 n&lt;/li>
 &lt;li>当一个格子的可能值只有一个时，填入这个数字&lt;/li>
 &lt;li>重复 2 和 3，直到所有格子都填满&lt;/li>
 &lt;/ol>
-&lt;h3 id="伪代码">伪代码&lt;/h3>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h3 id="伪代码">伪代码
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
 &lt;/span>&lt;span class="lnt"> 2
@@ -129,13 +129,13 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cells&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="存在的问题">存在的问题&lt;/h3>
-&lt;p>上面的方法在处理初始数字比较多的数独时，效果很好。但是对于初始数字比较少的数独，可能会陷入死循环。因为这种方法只能处理确定的数字，而不能处理可能的数字。&lt;/p>
-&lt;h3 id="解决方案">解决方案&lt;/h3>
-&lt;p>在每次的 while 循环中，增加一个判断，如果没有任何一个格子的可能值只有一个，那么就选择可能值最少的一个格子，填入可能值的第一个数字。&lt;/p>
+&lt;/div>&lt;h3 id="存在的问题">存在的问题
+&lt;/h3>&lt;p>上面的方法在处理初始数字比较多的数独时，效果很好。但是对于初始数字比较少的数独，可能会陷入死循环。因为这种方法只能处理确定的数字，而不能处理可能的数字。&lt;/p>
+&lt;h3 id="解决方案">解决方案
+&lt;/h3>&lt;p>在每次的 while 循环中，增加一个判断，如果没有任何一个格子的可能值只有一个，那么就选择可能值最少的一个格子，填入可能值的第一个数字。&lt;/p>
 &lt;p>这么做的原因是，这种初始数字少的数独，可能会有多个解，我们只需要找到一个解即可。&lt;/p>
-&lt;h3 id="完整代码">完整代码&lt;/h3>
-&lt;p>&lt;a class="link" href="https://gist.github.com/4ft35t/d284860ff96ddc4d7aae5a4262af907a" target="_blank" rel="noopener"
+&lt;h3 id="完整代码">完整代码
+&lt;/h3>&lt;p>&lt;a class="link" href="https://gist.github.com/4ft35t/d284860ff96ddc4d7aae5a4262af907a" target="_blank" rel="noopener"
 >https://gist.github.com/4ft35t/d284860ff96ddc4d7aae5a4262af907a&lt;/a>&lt;/p></description></item><item><title>群晖使用 A1 订阅版 Onedrive</title><link>https://4ft35t.github.io/post/use-office365-a1-onedrive-in-synology/</link><pubDate>Tue, 19 Mar 2024 11:22:46 +0800</pubDate><guid>https://4ft35t.github.io/post/use-office365-a1-onedrive-in-synology/</guid><description>&lt;p>教育版 A1 订阅的 Onedrive 可以用 rclone 以 webdav 方式挂载。 但这不是标准的 webdav 协议，无法在群晖中使用。&lt;/p>
 &lt;p>群晖的 Cloud Sync 支持同步 Microsoft OneDrive for Business 和 Microsoft SharePoint，但是这个帐号使用 edu 邮箱自己注册的，没有管理员，登陆后报错&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -146,37 +146,37 @@ loading="lazy"
 &lt;pre tabindex="0" class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>&lt;span class="nt">&amp;#34;error&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="s2">&amp;#34;invalid_client&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nt">&amp;#34;error_description&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="s2">&amp;#34;AADSTS650051: Using application &amp;#39;Cloud Sync&amp;#39; is currently not supported for your organization xxx.edu.cn because it is in an unmanaged state. An administrator needs to claim ownership of the company by DNS validation of xxx.edu.cn before the application Cloud Sync can be provisioned. Trace ID: a4ec2174-8d9f-4281-9f5b-7d782c060601 Correlation ID: c6bdc0ff-5a6c-4597-9060-af9c981610e2 Timestamp: 2024-03-15 02:00:57Z&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="实现方案">实现方案&lt;/h2>
-&lt;h3 id="skleeschultebasic-to-sharepoint-auth-http-proxy-方案">skleeschulte/basic-to-sharepoint-auth-http-proxy 方案&lt;/h3>
-&lt;p>使用 &lt;a class="link" href="https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy" target="_blank" rel="noopener"
+&lt;/div>&lt;h2 id="实现方案">实现方案
+&lt;/h2>&lt;h3 id="skleeschultebasic-to-sharepoint-auth-http-proxy-方案">skleeschulte/basic-to-sharepoint-auth-http-proxy 方案
+&lt;/h3>&lt;p>使用 &lt;a class="link" href="https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy" target="_blank" rel="noopener"
 >https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy&lt;/a> 中转请求，最终以 webdav 协议使用。&lt;/p>
-&lt;h3 id="rclone-方案">rclone 方案&lt;/h3>
-&lt;p>rclone 也是转为 webdav 服务&lt;/p>
+&lt;h3 id="rclone-方案">rclone 方案
+&lt;/h3>&lt;p>rclone 也是转为 webdav 服务&lt;/p>
 &lt;p>&lt;code>rclone serve webdav remote:path [flags]&lt;/code>&lt;/p>
-&lt;h3 id="方案效果对比">方案效果对比&lt;/h3>
-&lt;table>
+&lt;h3 id="方案效果对比">方案效果对比
+&lt;/h3>&lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th style="text-align: left">应用程序&lt;/th>
-&lt;th style="text-align: left">basic-to-sharepoint-auth-http-proxy&lt;/th>
-&lt;th style="text-align: left">rclone&lt;/th>
+&lt;th>应用程序&lt;/th>
+&lt;th>basic-to-sharepoint-auth-http-proxy&lt;/th>
+&lt;th>rclone&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td style="text-align: left">File Station&lt;/td>
-&lt;td style="text-align: left">N&lt;/td>
-&lt;td style="text-align: left">Y&lt;/td>
+&lt;td>File Station&lt;/td>
+&lt;td>N&lt;/td>
+&lt;td>Y&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align: left">Cloud Sync&lt;/td>
-&lt;td style="text-align: left">Y&lt;/td>
-&lt;td style="text-align: left">Y&lt;/td>
+&lt;td>Cloud Sync&lt;/td>
+&lt;td>Y&lt;/td>
+&lt;td>Y&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align: left">Hyper Backup&lt;/td>
-&lt;td style="text-align: left">Y&lt;/td>
-&lt;td style="text-align: left">Y&lt;/td>
+&lt;td>Hyper Backup&lt;/td>
+&lt;td>Y&lt;/td>
+&lt;td>Y&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
@@ -185,17 +185,17 @@ loading="lazy"
 &lt;li>支持在 File Station 挂载&lt;/li>
 &lt;li>rclone 是是个活跃项目，basic-to-sharepoint-auth-http-proxy 已经 2 年无更新&lt;/li>
 &lt;/ol>
-&lt;h2 id="操作方法">操作方法&lt;/h2>
-&lt;h3 id="basic-to-sharepoint-auth-http-proxy-方案">basic-to-sharepoint-auth-http-proxy 方案&lt;/h3>
-&lt;p>&lt;code>sudo docker run --name sharepoint-proxy -d -p 13000:3000 -e PROXY_TARGET=https://xxx-my.sharepoint.com/ --restart always skleeschulte/basic-to-passport-auth-http-proxy:v0.1.4&lt;/code>&lt;/p>
+&lt;h2 id="操作方法">操作方法
+&lt;/h2>&lt;h3 id="basic-to-sharepoint-auth-http-proxy-方案">basic-to-sharepoint-auth-http-proxy 方案
+&lt;/h3>&lt;p>&lt;code>sudo docker run --name sharepoint-proxy -d -p 13000:3000 -e PROXY_TARGET=https://xxx-my.sharepoint.com/ --restart always skleeschulte/basic-to-passport-auth-http-proxy:v0.1.4&lt;/code>&lt;/p>
 &lt;p>之后 webdav url 是 http://127.0.0.1:13000/personal/[YOUR-EMAIL]/Documents, 用户名和密码是 onedrive 的信息。&lt;/p>
-&lt;h3 id="rclone-方案-1">rclone 方案&lt;/h3>
-&lt;p>rclone 我本地也在用，没用 docker。&lt;/p>
-&lt;h4 id="1-配置-rclone-访问-onedrive">1. 配置 rclone 访问 onedrive&lt;/h4>
-&lt;p>教育版 Onedrive 登陆后的地址是 &lt;code>https://[YOUR-DOMAIN]-my.sharepoint.com/personal/[YOUR-EMAIL]/_layouts/15/onedrive.aspx&lt;/code>, 只需要把 &lt;code>_layouts/15/onedrive.aspx&lt;/code> 换成 &lt;code>Documents&lt;/code> 就是 webdav 地址。&lt;/p>
+&lt;h3 id="rclone-方案-1">rclone 方案
+&lt;/h3>&lt;p>rclone 我本地也在用，没用 docker。&lt;/p>
+&lt;h4 id="1-配置-rclone-访问-onedrive">1. 配置 rclone 访问 onedrive
+&lt;/h4>&lt;p>教育版 Onedrive 登陆后的地址是 &lt;code>https://[YOUR-DOMAIN]-my.sharepoint.com/personal/[YOUR-EMAIL]/_layouts/15/onedrive.aspx&lt;/code>, 只需要把 &lt;code>_layouts/15/onedrive.aspx&lt;/code> 换成 &lt;code>Documents&lt;/code> 就是 webdav 地址。&lt;/p>
 &lt;p>&lt;code>rclone confige - n) New remote - 随便起个名字 - 51 / WebDAV - https://[YOUR-DOMAIN]-my.sharepoint.com/personal/[YOUR-EMAIL]/Documents - 4 / Sharepoint Online, authenticated by Microsoft account - 用户名 - y) Yes, type in my own password - 密码 - 确认密码 - 回车跳过 - y) Yes this is OK (default)&lt;/code>&lt;/p>
-&lt;h4 id="2-rclone-开启-webadv-服务">2. rclone 开启 webadv 服务&lt;/h4>
-&lt;p>以上一步起的名字 1dr-sharepoint 为例, 执行下面命令即可开启 webdav 服务。
+&lt;h4 id="2-rclone-开启-webadv-服务">2. rclone 开启 webadv 服务
+&lt;/h4>&lt;p>以上一步起的名字 1dr-sharepoint 为例, 执行下面命令即可开启 webdav 服务。
 &lt;code>rclone rclone serve webdav 1dr-sharepoint:/ --user user --pass password --addr 192.168.1.101:8080&lt;/code>&lt;/p>
 &lt;p>webdav url http://192.168.1.101:8080/&lt;/p>
 &lt;p>rclone 支持开启的服务列表如下:&lt;/p>
@@ -223,8 +223,8 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> webdav Serve remote:path over WebDAV.
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h4 id="3-群晖-file-station-挂载">3. 群晖 File Station 挂载&lt;/h4>
-&lt;p>File Station - Tools - Remote Connection - Connection Setup - WebDAV&lt;/p>
+&lt;/div>&lt;h4 id="3-群晖-file-station-挂载">3. 群晖 File Station 挂载
+&lt;/h4>&lt;p>File Station - Tools - Remote Connection - Connection Setup - WebDAV&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -241,8 +241,8 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">passowrd: pssword
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;/div>&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://blog.edmond.work/2023/02/19/dsm-hyper-backup-onedrive-%E5%82%99%E4%BB%BD%E6%95%99%E5%AD%B8/" target="_blank" rel="noopener"
 >DSM Hyper Backup OneDrive 備份教學&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://hostloc.com/thread-785905-1-1.html" target="_blank" rel="noopener"
@@ -256,18 +256,18 @@ loading="lazy"
 &lt;li>&lt;a class="link" href="https://rclone.org/commands/rclone_serve_webdav/" target="_blank" rel="noopener"
 >rclone serve webdav&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>如何查找中国大陆地区的邮编</title><link>https://4ft35t.github.io/post/how-to-find-postcode-in-china/</link><pubDate>Mon, 18 Mar 2024 10:26:08 +0800</pubDate><guid>https://4ft35t.github.io/post/how-to-find-postcode-in-china/</guid><description>&lt;img src="https://dey.11185.cn/web/static/img/LOGO.png" alt="Featured image of post 如何查找中国大陆地区的邮编" />&lt;p>随着通信与快递行业的发展，国内日常生活已经用不到邮政编码（简称邮编）。如果需要接收境外的平信（Giffgaff 的 SIM 卡或者 OCBC token 信）或者挂号信(OCBC 的银行卡), 就需要准确的邮编来让信件投递到片区邮局。&lt;/p>
-&lt;h2 id="邮编查询">邮编查询&lt;/h2>
-&lt;ol>
+&lt;h2 id="邮编查询">邮编查询
+&lt;/h2>&lt;ol>
 &lt;li>访问 &lt;a class="link" href="https://dey.11185.cn/web/#/idtoolkitAddress" target="_blank" rel="noopener"
 >https://dey.11185.cn/web/#/idtoolkitAddress&lt;/a>&lt;/li>
 &lt;li>选择省 - 选择市 - 随便选一个区，因为城市里同样的路名只有一条&lt;/li>
 &lt;li>输入xx路xx号，查询）&lt;/li>
 &lt;/ol>
-&lt;h3 id="ems-网站查选">EMS 网站查选&lt;/h3>
-&lt;p>&lt;a class="link" href="https://www.ems.com.cn/postcode" target="_blank" rel="noopener"
+&lt;h3 id="ems-网站查选">EMS 网站查选
+&lt;/h3>&lt;p>&lt;a class="link" href="https://www.ems.com.cn/postcode" target="_blank" rel="noopener"
 >https://www.ems.com.cn/postcode&lt;/a> 也可以查询邮编&lt;/p>
-&lt;h2 id="邮局地址">邮局地址&lt;/h2>
-&lt;p>如果国外寄来的信地址没有中文，有可能出现片区邮局不认识地址，不配送的情况，需要自己去邮局找。
+&lt;h2 id="邮局地址">邮局地址
+&lt;/h2>&lt;p>如果国外寄来的信地址没有中文，有可能出现片区邮局不认识地址，不配送的情况，需要自己去邮局找。
 几种找到片区邮局地址的方法&lt;/p>
 &lt;ol>
 &lt;li>&lt;a class="link" href="https://dey.11185.cn/web/#/dotquery" target="_blank" rel="noopener"
@@ -276,8 +276,8 @@ loading="lazy"
 >https://dey.11185.cn/web/#/waybillNo&lt;/a> 查询，可以看到配送点名称和邮递员手机号。如果配送点名称找不到，打电话问邮递员。&lt;/li>
 &lt;/ol></description></item><item><title>中国大陆资料自主激活 Wise</title><link>https://4ft35t.github.io/post/chinese-activate-wise-by-self/</link><pubDate>Sun, 09 Apr 2023 13:39:11 +0800</pubDate><guid>https://4ft35t.github.io/post/chinese-activate-wise-by-self/</guid><description>&lt;img src="https://wise.com/public-resources/assets/icons/wise-personal/share_landscape.png" alt="Featured image of post 中国大陆资料自主激活 Wise" />&lt;p>Wise.com（原TransferWise）是一家总部位于英国的金融科技公司，成立于2011年。该公司的主要业务是提供跨境汇款服务，以低廉的费用和实时汇率吸引了全球数百万用户。与传统银行不同，Wise.com采用P2P（点对点）技术，直接将汇款的资金汇入接收方的账户，从而避免了传统银行的中间商和高昂的手续费。&lt;/p>
 &lt;p>除了跨境汇款服务，Wise.com 还提供了多种其他金融服务，例如多币种账户、预付卡、汇率换算器等。Wise.com的目标是使跨境金融交易更加便捷和透明，并减少用户支付的费用。该公司已经在全球40多个国家和地区设立了办事处，获得了众多投资者的支持，成为金融科技领域的领军企业之一。&lt;/p>
-&lt;h2 id="tldr">TLDR&lt;/h2>
-&lt;p>&lt;strong>国内地址激活的 wise 无法申请 wise 卡。&lt;/strong>&lt;/p>
+&lt;h2 id="tldr">TLDR
+&lt;/h2>&lt;p>&lt;strong>国内地址激活的 wise 无法申请 wise 卡。&lt;/strong>&lt;/p>
 &lt;ol>
 &lt;li>护照+国内真实资料注册杜高斯贝银行，获得 IBAN(International Bank Account Number, 国际银行账户号码)&lt;/li>
 &lt;li>护照+国内真实资料注册 bitfinex, 认证后获得 openpayd 提现通道使用资格&lt;/li>
@@ -285,13 +285,13 @@ loading="lazy"
 &lt;li>在 bitfinex 把 usdt 换成欧元，使用 openpayd 通道超低手续费提现到杜高&lt;/li>
 &lt;li>杜高同名转欧元到 wise&lt;/li>
 &lt;/ol>
-&lt;h3 id="202403-更新">2024.03 更新&lt;/h3>
-&lt;p>中国居民已无法在 bitfinex 获得个人 IBAN, 境外交易所不再推荐 bitfinex。&lt;/p>
+&lt;h3 id="202403-更新">2024.03 更新
+&lt;/h3>&lt;p>中国居民已无法在 bitfinex 获得个人 IBAN, 境外交易所不再推荐 bitfinex。&lt;/p>
 &lt;p>kraken.com 交易所提现欧元费用, 单笔 1 欧元，推荐使用。&lt;/p>
 &lt;p>当前路径
 &lt;code>人民币 -&amp;gt; OKX USDT -&amp;gt; Kraken USDT -&amp;gt; EUR -&amp;gt; 杜高 -&amp;gt; wise&lt;/code>&lt;/p>
-&lt;h3 id="202406-更新">2024.06 更新&lt;/h3>
-&lt;ol>
+&lt;h3 id="202406-更新">2024.06 更新
+&lt;/h3>&lt;ol>
 &lt;li>全套国内资料可以开奕丰集团的&lt;a class="link" href="https://www.ifastgb.com/" target="_blank" rel="noopener"
 >iFAST&lt;/a>, 替代杜高，iFAST 汇出英镑免费。视频验证选中文客服，首次入金需要同名，可以用兴业银行寰宇人生借记卡直接汇英镑，&amp;lt;=100 英镑，全程免费。&lt;/li>
 &lt;/ol>
@@ -306,18 +306,18 @@ loading="lazy"
 &lt;p>汇出给 wise，同样需要修改银行地址&lt;/p>
 &lt;p>当前路径
 &lt;code>兴业银行人民币 -&amp;gt; wise 英镑&lt;/code>&lt;/p>
-&lt;h3 id="我的邀请链接">我的邀请链接&lt;/h3>
-&lt;ul>
+&lt;h3 id="我的邀请链接">我的邀请链接
+&lt;/h3>&lt;ul>
 &lt;li>杜高 &lt;a class="link" href="https://www.dukascopy.bank/swiss/open-mca-account/?ref=JER-LXV&amp;amp;lang=cn" target="_blank" rel="noopener"
 >https://www.dukascopy.bank/swiss/open-mca-account/?ref=JER-LXV&amp;lang=cn&lt;/a>&lt;/li>
 &lt;li>bitfinex &lt;a class="link" href="https://www.bitfinex.com/sign-up?refcode=5-_prc0oV" target="_blank" rel="noopener"
 >https://www.bitfinex.com/sign-up?refcode=5-_prc0oV&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="注册瑞士杜高斯贝银行">注册瑞士杜高斯贝银行&lt;/h2>
-&lt;p>杜高斯贝免开户费、免账户管理费及年费，用全套国内资料可以0成本注册一个正规银行账户。&lt;/p>
+&lt;h2 id="注册瑞士杜高斯贝银行">注册瑞士杜高斯贝银行
+&lt;/h2>&lt;p>杜高斯贝免开户费、免账户管理费及年费，用全套国内资料可以0成本注册一个正规银行账户。&lt;/p>
 &lt;p>杜高通过 SEPA（简单理解成欧洲的电汇） 转欧元，每笔固定收费 2.3 欧元。&lt;/p>
-&lt;h3 id="注册参考">注册参考&lt;/h3>
-&lt;ul>
+&lt;h3 id="注册参考">注册参考
+&lt;/h3>&lt;ul>
 &lt;li>&lt;a class="link" href="https://zhuanlan.zhihu.com/p/369487155" target="_blank" rel="noopener"
 >https://zhuanlan.zhihu.com/p/369487155&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=fZCFH4-x_6E" target="_blank" rel="noopener"
@@ -325,25 +325,25 @@ loading="lazy"
 &lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=zVwwsrwky1k" target="_blank" rel="noopener"
 >https://www.youtube.com/watch?v=zVwwsrwky1k&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h3 id="注册要点">注册要点&lt;/h3>
-&lt;ul>
+&lt;h3 id="注册要点">注册要点
+&lt;/h3>&lt;ul>
 &lt;li>全部资料用拼音，不要出现中文。比如地址是人民路7号2栋301，直接用拼音就行，不用翻译成英文，Ren min lu 7 hao 2 dong 301&lt;/li>
 &lt;li>使用手机 app 做视频验证时，需要开 VPN，要快就选英文客服，英文不好就等中文客服。英文内容很简单，问下生日、职业，转动一下护照，调整反光角度，来张自拍，基本1分钟就能完成。初中英语就能完成。&lt;/li>
 &lt;li>开户成功后，可以下载账单，0 金额也无所谓。账单可以在 bitfinex 验证时用。操作路径，网页-左上角三横线-history-右侧statement-This Month/Last Month-LOAD REPORT-PDF&lt;/li>
 &lt;li>&lt;strong>从 bitfinex 提现到杜高时，杜高地址里的&lt;code>Pré-Bois&lt;/code>会提示不支持，换成&lt;code>Pre-Bois&lt;/code> 即可&lt;/strong>&lt;/li>
 &lt;/ul>
-&lt;h2 id="注册-bitfinex-并完成高级认证">注册 bitfinex 并完成高级认证&lt;/h2>
-&lt;p>bitfinex 完成高级认证后，可以使用 openpayd 通道提现，提现欧元费用超低，单笔 0.5 欧元。&lt;/p>
+&lt;h2 id="注册-bitfinex-并完成高级认证">注册 bitfinex 并完成高级认证
+&lt;/h2>&lt;p>bitfinex 完成高级认证后，可以使用 openpayd 通道提现，提现欧元费用超低，单笔 0.5 欧元。&lt;/p>
 &lt;p>openpayd 会用你的姓名开一个账户，收款方看到的转账人就是你自己。openpayd 只能同名转账，所以不能直接接活 wise，wise 激活时的收款人是 wise 的对公账户，所以需要用杜高来中转。wise 激活后会给用你名字开的 IBAN，可以用 openpayd 直接出金到 wise。&lt;/p>
-&lt;h3 id="注册参考-1">注册参考&lt;/h3>
-&lt;ul>
+&lt;h3 id="注册参考-1">注册参考
+&lt;/h3>&lt;ul>
 &lt;li>&lt;a class="link" href="https://www.v2ex.com/t/910724" target="_blank" rel="noopener"
 >https://www.v2ex.com/t/910724&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=nCkdbqbSAxw" target="_blank" rel="noopener"
 >https://www.youtube.com/watch?v=nCkdbqbSAxw&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h3 id="注册要点-1">注册要点&lt;/h3>
-&lt;ul>
+&lt;h3 id="注册要点-1">注册要点
+&lt;/h3>&lt;ul>
 &lt;li>注册时界面选英文，不要选中文，选中文会因为地址是中文导致出金一直卡在 &amp;lsquo;processing&amp;rsquo; 状态&lt;/li>
 &lt;li>注意 first name 与 last name，中文名张三四，first name: Sansi, last name: Zhang&lt;/li>
 &lt;li>全部资料用拼音，不要出现中文。比如地址是人民路7号2栋301，直接用拼音就行，不用翻译成英文，Ren min lu 7 hao 2 dong 301。我一开始按网上教程填中文地址，完成认证后，提现在processing卡了半个月，咨询客服得到如下回复。修改成拼音，并上传杜高账单做为证明文件，修改成功后再次提现大概3小时到帐。&lt;/li>
@@ -387,8 +387,8 @@ loading="lazy"
 &lt;p>如果高级认证提交资料2个工作日后还没有完成，可以用英文发邮件给 &lt;a class="link" href="mailto:support@bitfinex.com" >support@bitfinex.com&lt;/a> 咨询，一般发邮件当天就处理完成了&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;h2 id="激活-wise">激活 wise&lt;/h2>
-&lt;p>wise 入金 20 欧元，杜高转 wise 需要 2.3 欧元的手续费，大概需要 25 usdt，买 200 人民币的 usdt 足够。&lt;/p>
+&lt;h2 id="激活-wise">激活 wise
+&lt;/h2>&lt;p>wise 入金 20 欧元，杜高转 wise 需要 2.3 欧元的手续费，大概需要 25 usdt，买 200 人民币的 usdt 足够。&lt;/p>
 &lt;ul>
 &lt;li>
 &lt;p>okex/币安注册帐号后买 200 人民币 usdt，大概 29 个；推荐okex，实名认证几分钟，币安大概要2周；交易 24 小时后可提现&lt;/p>
@@ -418,11 +418,11 @@ loading="lazy"
 &lt;p>杜高网页选择欧元账户-SEND MONEY-BANK TRANSFER, 填写 wise 的收款信息，货币选 EUR，金额20，会显示总费用22.3欧元, &lt;strong>千万别忘了填 wise 给的转账附言&lt;/strong>，对公帐号是靠附言来判断转账是给谁的。大概3-5小时后，wise 收到20欧元，账户完成激活。&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;h2 id="总结">总结&lt;/h2>
-&lt;p>200 人民币，到最后 wise 账户最大余额约 23 欧元，约等于 172 人民币，损失大概 15%，如果一切顺利，耗时一周以内。和淘宝的 230 入金 20 美元比，投入产出比没有任何优势。&lt;/p>
+&lt;h2 id="总结">总结
+&lt;/h2>&lt;p>200 人民币，到最后 wise 账户最大余额约 23 欧元，约等于 172 人民币，损失大概 15%，如果一切顺利，耗时一周以内。和淘宝的 230 入金 20 美元比，投入产出比没有任何优势。&lt;/p>
 &lt;p>也不知道 wise 账户被风控时，自己用杜高走完激活流程的帐号，是否会比淘宝虚拟卡激活的账户多一些申诉机会？&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://zhuanlan.zhihu.com/p/369487155" target="_blank" rel="noopener"
 >https://zhuanlan.zhihu.com/p/369487155&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=fZCFH4-x_6E" target="_blank" rel="noopener"
@@ -435,21 +435,21 @@ loading="lazy"
 >https://www.youtube.com/watch?v=nCkdbqbSAxw&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.dukascopy.bank/swiss/fees-limits/?lang=cn#acc-fees" target="_blank" rel="noopener"
 >https://www.dukascopy.bank/swiss/fees-limits/?lang=cn#acc-fees&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>excel 折线图添加竖线</title><link>https://4ft35t.github.io/post/add-vertical-line-excel-chart/</link><pubDate>Wed, 15 Mar 2023 13:44:24 +0800</pubDate><guid>https://4ft35t.github.io/post/add-vertical-line-excel-chart/</guid><description>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862174.jpg" alt="Featured image of post excel 折线图添加竖线" />&lt;h2 id="背景">背景&lt;/h2>
-&lt;p>一般用折线图来表示发展趋势，需要在折线图的某个位置添加竖线，用来强调在这里发生了重要的区分性事件。需要的效果如下图。&lt;/p>
+&lt;/ul></description></item><item><title>excel 折线图添加竖线</title><link>https://4ft35t.github.io/post/add-vertical-line-excel-chart/</link><pubDate>Wed, 15 Mar 2023 13:44:24 +0800</pubDate><guid>https://4ft35t.github.io/post/add-vertical-line-excel-chart/</guid><description>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862174.jpg" alt="Featured image of post excel 折线图添加竖线" />&lt;h2 id="背景">背景
+&lt;/h2>&lt;p>一般用折线图来表示发展趋势，需要在折线图的某个位置添加竖线，用来强调在这里发生了重要的区分性事件。需要的效果如下图。&lt;/p>
 &lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862174.jpg"
 loading="lazy"
 alt="chart-vertical-line-ok"
 >&lt;/p>
-&lt;h2 id="实现方法">实现方法&lt;/h2>
-&lt;p>本文是在 MAC 版 Microsoft Office 上的操作，Windows 版操作见下方的参考链接。&lt;/p>
-&lt;h3 id="带直线的散点图">带直线的散点图&lt;/h3>
-&lt;p>如果已有折线图&lt;/p>
+&lt;h2 id="实现方法">实现方法
+&lt;/h2>&lt;p>本文是在 MAC 版 Microsoft Office 上的操作，Windows 版操作见下方的参考链接。&lt;/p>
+&lt;h3 id="带直线的散点图">带直线的散点图
+&lt;/h3>&lt;p>如果已有折线图&lt;/p>
 &lt;p>折线图上右键 - 更改图标类型 - XY（散点图）- 带直线的散点图&lt;/p>
 &lt;p>如果当前没有折线图&lt;/p>
 &lt;p>菜单栏，插入 - XY（散点图）- 带直线的散点图&lt;/p>
-&lt;h3 id="新增分割线数据">新增分割线数据&lt;/h3>
-&lt;p>画一条分割线需要占用4个单元格。在表格的任意空白位置，用左右两列来填写。&lt;/p>
+&lt;h3 id="新增分割线数据">新增分割线数据
+&lt;/h3>&lt;p>画一条分割线需要占用4个单元格。在表格的任意空白位置，用左右两列来填写。&lt;/p>
 &lt;p>用上图的2月14号举例，需要在2月14号位置画一条竖线&lt;/p>
 &lt;ul>
 &lt;li>左侧两格都是需要划线的 X 值&lt;/li>
@@ -458,30 +458,30 @@ alt="chart-vertical-line-ok"
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th style="text-align: left">X&lt;/th>
-&lt;th style="text-align: left">Y&lt;/th>
+&lt;th>X&lt;/th>
+&lt;th>Y&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td style="text-align: left">2023/2/14&lt;/td>
-&lt;td style="text-align: left">0&lt;/td>
+&lt;td>2023/2/14&lt;/td>
+&lt;td>0&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align: left">2023/2/14&lt;/td>
-&lt;td style="text-align: left">70&lt;/td>
+&lt;td>2023/2/14&lt;/td>
+&lt;td>70&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;h3 id="画分割线">画分割线&lt;/h3>
-&lt;p>散点图上右键 - 选择数据 - 点“+”&lt;/p>
+&lt;h3 id="画分割线">画分割线
+&lt;/h3>&lt;p>散点图上右键 - 选择数据 - 点“+”&lt;/p>
 &lt;ul>
 &lt;li>X 值 选 X 列&lt;/li>
 &lt;li>Y 值 选 Y 列&lt;/li>
 &lt;/ul>
 &lt;p>大功告成。&lt;/p>
-&lt;h3 id="画多条分割线">画多条分割线&lt;/h3>
-&lt;p>画多条分割线，直接在 X和Y列填写内容即可。但是要注意，&lt;strong>不同分割线的数据之间要空一行，不然分割线会连起来&lt;/strong>，变成下图的样子。&lt;/p>
+&lt;h3 id="画多条分割线">画多条分割线
+&lt;/h3>&lt;p>画多条分割线，直接在 X和Y列填写内容即可。但是要注意，&lt;strong>不同分割线的数据之间要空一行，不然分割线会连起来&lt;/strong>，变成下图的样子。&lt;/p>
 &lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862263.jpg"
 loading="lazy"
 alt="chart-vertical-line-bad"
@@ -490,38 +490,38 @@ alt="chart-vertical-line-bad"
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th style="text-align: left">X&lt;/th>
-&lt;th style="text-align: left">Y&lt;/th>
+&lt;th>X&lt;/th>
+&lt;th>Y&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td style="text-align: left">2023/2/14&lt;/td>
-&lt;td style="text-align: left">0&lt;/td>
+&lt;td>2023/2/14&lt;/td>
+&lt;td>0&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align: left">2023/2/14&lt;/td>
-&lt;td style="text-align: left">70&lt;/td>
+&lt;td>2023/2/14&lt;/td>
+&lt;td>70&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align: left"> &lt;/td>
-&lt;td style="text-align: left"> &lt;/td>
+&lt;td> &lt;/td>
+&lt;td> &lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align: left">2023/2/17&lt;/td>
-&lt;td style="text-align: left">0&lt;/td>
+&lt;td>2023/2/17&lt;/td>
+&lt;td>0&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align: left">2023/2/17&lt;/td>
-&lt;td style="text-align: left">70&lt;/td>
+&lt;td>2023/2/17&lt;/td>
+&lt;td>70&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;h3 id="分割线上加文字">分割线上加文字&lt;/h3>
-&lt;p>任意空白单元格写好文字 - 复制 - 任意空白单元格 - 右键 - 选择性粘贴- 粘贴图片链接 - 把图片拖到分割线合适位置。&lt;/p>
+&lt;h3 id="分割线上加文字">分割线上加文字
+&lt;/h3>&lt;p>任意空白单元格写好文字 - 复制 - 任意空白单元格 - 右键 - 选择性粘贴- 粘贴图片链接 - 把图片拖到分割线合适位置。&lt;/p>
 &lt;p>修改原始单元格的内容、改文字颜色等，图片上内容也会随之变动。&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://www.bilibili.com/video/BV1ex411J7Q1" target="_blank" rel="noopener"
 >Excel折线图美化技巧 在折线图中添加贯通竖线分隔季度数据&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.bilibili.com/video/BV1p44y1j7oq" target="_blank" rel="noopener"
@@ -531,8 +531,8 @@ alt="chart-vertical-line-bad"
 &lt;/ul></description></item><item><title>Ubuntu 20.04 server iptables 持久化</title><link>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</link><pubDate>Fri, 17 Feb 2023 10:36:40 +0800</pubDate><guid>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</guid><description>&lt;img src="https://i.stack.imgur.com/gZm6i.png" alt="Featured image of post Ubuntu 20.04 server iptables 持久化" />&lt;p>有一批服务器需要做 iptables 持久化，开机自动加载。&lt;/p>
 &lt;p>在 Ubuntu 12.04 时代, 可以把加载脚本写到 &lt;code>/etc/rc.local&lt;/code> 开机自动加载，Ubuntu 20.04 要启用 rc.local 太麻烦，用 &lt;code>netfilter-persistent&lt;/code> 来实现自动加载。&lt;/p>
 &lt;p>&lt;code>netfilter-persistent&lt;/code> 加载 &lt;code>ipset-persistent&lt;/code> 和 &lt;code>iptables-persistent&lt;/code> 保存的规则。&lt;/p>
-&lt;h2 id="tldr">TLDR&lt;/h2>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h2 id="tldr">TLDR
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
 &lt;/span>&lt;span class="lnt"> 2
@@ -562,8 +562,8 @@ alt="chart-vertical-line-bad"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl start netfilter-persistent
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="静默安装">静默安装&lt;/h2>
-&lt;p>ipset-persistent 和 iptables-persistent 安装过程中会弹出交互窗，选择是否自动保存规则。&lt;/p>
+&lt;/div>&lt;h2 id="静默安装">静默安装
+&lt;/h2>&lt;p>ipset-persistent 和 iptables-persistent 安装过程中会弹出交互窗，选择是否自动保存规则。&lt;/p>
 &lt;p>交互会打断服务器上脚本安装，需要无交互静默安装。&lt;/p>
 &lt;p>Ubuntu 上软件包安装配置项归 &lt;code>debconf&lt;/code> 管理，在一台机器上交互安装完成后，用 &lt;code>debconf-show&lt;/code> 查看软件包的配置项。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -612,11 +612,11 @@ alt="chart-vertical-line-bad"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>执行 &lt;code> sudo apt install netfilter-persistent ipset-persistent iptables-persistent -y&lt;/code> 即可静默安装。&lt;/p>
-&lt;h3 id="持久化">持久化&lt;/h3>
-&lt;h4 id="保存规则">保存规则&lt;/h4>
-&lt;p>&lt;code>sudo netfilter-persistent save&lt;/code>&lt;/p>
-&lt;h4 id="自动加载">自动加载&lt;/h4>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h3 id="持久化">持久化
+&lt;/h3>&lt;h4 id="保存规则">保存规则
+&lt;/h4>&lt;p>&lt;code>sudo netfilter-persistent save&lt;/code>&lt;/p>
+&lt;h4 id="自动加载">自动加载
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;span class="lnt">2
@@ -626,8 +626,8 @@ alt="chart-vertical-line-bad"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl start netfilter-persistent
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;/div>&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://dhtar.com/make-ipset-and-iptables-configurations-persistent-in-debianubuntu.html" target="_blank" rel="noopener"
 >Make ipset and iptables configurations persistent in Debian/Ubuntu&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://gist.github.com/alonisser/a2c19f5362c2091ac1e7" target="_blank" rel="noopener"
@@ -638,8 +638,8 @@ alt="chart-vertical-line-bad"
 >How to read and insert new values into the debconf database&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>低成本 mesh 组网</title><link>https://4ft35t.github.io/post/lowcast-mesh/</link><pubDate>Sun, 04 Dec 2022 17:57:03 +0800</pubDate><guid>https://4ft35t.github.io/post/lowcast-mesh/</guid><description>&lt;img src="https://cdn.unwire.hk/wp-content/uploads/2018/03/999-1.png" alt="Featured image of post 低成本 mesh 组网" />&lt;p>上一次主动看 mesh 路由，单台成本 2000 左右，最近在什么值得买上看到用网件 6300V2 刷机后组 mesh 的，原理是网件6300V2 和华硕 AC68U 使用相同的硬件，修改 CEF 中相关配置，即可伪装成华硕 AC68U，使用华硕固件和功能。&lt;/p>
 &lt;p>6300V2 二手价格单台不到80，立马买两台来组网。&lt;/p>
-&lt;h2 id="硬件成本">硬件成本&lt;/h2>
-&lt;p>自有一台服役多年的 6300V2，淘宝新买2台二手，75.99 一台包邮。&lt;/p>
+&lt;h2 id="硬件成本">硬件成本
+&lt;/h2>&lt;p>自有一台服役多年的 6300V2，淘宝新买2台二手，75.99 一台包邮。&lt;/p>
 &lt;p>不想折腾的可以买刷好梅林386版本的机器，跳过刷机部分，直达 mesh 组网部分。&lt;/p>
 &lt;ul>
 &lt;li>75.99 包邮，原厂固件 &lt;a class="link" href="https://item.taobao.com/item.htm?id=654468086454" target="_blank" rel="noopener"
@@ -647,15 +647,15 @@ alt="chart-vertical-line-bad"
 &lt;li>138 包邮，梅林386固件 &lt;a class="link" href="https://item.taobao.com/item.htm?id=690054031769" target="_blank" rel="noopener"
 >https://item.taobao.com/item.htm?id=690054031769&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="刷机">刷机&lt;/h2>
-&lt;p>电脑和路由器用网线连接，推荐使用路由器的 LAN1-LAN3，不要用 LAN4，具体原因下文会提到。&lt;/p>
-&lt;h3 id="1-从官方固件刷梅林">1. 从官方固件刷梅林&lt;/h3>
-&lt;p>下载 380 版本梅林固件，https://fw.koolcenter.com/KoolCenter_Merlin_Legacy_380/Netgear/R6300V2/X7.9.1/R6300V2_380.70_0-X7.9.1-koolshare.chk&lt;/p>
+&lt;h2 id="刷机">刷机
+&lt;/h2>&lt;p>电脑和路由器用网线连接，推荐使用路由器的 LAN1-LAN3，不要用 LAN4，具体原因下文会提到。&lt;/p>
+&lt;h3 id="1-从官方固件刷梅林">1. 从官方固件刷梅林
+&lt;/h3>&lt;p>下载 380 版本梅林固件，https://fw.koolcenter.com/KoolCenter_Merlin_Legacy_380/Netgear/R6300V2/X7.9.1/R6300V2_380.70_0-X7.9.1-koolshare.chk&lt;/p>
 &lt;p>路由器恢复出厂设置:&lt;/p>
 &lt;p>路由器关机，按住reset开机，15秒后松开&lt;/p>
 &lt;p>浏览器打开 192.168.1.1，admin/password 登录，固件升级选择 R6300V2_380.70_0-X7.9.1-koolshare.chk&lt;/p>
-&lt;h3 id="2-备份-cfe-和-board_data">2. 备份 CFE 和 board_data&lt;/h3>
-&lt;p>刷梅林 380 版本后，路由器地址变成 192.168.50.1。登录路由器，帐号密码沿用 admin/password，打开 SSH 服务&lt;/p>
+&lt;h3 id="2-备份-cfe-和-board_data">2. 备份 CFE 和 board_data
+&lt;/h3>&lt;p>刷梅林 380 版本后，路由器地址变成 192.168.50.1。登录路由器，帐号密码沿用 admin/password，打开 SSH 服务&lt;/p>
 &lt;p>系统管理 - 系统设置 - 启用 SSH- LAN only - 应用本页面设置&lt;/p>
 &lt;p>使用 ssh 登录路由器，Windows 可以用 putty 或者 wsl。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -678,8 +678,8 @@ alt="chart-vertical-line-bad"
 &lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">scp -O admin@192.168.50.1:/tmp/backup_cfe.bin .
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="3-刷-cfe">3. 刷 CFE&lt;/h3>
-&lt;p>下载 CEF &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/cfe_2.4Gfix.bin" target="_blank" rel="noopener"
+&lt;/div>&lt;h3 id="3-刷-cfe">3. 刷 CFE
+&lt;/h3>&lt;p>下载 CEF &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/cfe_2.4Gfix.bin" target="_blank" rel="noopener"
 >https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/cfe_2.4Gfix.bin&lt;/a>&lt;/p>
 &lt;p>下载 CEF 修改器 &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/CFEEdit.exe" target="_blank" rel="noopener"
 >https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/CFEEdit.exe&lt;/a>&lt;/p>
@@ -726,8 +726,8 @@ alt="chart-vertical-line-bad"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>重启后路由器会进入 tftp 刷机状态，ip 为 192.168.1.1&lt;/p>
-&lt;h3 id="4-tftp-刷入梅林-386-版本">4. tftp 刷入梅林 386 版本&lt;/h3>
-&lt;p>下载 386 版本固件 &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_386/Netgear/R6300v2/RT-AC6300v2_386.2_4-20210628-91625500b.trx" target="_blank" rel="noopener"
+&lt;h3 id="4-tftp-刷入梅林-386-版本">4. tftp 刷入梅林 386 版本
+&lt;/h3>&lt;p>下载 386 版本固件 &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_386/Netgear/R6300v2/RT-AC6300v2_386.2_4-20210628-91625500b.trx" target="_blank" rel="noopener"
 >https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_386/Netgear/R6300v2/RT-AC6300v2_386.2_4-20210628-91625500b.trx&lt;/a>&lt;/p>
 &lt;p>Windows 电脑安装自带的 tftp 客户端&lt;/p>
 &lt;p>Win+r - 输入 appwiz.cpl - 打开或关闭Windows功能 - 勾选TFTP客户端 - 重启&lt;/p>
@@ -738,8 +738,8 @@ alt="chart-vertical-line-bad"
 &lt;p>等 tftp 传输完成后，路由器会在3分钟内重启多次，最后完成刷机。&lt;/p>
 &lt;p>当 ping 的 TTL 变成 64，即表示路由器正常启动。如果 tftp 传输完成后5分钟，TTL 还没变成 64，重启路由器。&lt;/p>
 &lt;p>如果重启后 ping TTL 值一直保持 100，浏览器访问 192.168.1.1，进入 CFE miniWeb，点击 &amp;ldquo;Restore default NVRAM values&amp;rdquo;，然后重启。&lt;/p>
-&lt;h3 id="4-刷机后存在问题">4. 刷机后存在问题&lt;/h3>
-&lt;p>刷机后，WAN 口的位置会发生变化&lt;/p>
+&lt;h3 id="4-刷机后存在问题">4. 刷机后存在问题
+&lt;/h3>&lt;p>刷机后，WAN 口的位置会发生变化&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
@@ -768,8 +768,8 @@ alt="chart-vertical-line-bad"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------+------+------+------+ +------+
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="mesh-组网">mesh 组网&lt;/h2>
-&lt;p>路由1 做为 mesh 路由，访问 192.168.1.1，按向导完成 pppoe 拨号设置，选路由器模式。&lt;/p>
+&lt;/div>&lt;h2 id="mesh-组网">mesh 组网
+&lt;/h2>&lt;p>路由1 做为 mesh 路由，访问 192.168.1.1，按向导完成 pppoe 拨号设置，选路由器模式。&lt;/p>
 &lt;p>路由器2，作为 AiMesh 节点，按向导完成动态动态 IP 设置；然后&lt;/p>
 &lt;p>系统管理 - 操作模式 - AiMesh 节点 - 保存&lt;/p>
 &lt;p>等界面显示重置完成，路由器2的设置完成。&lt;/p>
@@ -778,12 +778,12 @@ alt="chart-vertical-line-bad"
 &lt;p>等待完成后对路由器3重复执行上述操作。&lt;/p>
 &lt;p>所有操作完成后，路由器2和3的用户名密码会变成和路由器1一样。&lt;/p>
 &lt;p>现在可以享受 mesh 组网的无缝切换了，不用再像用扩展器一样手动切换。&lt;/p>
-&lt;h3 id="有线回程">有线回程&lt;/h3>
-&lt;p>路由器1 LAN 连接路由器2 WAN，即可让路由器2 变成有线回程。路由器3 同理。&lt;/p>
-&lt;h2 id="加散热风扇">加散热风扇&lt;/h2>
-&lt;p>使用 3007 风扇，可以藏在机器内，用杜邦接口插在 ttl 针上，VCC 接红线，GND 接黑线。&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;h3 id="有线回程">有线回程
+&lt;/h3>&lt;p>路由器1 LAN 连接路由器2 WAN，即可让路由器2 变成有线回程。路由器3 同理。&lt;/p>
+&lt;h2 id="加散热风扇">加散热风扇
+&lt;/h2>&lt;p>使用 3007 风扇，可以藏在机器内，用杜邦接口插在 ttl 针上，VCC 接红线，GND 接黑线。&lt;/p>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://post.smzdm.com/p/a4dk3zgk/" target="_blank" rel="noopener"
 >最便宜的组Aimesh的方案——R6300V2最后的荣光&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.right.com.cn/forum/thread-7613019-1-1.html" target="_blank" rel="noopener"
@@ -795,30 +795,30 @@ alt="chart-vertical-line-bad"
 &lt;li>&lt;a class="link" href="https://www.right.com.cn/forum/forum.php?mod=redirect&amp;amp;goto=findpost&amp;amp;ptid=1686743&amp;amp;pid=5735198" target="_blank" rel="noopener"
 >6300v2主动散热加usb风扇问题&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Kodi 设置调整笔记</title><link>https://4ft35t.github.io/post/kodi-note/</link><pubDate>Sun, 18 Sep 2022 11:13:39 +0800</pubDate><guid>https://4ft35t.github.io/post/kodi-note/</guid><description>&lt;img src="https://kodi.tv/images/kodi-logo-with-text.svg" alt="Featured image of post Kodi 设置调整笔记" />&lt;p>Kodi是由XBMC基金会开发的开源媒体播放器，原名XBMC，Kodi可以运行在多种操作系统和硬件平台。Kodi支持硬件解码，可以在硬件的很便宜的、低功耗的系统上播放高清视频&lt;/p>
-&lt;h2 id="字幕移动到视频外黑框">字幕移动到视频外黑框&lt;/h2>
-&lt;p>电视分辨率一般16:9, 比如1920x1080, 遇到比例不一致的视频，会填充黑框。&lt;/p>
+&lt;h2 id="字幕移动到视频外黑框">字幕移动到视频外黑框
+&lt;/h2>&lt;p>电视分辨率一般16:9, 比如1920x1080, 遇到比例不一致的视频，会填充黑框。&lt;/p>
 &lt;p>Kodi 默认字幕显示在视频内底部， 播放1918x802美剧时，视频上下有黑边，字幕在视频内底部。把字幕位置移动到黑框内，可以获得更好体验。&lt;/p>
-&lt;h3 id="设置方法">设置方法&lt;/h3>
-&lt;p>设置-播放器-语言-字幕在屏幕上位置，从&lt;code>固定&lt;/code>切换到&lt;code>视频外下方&lt;/code>&lt;/p>
-&lt;h2 id="coreelec-自动唤醒电视问题">CoreELEC 自动唤醒电视问题&lt;/h2>
-&lt;p>CoreELEC 19.x 在斐讯 N1 上存在电视关机后自动唤醒问题，需要调整 HDMI CEC 相关设置&lt;/p>
-&lt;h3 id="设置方法-1">设置方法&lt;/h3>
-&lt;p>设置-系统-输入-外设-cec adapter-电视关闭时, 从&lt;code>待机&lt;/code>切换到&lt;code>暂停播放&lt;/code>&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;h3 id="设置方法">设置方法
+&lt;/h3>&lt;p>设置-播放器-语言-字幕在屏幕上位置，从&lt;code>固定&lt;/code>切换到&lt;code>视频外下方&lt;/code>&lt;/p>
+&lt;h2 id="coreelec-自动唤醒电视问题">CoreELEC 自动唤醒电视问题
+&lt;/h2>&lt;p>CoreELEC 19.x 在斐讯 N1 上存在电视关机后自动唤醒问题，需要调整 HDMI CEC 相关设置&lt;/p>
+&lt;h3 id="设置方法-1">设置方法
+&lt;/h3>&lt;p>设置-系统-输入-外设-cec adapter-电视关闭时, 从&lt;code>待机&lt;/code>切换到&lt;code>暂停播放&lt;/code>&lt;/p>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://www.hao4k.cn/thread-24008-1-1.html" target="_blank" rel="noopener"
 >请问有谁知道哪个版本的kodi能设置字幕的显示位置？（已自解决，方法在7楼）&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://kodi.wiki/view/Settings/Player/Language#Subtitles" target="_blank" rel="noopener"
 >Settings/Player/Language&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://github.com/RuralHunter/CoreELEC/issues/84" target="_blank" rel="noopener"
 >[BUG] 19.x 会自动唤醒电视 #84&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>修复 Chromecast YouTube 投屏失败问题</title><link>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</link><pubDate>Fri, 29 Jul 2022 01:38:00 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</guid><description>&lt;img src="https://www.right.com.cn/forum/data/attachment/forum/201803/08/102522uwh6r70ssbuh01r5.jpg" alt="Featured image of post 修复 Chromecast YouTube 投屏失败问题" />&lt;h2 id="问题分析">问题分析&lt;/h2>
-&lt;p>软路由 OpenWrt 做网关，同时用 SS 透明代理所有国外 IP 的 TCP 连接，手机、电脑都无感翻墙。&lt;/p>
+&lt;/ul></description></item><item><title>修复 Chromecast YouTube 投屏失败问题</title><link>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</link><pubDate>Fri, 29 Jul 2022 01:38:00 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</guid><description>&lt;img src="https://www.right.com.cn/forum/data/attachment/forum/201803/08/102522uwh6r70ssbuh01r5.jpg" alt="Featured image of post 修复 Chromecast YouTube 投屏失败问题" />&lt;h2 id="问题分析">问题分析
+&lt;/h2>&lt;p>软路由 OpenWrt 做网关，同时用 SS 透明代理所有国外 IP 的 TCP 连接，手机、电脑都无感翻墙。&lt;/p>
 &lt;p>Chromecast 在多个境外网站上投屏正常工作，Google Photos 投屏也正常，唯独 YouTube 无法投屏。&lt;/p>
 &lt;p>使用关键词 &amp;ldquo;chromecast youtube something went wrong&amp;rdquo; 没找到有用信息，把 ChromeCast 的语言改成中文后，用中文的报错信息一下就找到了，果然是天朝特有问题。Google 搜 &lt;code>chromecast youtube &amp;quot;出问题了&amp;quot;&lt;/code>。&lt;/p>
 &lt;p>问题原因在于 Chromecast 不使用 DHCP 分配的 DNS 服务器，用 8.8.8.8 解析，会拿到污染的结果，导致失败。&lt;/p>
-&lt;h2 id="解决方案">解决方案&lt;/h2>
-&lt;p>解决方法很简单，在网关上劫持 8.8.8.8 的 53 端口 UDP 包，重定向到网关的无污染 DNS。&lt;/p>
+&lt;h2 id="解决方案">解决方案
+&lt;/h2>&lt;p>解决方法很简单，在网关上劫持 8.8.8.8 的 53 端口 UDP 包，重定向到网关的无污染 DNS。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -829,8 +829,8 @@ alt="chart-vertical-line-bad"
 &lt;/div>
 &lt;/div>&lt;p>OpenWrt 网页 - NetWork - Firewall - Custom Rules, 把上述命令贴进去，保存即可。&lt;/p>
 &lt;p>也可直接修改 &lt;code>/etc/firewall.user&lt;/code> 然后 &lt;code>/etc/init.d/firewall restart&lt;/code> 生效。&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://v2ex.com/t/436014" target="_blank" rel="noopener"
 >Chromecast 如何配搭路由的 SS 看 youtube？&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://iso1.wordpress.com/2017/07/06/install-shadowsocks-on-geek-router-and-fix-chromecast-casting-youtube-issue/" target="_blank" rel="noopener"
@@ -839,27 +839,27 @@ alt="chart-vertical-line-bad"
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th style="text-align: left">&lt;/th>
-&lt;th style="text-align: left">自建代理&lt;/th>
-&lt;th style="text-align: left">机场&lt;/th>
+&lt;th>&lt;/th>
+&lt;th>自建代理&lt;/th>
+&lt;th>机场&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td style="text-align: left">速度&lt;/td>
-&lt;td style="text-align: left">慢&lt;/td>
-&lt;td style="text-align: left">快&lt;/td>
+&lt;td>速度&lt;/td>
+&lt;td>慢&lt;/td>
+&lt;td>快&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align: left">安全性&lt;/td>
-&lt;td style="text-align: left">高&lt;/td>
-&lt;td style="text-align: left">无&lt;/td>
+&lt;td>安全性&lt;/td>
+&lt;td>高&lt;/td>
+&lt;td>无&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
 &lt;p>有没有兼顾安全性和速度的方案？&lt;/p>
-&lt;h2 id="最终方案">最终方案&lt;/h2>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h2 id="最终方案">最终方案
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
 &lt;/span>&lt;span class="lnt"> 2
@@ -903,28 +903,28 @@ alt="chart-vertical-line-bad"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------------+ +---------------+
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="部署要点">部署要点&lt;/h3>
-&lt;ol>
+&lt;/div>&lt;h3 id="部署要点">部署要点
+&lt;/h3>&lt;ol>
 &lt;li>自建梯子用 tsl+websocket 协议，各种工具都可以，ss+v2ray-plugin、v2ray、gost 等都可以。这一步目的是为了能用 Cloudflare 的 CDN。&lt;/li>
 &lt;li>需要有自己的域名，把域名接入 Cloudflare。&lt;/li>
 &lt;li>在本地用 clash 控制流量走向&lt;/li>
 &lt;/ol>
-&lt;h2 id="方案优势">方案优势&lt;/h2>
-&lt;ol>
+&lt;h2 id="方案优势">方案优势
+&lt;/h2>&lt;ol>
 &lt;li>国内运营商在链路①的位置只能看到你访问了机场的国内 IP&lt;/li>
 &lt;li>机场在链路②③只能看到你在用 tls 流量访问 Cloudflare 节点，目标网站就是你接入 Cloudflare 的域名。&lt;/li>
 &lt;li>&lt;strong>只要你不用代理访问国内网站，运营商和机场都不知道你的自建梯子的出口 IP&lt;/strong>&lt;/li>
 &lt;li>和直连自建梯子比，大幅提升速度和稳定性；和单独使用机场相比，机场无法知道你的访问信息，安全性很大提升&lt;/li>
 &lt;/ol>
-&lt;h2 id="方案实施">方案实施&lt;/h2>
-&lt;ol>
+&lt;h2 id="方案实施">方案实施
+&lt;/h2>&lt;ol>
 &lt;li>各代理软件都有详细文档，如何开启tsl+websocket 协议，此处略&lt;/li>
 &lt;li>域名接入 cloudflare， 略&lt;/li>
 &lt;li>购买机场，略&lt;/li>
 &lt;li>clash 配置&lt;/li>
 &lt;/ol>
-&lt;h3 id="clash-简介">Clash 简介&lt;/h3>
-&lt;p>&lt;a class="link" href="https://github.com/Dreamacro/clash" target="_blank" rel="noopener"
+&lt;h3 id="clash-简介">Clash 简介
+&lt;/h3>&lt;p>&lt;a class="link" href="https://github.com/Dreamacro/clash" target="_blank" rel="noopener"
 >Clash&lt;/a>是一款用 Go 开发的多平台的代理工具，使用强大的策略组来管理节点;可以自动选择节点，不同的网站，在同一时间，可以使用不同的节点去访问。&lt;/p>
 &lt;p>我们用 Clash 强大的策略组功能来套娃。&lt;/p>
 &lt;p>官方文档有示例 &lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
@@ -933,8 +933,8 @@ alt="chart-vertical-line-bad"
 &lt;p>relay chains the proxies. proxies shall not contain a relay. No UDP support.
 Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; ss1 &amp;lt;-&amp;gt; ss2 &amp;lt;-&amp;gt; Internet&lt;/p>
 &lt;/blockquote>
-&lt;h3 id="配置文件">配置文件&lt;/h3>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h3 id="配置文件">配置文件
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
 &lt;/span>&lt;span class="lnt"> 2
@@ -1098,17 +1098,17 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;li>国内 IP 直连&lt;/li>
 &lt;li>国外 IP 走代理&lt;/li>
 &lt;/ul>
-&lt;h3 id="数据流">数据流：&lt;/h3>
-&lt;ol>
+&lt;h3 id="数据流">数据流：
+&lt;/h3>&lt;ol>
 &lt;li>本机请求 -&amp;gt; clash，clash 按 relay 组的 proxies 顺序，从下往上加密，本配置中，先用自建的加密方式加密请求，再用机场的加密方式加密第二次&lt;/li>
 &lt;li>clash -&amp;gt; 机场，机场解开自己的加密，看到目标是一个 Cloudflare 上的网站&lt;/li>
 &lt;li>机场 -&amp;gt; Cloudflare, 用标准的 https 方式转发收到的数据包&lt;/li>
 &lt;li>Cloudflare -&amp;gt; vps，vps 收到 https 包后，先用域名的私钥解密数据，得到加密的 ss 数据，再用 ss 解密得到真正的目标。&lt;/li>
 &lt;/ol>
-&lt;h2 id="更古老的套娃方案">更古老的套娃方案&lt;/h2>
-&lt;p>在遇到 clash 之前，一直在 openwrt 上套娃，使用的是 shadowsocks + iptables-mod-tproxy&lt;/p>
-&lt;h3 id="环境准备">环境准备&lt;/h3>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h2 id="更古老的套娃方案">更古老的套娃方案
+&lt;/h2>&lt;p>在遇到 clash 之前，一直在 openwrt 上套娃，使用的是 shadowsocks + iptables-mod-tproxy&lt;/p>
+&lt;h3 id="环境准备">环境准备
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
@@ -1116,8 +1116,8 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">opkg install shadowsocks-libev
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="操作方法">操作方法&lt;/h3>
-&lt;ol>
+&lt;/div>&lt;h3 id="操作方法">操作方法
+&lt;/h3>&lt;ol>
 &lt;li>openwrt 上正常配置自建梯子，能正常使用后进入第2步&lt;/li>
 &lt;li>用 ss-redir 启动机场的 ss&lt;/li>
 &lt;/ol>
@@ -1152,8 +1152,8 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>&lt;strong>机场的 ss-redir 需要后启动，shadowsocks 默认策略是插入 OUTPUT 链首位，后启动的在首位&lt;/strong>&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://wanchuan.top/e9430b8345c049f8afce602db5f5f773" target="_blank" rel="noopener"
 >使用Clash工具科学上网&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
@@ -1169,8 +1169,8 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;p>这个报错，在 PaddleOCR 官方的 github 仓库 issue 有人发过, ubuntu 20.10 上遇到此报错，https://github.com/PaddlePaddle/Paddle/issues/36801 。&lt;/p>
 &lt;p>只能把 PaddleOCR 放在 Docker 运行了。不过官方镜像的体积高达 11G，我只需要 OCR 功能，不做样本训练，应该有很大的精简空间。&lt;/p>
 &lt;p>此前在 VPS 上的 ubuntu 20.04 里用过 PaddleOCR，故选择 ubuntu 20.04 做基础镜像。群晖 NAS 上有多个 Docker 服务，PaddleOCR 同样丢群晖跑。&lt;/p>
-&lt;h2 id="运行-ubuntu-2004">运行 ubuntu 20.04&lt;/h2>
-&lt;p>ssh 登录群晖后，执行 &lt;code>sudo su&lt;/code>，输入当前用户的密码，切换到 &lt;strong>root&lt;/strong>。&lt;/p>
+&lt;h2 id="运行-ubuntu-2004">运行 ubuntu 20.04
+&lt;/h2>&lt;p>ssh 登录群晖后，执行 &lt;code>sudo su&lt;/code>，输入当前用户的密码，切换到 &lt;strong>root&lt;/strong>。&lt;/p>
 &lt;p>执行下面命令，进入 ubuntu 的 bash 终端&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -1182,8 +1182,8 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker run -it ubuntu:20.04 bash
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="系统的软件源换成阿里云">系统的软件源换成阿里云&lt;/h2>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;/div>&lt;h2 id="系统的软件源换成阿里云">系统的软件源换成阿里云
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;span class="lnt">2
@@ -1195,8 +1195,8 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">apt-get update
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="安装-python-环境">安装 python 环境&lt;/h2>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;/div>&lt;h2 id="安装-python-环境">安装 python 环境
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;span class="lnt">2
@@ -1210,8 +1210,8 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">echo &amp;#39;index-url = https://pypi.doubanio.com/simple&amp;#39; &amp;gt;&amp;gt; /root/.pip/pip.conf
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="安装-paddleocr">安装 PaddleOCR&lt;/h2>
-&lt;p>按官方文档操作，https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.4/doc/doc_ch/quickstart.md&lt;/p>
+&lt;/div>&lt;h2 id="安装-paddleocr">安装 PaddleOCR
+&lt;/h2>&lt;p>按官方文档操作，https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.4/doc/doc_ch/quickstart.md&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -1223,10 +1223,10 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>一切进展顺利，下面开始踩坑&lt;/p>
-&lt;h2 id="填坑过程">填坑过程&lt;/h2>
-&lt;p>执行 &lt;code>paddleocr -h&lt;/code>, 看是否有报错信息。错误一个接一个的来，下面安出现顺序解决&lt;/p>
-&lt;h3 id="modulenotfounderror-no-module-named-paddlefluidcore_noavx">ModuleNotFoundError: No module named &amp;lsquo;paddle.fluid.core_noavx&amp;rsquo;&lt;/h3>
-&lt;p>群晖的 CPU 太古老了，不支持 AVX(Advanced Vector Extensions) 指令集, 需要 noavx 的预编译包。
+&lt;h2 id="填坑过程">填坑过程
+&lt;/h2>&lt;p>执行 &lt;code>paddleocr -h&lt;/code>, 看是否有报错信息。错误一个接一个的来，下面安出现顺序解决&lt;/p>
+&lt;h3 id="modulenotfounderror-no-module-named-paddlefluidcore_noavx">ModuleNotFoundError: No module named &amp;lsquo;paddle.fluid.core_noavx&amp;rsquo;
+&lt;/h3>&lt;p>群晖的 CPU 太古老了，不支持 AVX(Advanced Vector Extensions) 指令集, 需要 noavx 的预编译包。
 在这个 issue &lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
 >https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a> 中找到线索，官方的预先编译 whl 列表 &lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
 >https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a>&lt;/p>
@@ -1256,16 +1256,16 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pip install --force-reinstal paddlepaddle-2.2.2-cp38-cp38-linux_x86_64.whl
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="importerror-libglso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libGL.so.1: cannot open shared object file: No such file or directory&lt;/h3>
-&lt;p>&lt;code>pip install opencv-python-headless==4.2.0.32&lt;/code>&lt;/p>
-&lt;h3 id="importerror-libgthread-20so0-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgthread-2.0.so.0: cannot open shared object file: No such file or directory&lt;/h3>
-&lt;p>&lt;code>apt-get install libglib2.0-0 libsm6 libxrender1 libxext6&lt;/code>&lt;/p>
+&lt;/div>&lt;h3 id="importerror-libglso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libGL.so.1: cannot open shared object file: No such file or directory
+&lt;/h3>&lt;p>&lt;code>pip install opencv-python-headless==4.2.0.32&lt;/code>&lt;/p>
+&lt;h3 id="importerror-libgthread-20so0-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgthread-2.0.so.0: cannot open shared object file: No such file or directory
+&lt;/h3>&lt;p>&lt;code>apt-get install libglib2.0-0 libsm6 libxrender1 libxext6&lt;/code>&lt;/p>
 &lt;p>中途会出现选择时区的交互，依次选择 &lt;code>6. Asia&lt;/code> - &lt;code>19. Chongqing&lt;/code>&lt;/p>
-&lt;h3 id="importerror-libgompso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgomp.so.1: cannot open shared object file: No such file or directory&lt;/h3>
-&lt;p>&lt;code>apt-get install libgomp1&lt;/code>&lt;/p>
+&lt;h3 id="importerror-libgompso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgomp.so.1: cannot open shared object file: No such file or directory
+&lt;/h3>&lt;p>&lt;code>apt-get install libgomp1&lt;/code>&lt;/p>
 &lt;p>至此，paddleocr 可以正常运行。&lt;/p>
-&lt;h2 id="添加-api">添加 API&lt;/h2>
-&lt;p>使用 flask 提供简单的 ocr 识别 API，可以上传图片或者从 url 下载图片，输出格式可选 text 或者 json，默认 text。&lt;/p>
+&lt;h2 id="添加-api">添加 API
+&lt;/h2>&lt;p>使用 flask 提供简单的 ocr 识别 API，可以上传图片或者从 url 下载图片，输出格式可选 text 或者 json，默认 text。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
@@ -1328,8 +1328,8 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">ret&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="api-使用">API 使用&lt;/h3>
-&lt;ul>
+&lt;/div>&lt;h3 id="api-使用">API 使用
+&lt;/h3>&lt;ul>
 &lt;li>
 &lt;p>上传文件识别, 输出 text 格式&lt;/p>
 &lt;p>&lt;code> curl 127.0.0.1:5000/ocr -F img=@/tmp/img.png&lt;/code>&lt;/p>
@@ -1339,8 +1339,8 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;code>curl 127.0.0.1:5000/ocr -F imgurl=https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/doc/imgs_en/254.jpg -F outtype=json&lt;/code>&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;h2 id="创建-dockerfile">创建 Dockerfile&lt;/h2>
-&lt;p>上面提到的安装过程中需要交互选择时区，会中断 docker 编译，通过设置 &lt;code>ENV DEBIAN_FRONTEND=noninteractive&lt;/code> 来规避&lt;/p>
+&lt;h2 id="创建-dockerfile">创建 Dockerfile
+&lt;/h2>&lt;p>上面提到的安装过程中需要交互选择时区，会中断 docker 编译，通过设置 &lt;code>ENV DEBIAN_FRONTEND=noninteractive&lt;/code> 来规避&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
@@ -1396,8 +1396,8 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;p>Docker Hub 地址 &lt;a class="link" href="https://hub.docker.com/r/c403/paddleocr" target="_blank" rel="noopener"
 >https://hub.docker.com/r/c403/paddleocr&lt;/a>&lt;/p>
 &lt;p>最后吐槽一下，PaddleOCR 的文档太混乱了, 很多内容在 issues 里，不在文档。&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
 >https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
@@ -1413,15 +1413,15 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;li>&lt;a class="link" href="https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai" target="_blank" rel="noopener"
 >https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;img src="https://oss-cn-hangzhou.aliyuncs.com/codingsky/cdn/img/2019-07-25/dc29fbcc14b8c4acce61ba33a7f2af63.jpg" alt="Featured image of post 利用 Pixel 一代的无限存储备份 NAS 照片" />&lt;p>Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p>
-&lt;h2 id="tldr">TLDR&lt;/h2>
-&lt;h3 id="手机端设置">手机端设置&lt;/h3>
-&lt;ol>
+&lt;h2 id="tldr">TLDR
+&lt;/h2>&lt;h3 id="手机端设置">手机端设置
+&lt;/h3>&lt;ol>
 &lt;li>Pixel 手机无需 root，安装 &lt;a class="link" href="https://play.google.com/store/apps/details?id=pl.solidexplorer2" target="_blank" rel="noopener"
 >Solid Explorer&lt;/a>, 开启 FTP 服务。FTP 默认端口 9999, 默认目录 /sdcard/Download/。&lt;/li>
 &lt;li>在 FTP 目录放一张图片（使用 Solid Explorer 复制、浏览器从网上下载、FTP 上传均可），Google Photos 会询问是否备份此目录，选备份。&lt;/li>
 &lt;/ol>
-&lt;h3 id="nas-设置">NAS 设置&lt;/h3>
-&lt;p>群晖自带的 curl 不支持 FTP，需要下载一个静态编译开启 FTP 支持的 curl。可以在 &lt;a class="link" href="https://github.com/moparisthebest/static-curl/releases" target="_blank" rel="noopener"
+&lt;h3 id="nas-设置">NAS 设置
+&lt;/h3>&lt;p>群晖自带的 curl 不支持 FTP，需要下载一个静态编译开启 FTP 支持的 curl。可以在 &lt;a class="link" href="https://github.com/moparisthebest/static-curl/releases" target="_blank" rel="noopener"
 >https://github.com/moparisthebest/static-curl/releases&lt;/a> 下载。&lt;/p>
 &lt;ol>
 &lt;li>下载 curl 并重命名成 &lt;strong>curl-amd64&lt;/strong>, 并执行 &lt;code>chmod +x curl-amd64&lt;/code>&lt;/li>
@@ -1443,9 +1443,9 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;/ul>
 &lt;p>点击确定后，右键-运行，即可在手机上看到上传的照片/视频。&lt;/p>
 &lt;p>脚本根据 NAS 上照片的修改时间来增量备份，需要定期去手机上释放空间，避免手机空间占满。具体操作路径：Google 相册-右上角头像-释放空间。&lt;/p>
-&lt;h2 id="20220320-更新使用-autojs-自动释放手机空间">2022.03.20 更新，使用 Autojs 自动释放手机空间&lt;/h2>
-&lt;h3 id="环境准备">环境准备&lt;/h3>
-&lt;ul>
+&lt;h2 id="20220320-更新使用-autojs-自动释放手机空间">2022.03.20 更新，使用 Autojs 自动释放手机空间
+&lt;/h2>&lt;h3 id="环境准备">环境准备
+&lt;/h3>&lt;ul>
 &lt;li>&lt;a class="link" href="https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk" target="_blank" rel="noopener"
 >https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://raw.githubusercontent.com/4ft35t/utils/master/autojs/utils.js" target="_blank" rel="noopener"
@@ -1453,8 +1453,8 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;li>&lt;a class="link" href="https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js" target="_blank" rel="noopener"
 >https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h3 id="操作步骤">操作步骤&lt;/h3>
-&lt;ol>
+&lt;h3 id="操作步骤">操作步骤
+&lt;/h3>&lt;ol>
 &lt;li>安装 autojs, 运行 app， 并按照提示打开无障碍服务。&lt;/li>
 &lt;li>将 utils.js 和 google-photo-free-up-space.js 放到手机 /sdcard/Scripts 目录&lt;/li>
 &lt;li>打开 autojs，下拉刷新，点击 google-photo-free-up-space.js 右边的三角符号运行&lt;/li>
@@ -1543,16 +1543,16 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">hide&lt;/span>&lt;span class="p">()&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="踩坑过程">踩坑过程&lt;/h2>
-&lt;p>最初的设想，termux 安装 rclone, 然后将 NAS 共享目录挂载到本地目录，最后在相册里备份本地目录。&lt;/p>
+&lt;/div>&lt;h2 id="踩坑过程">踩坑过程
+&lt;/h2>&lt;p>最初的设想，termux 安装 rclone, 然后将 NAS 共享目录挂载到本地目录，最后在相册里备份本地目录。&lt;/p>
 &lt;p>&lt;del>&lt;strong>rclone 挂载 SFTP&lt;/strong>&lt;/del>&lt;/p>
 &lt;p>群晖开启 STFP 支持，手机上 termux 里配置 rclone 一切正常，到执行 rclone mount 时报 &lt;code>/etc/fstab&lt;/code> 问题，具体记不清，因该是和手机没有 root 有关。&lt;/p>
 &lt;p>&lt;del>&lt;strong>rclone 挂载 WebDAV&lt;/strong>&lt;/del>&lt;/p>
 &lt;p>WebDAV 在 rclone 里不支持 rclone mount。&lt;/p>
 &lt;p>&lt;del>&lt;strong>挂载 SMB 共享文件夹&lt;/strong>&lt;/del>&lt;/p>
 &lt;p>找了几个文件管理器，都只能挂载给自己使用，不能提供给别的 app。只有 root 后才能全局挂载。&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ol>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ol>
 &lt;li>&lt;a class="link" href="https://support.google.com/photos/answer/6220791" target="_blank" rel="noopener"
 >Choose the upload size of your photos &amp;amp; videos&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.reddit.com/r/GooglePixel/comments/l9m6nk/how_to_use_og_pixel_as_an_unlimited_google_photos/" target="_blank" rel="noopener"
@@ -1564,12 +1564,12 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;li>&lt;a class="link" href="https://pmiku.com/note/mount-cifs-in-android.html" target="_blank" rel="noopener"
 >mount-cifs-in-android&lt;/a>&lt;/li>
 &lt;/ol></description></item><item><title>Android 远程截图</title><link>https://4ft35t.github.io/post/android-screenshoot-remote/</link><pubDate>Fri, 06 Aug 2021 16:51:31 +0800</pubDate><guid>https://4ft35t.github.io/post/android-screenshoot-remote/</guid><description>&lt;img src="https://img1.mydrivers.com/img/20210226/s_ff489bbf9a884b83a72837c099f23e97.jpg" alt="Featured image of post Android 远程截图" />&lt;p>某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。&lt;/p>
-&lt;h2 id="背景">背景&lt;/h2>
-&lt;p>云闪付公交乘车码，每周使用三次可以获得一张 6-5 消费券，但那一个帐号一周只能领一次，需要多个帐号。&lt;/p>
+&lt;h2 id="背景">背景
+&lt;/h2>&lt;p>云闪付公交乘车码，每周使用三次可以获得一张 6-5 消费券，但那一个帐号一周只能领一次，需要多个帐号。&lt;/p>
 &lt;p>家里有个老华为手机，上面登录的有老人的云闪付帐号，但是注册帐号的手机号失效，无法更换新手机号，新设备登录需要短信验证码，只有拿这个手机去刷。&lt;/p>
 &lt;p>不想带多个手机出门，开启折腾之路。&lt;/p>
-&lt;h2 id="截屏">截屏&lt;/h2>
-&lt;p>系统自带 &lt;code>screencap&lt;/code> 命令，桌面和别的 app 可以截屏，云闪付不行，应该是云闪付设置了&lt;code>FLAG_SECURE&lt;/code>。&lt;/p>
+&lt;h2 id="截屏">截屏
+&lt;/h2>&lt;p>系统自带 &lt;code>screencap&lt;/code> 命令，桌面和别的 app 可以截屏，云闪付不行，应该是云闪付设置了&lt;code>FLAG_SECURE&lt;/code>。&lt;/p>
 &lt;p>&lt;a class="link" href="https://github.com/Genymobile/scrcpy" target="_blank" rel="noopener"
 >scrcpy&lt;/a> 可以显示云闪付内容，猜测 &lt;a class="link" href="https://github.com/Ericwyn/Auto.js" target="_blank" rel="noopener"
 >autojs&lt;/a> 使用 cast 模式也可以截屏，实测确实可以。&lt;/p>
@@ -1631,8 +1631,8 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;截图完成&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="触发">触发&lt;/h2>
-&lt;p>一开始设想的是 autojs 监听通知，使用 &lt;a class="link" href="https://github.com/Finb/Bark" target="_blank" rel="noopener"
+&lt;/div>&lt;h2 id="触发">触发
+&lt;/h2>&lt;p>一开始设想的是 autojs 监听通知，使用 &lt;a class="link" href="https://github.com/Finb/Bark" target="_blank" rel="noopener"
 >Bark&lt;/a> 的安卓客户端 &lt;a class="link" href="https://github.com/xlvecle/PushLite" target="_blank" rel="noopener"
 >PushLite&lt;/a> 来接收通知触发截图，然而 PushLite 需要 Google FCM，安装太折腾，放弃，寻求电脑端触发的方案。&lt;/p>
 &lt;p>一番搜索，决定用 cgi 来接收外部请求并触发截图，各种依赖最少。&lt;/p>
@@ -1772,8 +1772,8 @@ loading="lazy"
 &lt;li>4.0*1.7&lt;/li>
 &lt;/ul>
 &lt;p>第一次看到这个星号，&lt;del>&lt;strong>想当然以为是直径乘以长度&lt;/strong>&lt;/del>，买了 4.0*1.35 就踩坑了。&lt;/p>
-&lt;h3 id="dc-头尺寸表示方法">DC 头尺寸表示方法&lt;/h3>
-&lt;p>DC 头是家里小电器常用的供电插头，通常是圆的，中心是空的。光猫、路由器、笔记本电脑、台灯等都在用这种接头。DC 头供电比 USB 稳固、可靠、耐用。&lt;/p>
+&lt;h3 id="dc-头尺寸表示方法">DC 头尺寸表示方法
+&lt;/h3>&lt;p>DC 头是家里小电器常用的供电插头，通常是圆的，中心是空的。光猫、路由器、笔记本电脑、台灯等都在用这种接头。DC 头供电比 USB 稳固、可靠、耐用。&lt;/p>
 &lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2015.10.09.png"
 loading="lazy"
 >&lt;/p>
@@ -1784,25 +1784,25 @@ loading="lazy"
 &lt;li>5521&lt;/li>
 &lt;/ul>
 &lt;p>一个小提示，DC 5525 插头兼容 5521，也就是 5525 的插头可以插在 5525 和 5521 的插座上。&lt;/p>
-&lt;h3 id="pd-诱骗头">PD 诱骗头&lt;/h3>
-&lt;p>淘宝上的 PD 诱骗器头一般输出电压是 18.5v ~ 20v，笔记本电脑电源输出电压一般在 19v 左右。使用 PD 诱骗头，完美用 PD 头给笔记本电脑和 Surface Pro供电，节约不少桌面空间。&lt;/p>
+&lt;h3 id="pd-诱骗头">PD 诱骗头
+&lt;/h3>&lt;p>淘宝上的 PD 诱骗器头一般输出电压是 18.5v ~ 20v，笔记本电脑电源输出电压一般在 19v 左右。使用 PD 诱骗头，完美用 PD 头给笔记本电脑和 Surface Pro供电，节约不少桌面空间。&lt;/p>
 &lt;p>使用 PD 充电器头+PD 诱骗器给笔记本供电和原装电源体积对比&lt;/p>
 &lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/mmexport1594626877412.jpg"
 loading="lazy"
 >&lt;/p>
 &lt;p>PD 诱骗器头的另一侧一般是 type-c 头，使用一根双头 type-c 的线连接 PD&lt;/p>
 &lt;p>电源和诱骗器。&lt;/p>
-&lt;h3 id="qc-诱骗线升压线">QC 诱骗线／升压线&lt;/h3>
-&lt;p>PD 诱骗器可以解决 19v 左右供电问题，别的小电器用的 DC 头一般是 9V 或者 12v，这就需要另外找一种可以诱骗出 9v 或者 12v 电压的诱骗器。在群里提问后得到关键字“升压线”。后换成“qc 诱骗线”后结果更多。&lt;/p>
+&lt;h3 id="qc-诱骗线升压线">QC 诱骗线／升压线
+&lt;/h3>&lt;p>PD 诱骗器可以解决 19v 左右供电问题，别的小电器用的 DC 头一般是 9V 或者 12v，这就需要另外找一种可以诱骗出 9v 或者 12v 电压的诱骗器。在群里提问后得到关键字“升压线”。后换成“qc 诱骗线”后结果更多。&lt;/p>
 &lt;p>用 12v 的 QC 诱骗线给 SmrtClean 超声波清洗机供电，同样节约很多桌面空间。&lt;/p>
 &lt;p>QC 诱骗线的另一侧是 USB 插头。&lt;/p>
 &lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2016.08.32.png"
 loading="lazy"
 >&lt;/p>
-&lt;h3 id="趣事">趣事&lt;/h3>
-&lt;p>家里有个硕方的标签打印机，自带电源是 9v 2.5a，直接插笔记本诱骗器的 19v 供电居然可以正常工作。&lt;/p></description></item><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;img src="https://pic1.zhimg.com/v2-6101b6f0fb5664fd5f959332faefb38f_1440w.jpg" alt="Featured image of post bash 条件退出踩坑" />&lt;p>一个小脚本，&lt;code>[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code>,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p>
-&lt;h3 id="排查">排查&lt;/h3>
-&lt;p>这个写法以前在脚本里经常写，稳定运行未出错。对比之前的脚本后发现差异，之前的脚本 exit 是提前退出，后面还有内容；这个脚本exit是上层调用脚本反馈最终结果，exit 是最后一行。&lt;/p>
+&lt;h3 id="趣事">趣事
+&lt;/h3>&lt;p>家里有个硕方的标签打印机，自带电源是 9v 2.5a，直接插笔记本诱骗器的 19v 供电居然可以正常工作。&lt;/p></description></item><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;img src="https://pic1.zhimg.com/v2-6101b6f0fb5664fd5f959332faefb38f_1440w.jpg" alt="Featured image of post bash 条件退出踩坑" />&lt;p>一个小脚本，&lt;code>[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code>,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p>
+&lt;h3 id="排查">排查
+&lt;/h3>&lt;p>这个写法以前在脚本里经常写，稳定运行未出错。对比之前的脚本后发现差异，之前的脚本 exit 是提前退出，后面还有内容；这个脚本exit是上层调用脚本反馈最终结果，exit 是最后一行。&lt;/p>
 &lt;p>修改脚本后一切正常&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -1816,8 +1816,8 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">echo&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="原因分析">原因分析&lt;/h3>
-&lt;p>使用　bash -x 可以看出差异，&lt;/p>
+&lt;/div>&lt;h3 id="原因分析">原因分析
+&lt;/h3>&lt;p>使用　bash -x 可以看出差异，&lt;/p>
 &lt;p>exit　在最后一行&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -1847,8 +1847,8 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>shell 会将最后一条命令的返回状态码作为整个脚本的返回状态码。test 在最后一行时，&lt;code>[ $status != &amp;quot;success&amp;quot; ]&lt;/code> 的返回结果非0，后面的　&amp;amp;&amp;amp; 内容不会执行，整个脚本结束，脚本返回状态码就是中括号内test命令的反馈状态码。　　　　　　&lt;/p>
-&lt;h3 id="避坑经验">避坑经验&lt;/h3>
-&lt;ul>
+&lt;h3 id="避坑经验">避坑经验
+&lt;/h3>&lt;ul>
 &lt;li>退出用或逻辑 &lt;code>||&lt;/code>，避免用与逻辑 &lt;del>&amp;amp;&amp;amp;&lt;/del>&lt;/li>
 &lt;li>一定要用 &lt;strong>&amp;amp;&amp;amp; 做退出条件时，不能作为脚本或者函数的最后一条命令&lt;/strong>&lt;/li>
 &lt;/ul>
@@ -1876,8 +1876,8 @@ loading="lazy"
 &lt;li>&lt;code>auto&lt;/code> 自动识别卡类型&lt;/li>
 &lt;li>&lt;code>hf mf autopwn&lt;/code> 自动破解 IC 卡密码&lt;/li>
 &lt;/ul>
-&lt;h2 id="编译安装">编译安装&lt;/h2>
-&lt;p>win 10 的 WSL 可以直接访问串口，很方便。win 10 上的 COM3， 自动映射到 WSL 的 /dev/ttyS3。&lt;/p>
+&lt;h2 id="编译安装">编译安装
+&lt;/h2>&lt;p>win 10 的 WSL 可以直接访问串口，很方便。win 10 上的 COM3， 自动映射到 WSL 的 /dev/ttyS3。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -1907,8 +1907,8 @@ Lock Error&lt;/p>
 loading="lazy"
 alt="image-20200604192556929"
 >&lt;/p>
-&lt;h2 id="刷预编译固件">刷预编译固件&lt;/h2>
-&lt;p>在冰人固件的 wiki 中找到 windows 的预编译非 RDV4 版本下载，Generice Proxmark3 devices (non RDV4) [&lt;a class="link" href="https://drive.google.com/open?id=1PI3Xr1mussPBPnYGu4ZjWzGPARK4N7JR" target="_blank" rel="noopener"
+&lt;h2 id="刷预编译固件">刷预编译固件
+&lt;/h2>&lt;p>在冰人固件的 wiki 中找到 windows 的预编译非 RDV4 版本下载，Generice Proxmark3 devices (non RDV4) [&lt;a class="link" href="https://drive.google.com/open?id=1PI3Xr1mussPBPnYGu4ZjWzGPARK4N7JR" target="_blank" rel="noopener"
 >Precompiled builds for RRG / Iceman repository x64&lt;/a>&lt;/p>
 &lt;p>提取 fullimage.elf 后，顺利刷入。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -1981,8 +1981,8 @@ alt="image-20200604192556929"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Have a nice day!
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="解决方案">解决方案&lt;/h2>
-&lt;p>到这一步可以确认是关键编译参数问题，而非硬件缩水问题233。&lt;/p>
+&lt;/div>&lt;h2 id="解决方案">解决方案
+&lt;/h2>&lt;p>到这一步可以确认是关键编译参数问题，而非硬件缩水问题233。&lt;/p>
 &lt;p>查阅文档后，默认编译的目标平台是 PM3RDV4，非 PM3RDV4 需要设置为 PM3OTHER。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -2080,8 +2080,8 @@ bootrom: RRG/Iceman/master/v4.9237-188-gbd5aa92a 2020-06-04 16:05:12
 os: RRG/Iceman/master/v4.9237-188-gbd5aa92a 2020-06-04 21:01:01
 compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p>
 &lt;/blockquote>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>
 &lt;p>&lt;a class="link" href="https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1" target="_blank" rel="noopener"
 >https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1&lt;/a>&lt;/p>
@@ -2091,8 +2091,8 @@ compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p>
 >https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md&lt;/a>&lt;/p>
 &lt;/li>
 &lt;/ul></description></item><item><title>SSH 跳板机与代理</title><link>https://4ft35t.github.io/post/ssh-porxy/</link><pubDate>Wed, 03 Jun 2020 16:55:35 +0800</pubDate><guid>https://4ft35t.github.io/post/ssh-porxy/</guid><description>&lt;img src="https://www.openssh.com/images/openssh.gif" alt="Featured image of post SSH 跳板机与代理" />&lt;p>基于各种复杂环境，ssh 无法直接连接目标主机，需要借助中间的跳板机或者代理来连接。通常使用 ssh-agent 来通过跳板机连接目标主机，使用 ProxyCommand 或者 ProxyJump 连接更方便。&lt;/p>
-&lt;h3 id="跳板机">跳板机&lt;/h3>
-&lt;p>在　&lt;code>~/.ssh/config&lt;/code> 中给跳板机一个方便记忆的别名，比如　jumpserver&lt;/p>
+&lt;h3 id="跳板机">跳板机
+&lt;/h3>&lt;p>在　&lt;code>~/.ssh/config&lt;/code> 中给跳板机一个方便记忆的别名，比如　jumpserver&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -2169,9 +2169,9 @@ compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p>
 &lt;code>ssh -J jumpserver user@dst-host&lt;/code>&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;h3 id="代理">代理&lt;/h3>
-&lt;h4 id="socks-代理">socks 代理&lt;/h4>
-&lt;ul>
+&lt;h3 id="代理">代理
+&lt;/h3>&lt;h4 id="socks-代理">socks 代理
+&lt;/h4>&lt;ul>
 &lt;li>
 &lt;p>nc &lt;code>ProxyCommand nc -x 127.0.0.1:1080 %h %p&lt;/code>&lt;/p>
 &lt;/li>
@@ -2180,8 +2180,8 @@ compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p>
 >https://github.com/larryhou/connect-proxy&lt;/a> &lt;code>ProxyCommand connect-proxy -S 127.0.0.1:1080 %h %p&lt;/code>&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;h4 id="httphttps-代理">HTTP/HTTPS 代理&lt;/h4>
-&lt;ul>
+&lt;h4 id="httphttps-代理">HTTP/HTTPS 代理
+&lt;/h4>&lt;ul>
 &lt;li>
 &lt;p>nc &lt;code>ProxyCommand nc -X connect -x 1.2.3.4:3128 %h %p&lt;/code>&lt;/p>
 &lt;/li>
@@ -2191,12 +2191,12 @@ compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p>
 &lt;/li>
 &lt;/ul>
 &lt;p>&lt;strong>corkscrew 在代理不稳定时比 nc 可靠&lt;/strong>&lt;/p>
-&lt;h3 id="特别注意">特别注意&lt;/h3>
-&lt;p>本文提到的 nc 是 &lt;strong>BSD 版本的 netcat&lt;/strong>， GNU 版本的 natcat 没有代理功能。&lt;/p>
+&lt;h3 id="特别注意">特别注意
+&lt;/h3>&lt;p>本文提到的 nc 是 &lt;strong>BSD 版本的 netcat&lt;/strong>， GNU 版本的 natcat 没有代理功能。&lt;/p>
 &lt;p>更多 netcat 版本见 &lt;a class="link" href="https://wiki.archlinux.org/title/Network_tools#Netcat" target="_blank" rel="noopener"
 >https://wiki.archlinux.org/title/Network_tools#Netcat&lt;/a>&lt;/p>
-&lt;h3 id="使用-socat-突破某些堡垒机">使用 socat 突破某些堡垒机&lt;/h3>
-&lt;p>某堡垒机的OpenSSH版本是&lt;code>OpenSSH_7.8p1&lt;/code>, 使用&lt;code>ssh -J jumpserver user@dst-host&lt;/code>无法连接，从报错信息来看，堡垒机禁止了 SSH 转发功能&lt;/p>
+&lt;h3 id="使用-socat-突破某些堡垒机">使用 socat 突破某些堡垒机
+&lt;/h3>&lt;p>某堡垒机的OpenSSH版本是&lt;code>OpenSSH_7.8p1&lt;/code>, 使用&lt;code>ssh -J jumpserver user@dst-host&lt;/code>无法连接，从报错信息来看，堡垒机禁止了 SSH 转发功能&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -2210,8 +2210,8 @@ compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>&lt;code>ssh -tt&lt;/code> 和 &lt;code>ssh -W&lt;/code> 也是同样错误，SSH 自身转发走不通，需要借助第三方软件。&lt;/p>
-&lt;h4 id="尝试1---使用-nc-转发">尝试1 - 使用 nc 转发&lt;/h4>
-&lt;p>使用 &lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code> 连接失败，报错, 跳板机上没有 nc&lt;/p>
+&lt;h4 id="尝试1---使用-nc-转发">尝试1 - 使用 nc 转发
+&lt;/h4>&lt;p>使用 &lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code> 连接失败，报错, 跳板机上没有 nc&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -2223,27 +2223,27 @@ compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>用包管理器安装 netcat, 提供的只有 nmap 版本，没有代理功能。&lt;/p>
-&lt;h4 id="尝试2---使用-socat-转发">尝试2 - 使用 socat 转发&lt;/h4>
-&lt;p>Socat 是 Linux 下的一个多功能的网络工具，名字来由是 「Socket CAT」。其功能与有瑞士军刀之称的 Netcat 类似，可以看做是 Netcat 的加强版。Socat 的主要特点就是在两个数据流之间建立通道，支持众多协议和链接方式，如 IP、TCP、 UDP、IPv6、PIPE、EXEC、System、Open、Proxy、Openssl、Socket等。&lt;/p>
+&lt;h4 id="尝试2---使用-socat-转发">尝试2 - 使用 socat 转发
+&lt;/h4>&lt;p>Socat 是 Linux 下的一个多功能的网络工具，名字来由是 「Socket CAT」。其功能与有瑞士军刀之称的 Netcat 类似，可以看做是 Netcat 的加强版。Socat 的主要特点就是在两个数据流之间建立通道，支持众多协议和链接方式，如 IP、TCP、 UDP、IPv6、PIPE、EXEC、System、Open、Proxy、Openssl、Socket等。&lt;/p>
 &lt;p>使用 &lt;code>ProxyCommand ssh jumpserver socat - tcp:%h:%p&lt;/code> 成功通过堡垒机连接目标机器。&lt;/p>
-&lt;h3 id="socat-在proxycommand-中与-netcat-等效用法">socat 在ProxyCommand 中与 netcat 等效用法&lt;/h3>
-&lt;p>socat 稳定版 1.7，beta 版 2 的代理功能更丰富。&lt;/p>
-&lt;h4 id="跳板机堡垒机">跳板机/堡垒机&lt;/h4>
-&lt;p>&lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code> -&amp;gt; &lt;code>ProxyCommand ssh jumpserver socat - tcp:%h:%p&lt;/code>&lt;/p>
-&lt;h4 id="socks-代理-1">socks 代理&lt;/h4>
-&lt;p>&lt;code>ProxyCommand nc -x 127.0.0.1:1080 %h %p&lt;/code> -&amp;gt;&lt;/p>
+&lt;h3 id="socat-在proxycommand-中与-netcat-等效用法">socat 在ProxyCommand 中与 netcat 等效用法
+&lt;/h3>&lt;p>socat 稳定版 1.7，beta 版 2 的代理功能更丰富。&lt;/p>
+&lt;h4 id="跳板机堡垒机">跳板机/堡垒机
+&lt;/h4>&lt;p>&lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code> -&amp;gt; &lt;code>ProxyCommand ssh jumpserver socat - tcp:%h:%p&lt;/code>&lt;/p>
+&lt;h4 id="socks-代理-1">socks 代理
+&lt;/h4>&lt;p>&lt;code>ProxyCommand nc -x 127.0.0.1:1080 %h %p&lt;/code> -&amp;gt;&lt;/p>
 &lt;ul>
 &lt;li>socat1 &lt;code>ProxyCommand socat - &amp;quot;SOCKS4:127.0.0.1:%h:%p,socksport=1080&amp;quot;&lt;/code>&lt;/li>
 &lt;li>socat2 &lt;code>ProxyCommand socat - &amp;quot;SOCKS5:%h:%p|tcp:127.0.0.1:1080&amp;quot;&lt;/code>&lt;/li>
 &lt;/ul>
-&lt;h4 id="httphttps-代理-1">HTTP/HTTPS 代理&lt;/h4>
-&lt;p>&lt;code>ProxyCommand nc -X connect -x 1.2.3.4:3128 %h %p&lt;/code> -&amp;gt;&lt;/p>
+&lt;h4 id="httphttps-代理-1">HTTP/HTTPS 代理
+&lt;/h4>&lt;p>&lt;code>ProxyCommand nc -X connect -x 1.2.3.4:3128 %h %p&lt;/code> -&amp;gt;&lt;/p>
 &lt;ul>
 &lt;li>socat1 &lt;code>ProxyCommand socat - &amp;quot;PROXY:1.2.3.4:%h:%p,proxyport=3128&amp;quot;&lt;/code>&lt;/li>
 &lt;li>socat2 &lt;code>ProxyCommand socat - &amp;quot;PROXY:%h:%p|tcp:1.2.3.4:3128&amp;quot;&lt;/code>&lt;/li>
 &lt;/ul>
-&lt;h3 id="参考链接">参考链接&lt;/h3>
-&lt;ul>
+&lt;h3 id="参考链接">参考链接
+&lt;/h3>&lt;ul>
 &lt;li>&lt;a class="link" href="https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts" target="_blank" rel="noopener"
 >https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/" target="_blank" rel="noopener"
@@ -2268,8 +2268,8 @@ compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p>
 &lt;p>最终靠知乎的这条答案曲线解决。&lt;/p>
 &lt;p>&lt;a class="link" href="https://www.zhihu.com/question/310873087/answer/1127300614" target="_blank" rel="noopener"
 >https://www.zhihu.com/question/310873087/answer/1127300614&lt;/a>&lt;/p>
-&lt;h3 id="操作步骤">操作步骤&lt;/h3>
-&lt;ol>
+&lt;h3 id="操作步骤">操作步骤
+&lt;/h3>&lt;ol>
 &lt;li>下载安装 fiddler &lt;a class="link" href="https://telerik-fiddler.s3.amazonaws.com/fiddler/FiddlerSetup.exe" target="_blank" rel="noopener"
 >https://telerik-fiddler.s3.amazonaws.com/fiddler/FiddlerSetup.exe&lt;/a>&lt;/li>
 &lt;li>打开fiddler&amp;mdash;点击左上角winconfig&amp;mdash;给 Microsoft Store 打勾&amp;mdash;点save changes&lt;/li>
@@ -2279,11 +2279,11 @@ loading="lazy"
 alt="image-20200603120155534"
 >&lt;/p>
 &lt;p>再次打开应用商店就能正常使用。唯一的缺陷是需要打开 fiddler 才能使用应用商店，不然会报 0x80072EFD 错误。&lt;/p></description></item><item><title>解决无忧行长时间显示“正在连接电话服务器”问题</title><link>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</link><pubDate>Thu, 09 Apr 2020 21:48:15 +0800</pubDate><guid>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</guid><description>&lt;img src="https://www.jegotrip.cn/m/img/favicon.ico" alt="Featured image of post 解决无忧行长时间显示“正在连接电话服务器”问题" />&lt;p>无忧行(JegoTrip)APP是中国移动专门为出境游用户量身打造的APP。在境内也可以使用，移动号码可以在 APP 内接电话和收短信, 轻松实现一机双号。&lt;/p>
-&lt;h2 id="具体症状">具体症状&lt;/h2>
-&lt;p>家里路由器上部署梯子, 国内 IP 直连，其余 IP 走梯子, 国内 IP 库用的 &lt;a class="link" href="https://github.com/17mon/china_ip_list" target="_blank" rel="noopener"
+&lt;h2 id="具体症状">具体症状
+&lt;/h2>&lt;p>家里路由器上部署梯子, 国内 IP 直连，其余 IP 走梯子, 国内 IP 库用的 &lt;a class="link" href="https://github.com/17mon/china_ip_list" target="_blank" rel="noopener"
 >https://github.com/17mon/china_ip_list&lt;/a>。连接家里 WIFI，无忧行 APP 启动后，显示“正在连接电话服务器”, 持续 30 秒以上才能连接到服务器，之后才能收到短信；用 4G 则没有这个提示，启动 APP 瞬间就能收到短信。猜测是无忧行服务器的香港 IP 走梯子后比直连慢很多所致。&lt;/p>
-&lt;h2 id="排查-ip">排查 IP&lt;/h2>
-&lt;p>从 Pi-hole 导出 jego 相关域名, &lt;code>192.168.1.123&lt;/code> 是手机 IP&lt;/p>
+&lt;h2 id="排查-ip">排查 IP
+&lt;/h2>&lt;p>从 Pi-hole 导出 jego 相关域名, &lt;code>192.168.1.123&lt;/code> 是手机 IP&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -2304,8 +2304,8 @@ oss.jegotrip.com.cn&lt;br>
 cp.jegotrip.com.cn&lt;/p>
 &lt;/blockquote>
 &lt;p>逐一排查后，&lt;strong>tms.jegotrip.com.cn&lt;/strong> 解析到 223.118.41.228, 是香港 IP。&lt;/p>
-&lt;h2 id="更新-ip-列表">更新 IP 列表&lt;/h2>
-&lt;p>223.118.41.228 属于 AS58453 自治域，把这个自治域中的几个 IP 段全部追加到国内 IP 列表。&lt;/p>
+&lt;h2 id="更新-ip-列表">更新 IP 列表
+&lt;/h2>&lt;p>223.118.41.228 属于 AS58453 自治域，把这个自治域中的几个 IP 段全部追加到国内 IP 列表。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -2323,18 +2323,18 @@ cp.jegotrip.com.cn&lt;/p>
 &lt;/div>&lt;p>重启梯子服务后问题解决。&lt;/p></description></item><item><title>使用 Github Actions 自动部署 Hugo</title><link>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</link><pubDate>Tue, 07 Apr 2020 14:03:04 +0800</pubDate><guid>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</guid><description>&lt;img src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg" alt="Featured image of post 使用 Github Actions 自动部署 Hugo" />&lt;p>Hugo 是一款开源的使用 go 语言写的静态网站生成器，生成的静态页面可以轻松部署到 github pages。&lt;/p>
 &lt;p>GitHub Actions 是 GitHub 的持续集成服务，持续集成由很多操作组成，比如抓取代码、运行测试、登录远程服务器，发布到第三方服务等等。GitHub 把这些操作就称为 actions。如果你需要某个 action，不必自己写复杂的脚本，直接引用他人写好的 action 即可，整个持续集成过程，就变成了一个 actions 的组合。&lt;a class="link" href="https://github.com/marketplace?type=actions" target="_blank" rel="noopener"
 >Github actions 市场&lt;/a>，可以搜索别人提交的 actions。&lt;/p>
-&lt;h2 id="自动部署要点">自动部署要点&lt;/h2>
-&lt;ul>
+&lt;h2 id="自动部署要点">自动部署要点
+&lt;/h2>&lt;ul>
 &lt;li>username.github.io 只能使用 master 分支&lt;/li>
 &lt;li>Github actions 的配置 yaml 文件只能放在默认分支&lt;/li>
 &lt;/ul>
-&lt;h2 id="编写脚本">编写脚本&lt;/h2>
-&lt;p>自动部署可以从源码仓库部署到发布仓库，也可以在单一仓库的分支之间部署。
+&lt;h2 id="编写脚本">编写脚本
+&lt;/h2>&lt;p>自动部署可以从源码仓库部署到发布仓库，也可以在单一仓库的分支之间部署。
 本文的 hugo markdown 文件位于 username.github.io 的 &lt;code>source&lt;/code> 分支，生成的 html 文件在同仓库的 &lt;code>master&lt;/code> 分支发布。&lt;/p>
-&lt;h4 id="切换默认分支">切换默认分支&lt;/h4>
-&lt;p>&lt;strong>Repository Settings&lt;/strong> - &lt;strong>Branches&lt;/strong> 切换 source 为默认分支。&lt;/p>
-&lt;h4 id="添加-actions">添加 Actions&lt;/h4>
-&lt;p>&lt;strong>Actions&lt;/strong> - &lt;strong>New workflows&lt;/strong>，选择 &lt;strong>Simple workflow&lt;/strong>
+&lt;h4 id="切换默认分支">切换默认分支
+&lt;/h4>&lt;p>&lt;strong>Repository Settings&lt;/strong> - &lt;strong>Branches&lt;/strong> 切换 source 为默认分支。&lt;/p>
+&lt;h4 id="添加-actions">添加 Actions
+&lt;/h4>&lt;p>&lt;strong>Actions&lt;/strong> - &lt;strong>New workflows&lt;/strong>，选择 &lt;strong>Simple workflow&lt;/strong>
 然后填入以下内容&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -2407,8 +2407,8 @@ cp.jegotrip.com.cn&lt;/p>
 &lt;li>&lt;a class="link" href="https://github.com/peaceiris/actions-gh-pages" target="_blank" rel="noopener"
 >peaceiris/actions-gh-pages&lt;/a> 发布静态页面&lt;/li>
 &lt;/ul>
-&lt;h2 id="设置部署权限">设置部署权限&lt;/h2>
-&lt;p>可以使用 Github Token 或者私钥给 workflow 仓库写权限。
+&lt;h2 id="设置部署权限">设置部署权限
+&lt;/h2>&lt;p>可以使用 Github Token 或者私钥给 workflow 仓库写权限。
 本文使用私钥，设置步骤如下&lt;/p>
 &lt;ol>
 &lt;li>&lt;code>ssh-keygen -t rsa -b 4096 -C &amp;quot;$(git config user.email)&amp;quot; -f gh-pages -N &amp;quot;&amp;quot;&lt;/code> 生成公私钥对&lt;/li>
@@ -2423,8 +2423,8 @@ loading="lazy"
 &lt;img src="https://cdn.jsdelivr.net/gh/peaceiris/actions-gh-pages/images/log_overview.jpg"
 loading="lazy"
 >&lt;/p>
-&lt;h2 id="参考资料">参考资料&lt;/h2>
-&lt;ul>
+&lt;h2 id="参考资料">参考资料
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://tianhui.xin/blog/2019/11/17/hugousegithubactionstopages/" target="_blank" rel="noopener"
 >https://tianhui.xin/blog/2019/11/17/hugousegithubactionstopages/&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://github.com/peaceiris/actions-hugo" target="_blank" rel="noopener"

@@ -8,37 +8,37 @@
 &lt;pre tabindex="0" class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>&lt;span class="nt">&amp;#34;error&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="s2">&amp;#34;invalid_client&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nt">&amp;#34;error_description&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="s2">&amp;#34;AADSTS650051: Using application &amp;#39;Cloud Sync&amp;#39; is currently not supported for your organization xxx.edu.cn because it is in an unmanaged state. An administrator needs to claim ownership of the company by DNS validation of xxx.edu.cn before the application Cloud Sync can be provisioned. Trace ID: a4ec2174-8d9f-4281-9f5b-7d782c060601 Correlation ID: c6bdc0ff-5a6c-4597-9060-af9c981610e2 Timestamp: 2024-03-15 02:00:57Z&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="实现方案">实现方案&lt;/h2>
-&lt;h3 id="skleeschultebasic-to-sharepoint-auth-http-proxy-方案">skleeschulte/basic-to-sharepoint-auth-http-proxy 方案&lt;/h3>
-&lt;p>使用 &lt;a class="link" href="https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy" target="_blank" rel="noopener"
+&lt;/div>&lt;h2 id="实现方案">实现方案
+&lt;/h2>&lt;h3 id="skleeschultebasic-to-sharepoint-auth-http-proxy-方案">skleeschulte/basic-to-sharepoint-auth-http-proxy 方案
+&lt;/h3>&lt;p>使用 &lt;a class="link" href="https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy" target="_blank" rel="noopener"
 >https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy&lt;/a> 中转请求，最终以 webdav 协议使用。&lt;/p>
-&lt;h3 id="rclone-方案">rclone 方案&lt;/h3>
-&lt;p>rclone 也是转为 webdav 服务&lt;/p>
+&lt;h3 id="rclone-方案">rclone 方案
+&lt;/h3>&lt;p>rclone 也是转为 webdav 服务&lt;/p>
 &lt;p>&lt;code>rclone serve webdav remote:path [flags]&lt;/code>&lt;/p>
-&lt;h3 id="方案效果对比">方案效果对比&lt;/h3>
-&lt;table>
+&lt;h3 id="方案效果对比">方案效果对比
+&lt;/h3>&lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th style="text-align: left">应用程序&lt;/th>
-&lt;th style="text-align: left">basic-to-sharepoint-auth-http-proxy&lt;/th>
-&lt;th style="text-align: left">rclone&lt;/th>
+&lt;th>应用程序&lt;/th>
+&lt;th>basic-to-sharepoint-auth-http-proxy&lt;/th>
+&lt;th>rclone&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td style="text-align: left">File Station&lt;/td>
-&lt;td style="text-align: left">N&lt;/td>
-&lt;td style="text-align: left">Y&lt;/td>
+&lt;td>File Station&lt;/td>
+&lt;td>N&lt;/td>
+&lt;td>Y&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align: left">Cloud Sync&lt;/td>
-&lt;td style="text-align: left">Y&lt;/td>
-&lt;td style="text-align: left">Y&lt;/td>
+&lt;td>Cloud Sync&lt;/td>
+&lt;td>Y&lt;/td>
+&lt;td>Y&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align: left">Hyper Backup&lt;/td>
-&lt;td style="text-align: left">Y&lt;/td>
-&lt;td style="text-align: left">Y&lt;/td>
+&lt;td>Hyper Backup&lt;/td>
+&lt;td>Y&lt;/td>
+&lt;td>Y&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
@@ -47,17 +47,17 @@
 &lt;li>支持在 File Station 挂载&lt;/li>
 &lt;li>rclone 是是个活跃项目，basic-to-sharepoint-auth-http-proxy 已经 2 年无更新&lt;/li>
 &lt;/ol>
-&lt;h2 id="操作方法">操作方法&lt;/h2>
-&lt;h3 id="basic-to-sharepoint-auth-http-proxy-方案">basic-to-sharepoint-auth-http-proxy 方案&lt;/h3>
-&lt;p>&lt;code>sudo docker run --name sharepoint-proxy -d -p 13000:3000 -e PROXY_TARGET=https://xxx-my.sharepoint.com/ --restart always skleeschulte/basic-to-passport-auth-http-proxy:v0.1.4&lt;/code>&lt;/p>
+&lt;h2 id="操作方法">操作方法
+&lt;/h2>&lt;h3 id="basic-to-sharepoint-auth-http-proxy-方案">basic-to-sharepoint-auth-http-proxy 方案
+&lt;/h3>&lt;p>&lt;code>sudo docker run --name sharepoint-proxy -d -p 13000:3000 -e PROXY_TARGET=https://xxx-my.sharepoint.com/ --restart always skleeschulte/basic-to-passport-auth-http-proxy:v0.1.4&lt;/code>&lt;/p>
 &lt;p>之后 webdav url 是 http://127.0.0.1:13000/personal/[YOUR-EMAIL]/Documents, 用户名和密码是 onedrive 的信息。&lt;/p>
-&lt;h3 id="rclone-方案-1">rclone 方案&lt;/h3>
-&lt;p>rclone 我本地也在用，没用 docker。&lt;/p>
-&lt;h4 id="1-配置-rclone-访问-onedrive">1. 配置 rclone 访问 onedrive&lt;/h4>
-&lt;p>教育版 Onedrive 登陆后的地址是 &lt;code>https://[YOUR-DOMAIN]-my.sharepoint.com/personal/[YOUR-EMAIL]/_layouts/15/onedrive.aspx&lt;/code>, 只需要把 &lt;code>_layouts/15/onedrive.aspx&lt;/code> 换成 &lt;code>Documents&lt;/code> 就是 webdav 地址。&lt;/p>
+&lt;h3 id="rclone-方案-1">rclone 方案
+&lt;/h3>&lt;p>rclone 我本地也在用，没用 docker。&lt;/p>
+&lt;h4 id="1-配置-rclone-访问-onedrive">1. 配置 rclone 访问 onedrive
+&lt;/h4>&lt;p>教育版 Onedrive 登陆后的地址是 &lt;code>https://[YOUR-DOMAIN]-my.sharepoint.com/personal/[YOUR-EMAIL]/_layouts/15/onedrive.aspx&lt;/code>, 只需要把 &lt;code>_layouts/15/onedrive.aspx&lt;/code> 换成 &lt;code>Documents&lt;/code> 就是 webdav 地址。&lt;/p>
 &lt;p>&lt;code>rclone confige - n) New remote - 随便起个名字 - 51 / WebDAV - https://[YOUR-DOMAIN]-my.sharepoint.com/personal/[YOUR-EMAIL]/Documents - 4 / Sharepoint Online, authenticated by Microsoft account - 用户名 - y) Yes, type in my own password - 密码 - 确认密码 - 回车跳过 - y) Yes this is OK (default)&lt;/code>&lt;/p>
-&lt;h4 id="2-rclone-开启-webadv-服务">2. rclone 开启 webadv 服务&lt;/h4>
-&lt;p>以上一步起的名字 1dr-sharepoint 为例, 执行下面命令即可开启 webdav 服务。
+&lt;h4 id="2-rclone-开启-webadv-服务">2. rclone 开启 webadv 服务
+&lt;/h4>&lt;p>以上一步起的名字 1dr-sharepoint 为例, 执行下面命令即可开启 webdav 服务。
 &lt;code>rclone rclone serve webdav 1dr-sharepoint:/ --user user --pass password --addr 192.168.1.101:8080&lt;/code>&lt;/p>
 &lt;p>webdav url http://192.168.1.101:8080/&lt;/p>
 &lt;p>rclone 支持开启的服务列表如下:&lt;/p>
@@ -85,8 +85,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> webdav Serve remote:path over WebDAV.
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h4 id="3-群晖-file-station-挂载">3. 群晖 File Station 挂载&lt;/h4>
-&lt;p>File Station - Tools - Remote Connection - Connection Setup - WebDAV&lt;/p>
+&lt;/div>&lt;h4 id="3-群晖-file-station-挂载">3. 群晖 File Station 挂载
+&lt;/h4>&lt;p>File Station - Tools - Remote Connection - Connection Setup - WebDAV&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -103,8 +103,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">passowrd: pssword
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;/div>&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://blog.edmond.work/2023/02/19/dsm-hyper-backup-onedrive-%E5%82%99%E4%BB%BD%E6%95%99%E5%AD%B8/" target="_blank" rel="noopener"
 >DSM Hyper Backup OneDrive 備份教學&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://hostloc.com/thread-785905-1-1.html" target="_blank" rel="noopener"
@@ -120,8 +120,8 @@
 &lt;/ul></description></item><item><title>Ubuntu 20.04 server iptables 持久化</title><link>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</link><pubDate>Fri, 17 Feb 2023 10:36:40 +0800</pubDate><guid>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</guid><description>&lt;img src="https://i.stack.imgur.com/gZm6i.png" alt="Featured image of post Ubuntu 20.04 server iptables 持久化" />&lt;p>有一批服务器需要做 iptables 持久化，开机自动加载。&lt;/p>
 &lt;p>在 Ubuntu 12.04 时代, 可以把加载脚本写到 &lt;code>/etc/rc.local&lt;/code> 开机自动加载，Ubuntu 20.04 要启用 rc.local 太麻烦，用 &lt;code>netfilter-persistent&lt;/code> 来实现自动加载。&lt;/p>
 &lt;p>&lt;code>netfilter-persistent&lt;/code> 加载 &lt;code>ipset-persistent&lt;/code> 和 &lt;code>iptables-persistent&lt;/code> 保存的规则。&lt;/p>
-&lt;h2 id="tldr">TLDR&lt;/h2>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h2 id="tldr">TLDR
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
 &lt;/span>&lt;span class="lnt"> 2
@@ -151,8 +151,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl start netfilter-persistent
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="静默安装">静默安装&lt;/h2>
-&lt;p>ipset-persistent 和 iptables-persistent 安装过程中会弹出交互窗，选择是否自动保存规则。&lt;/p>
+&lt;/div>&lt;h2 id="静默安装">静默安装
+&lt;/h2>&lt;p>ipset-persistent 和 iptables-persistent 安装过程中会弹出交互窗，选择是否自动保存规则。&lt;/p>
 &lt;p>交互会打断服务器上脚本安装，需要无交互静默安装。&lt;/p>
 &lt;p>Ubuntu 上软件包安装配置项归 &lt;code>debconf&lt;/code> 管理，在一台机器上交互安装完成后，用 &lt;code>debconf-show&lt;/code> 查看软件包的配置项。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -201,11 +201,11 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>执行 &lt;code> sudo apt install netfilter-persistent ipset-persistent iptables-persistent -y&lt;/code> 即可静默安装。&lt;/p>
-&lt;h3 id="持久化">持久化&lt;/h3>
-&lt;h4 id="保存规则">保存规则&lt;/h4>
-&lt;p>&lt;code>sudo netfilter-persistent save&lt;/code>&lt;/p>
-&lt;h4 id="自动加载">自动加载&lt;/h4>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h3 id="持久化">持久化
+&lt;/h3>&lt;h4 id="保存规则">保存规则
+&lt;/h4>&lt;p>&lt;code>sudo netfilter-persistent save&lt;/code>&lt;/p>
+&lt;h4 id="自动加载">自动加载
+&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;span class="lnt">2
@@ -215,8 +215,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl start netfilter-persistent
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;/div>&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://dhtar.com/make-ipset-and-iptables-configurations-persistent-in-debianubuntu.html" target="_blank" rel="noopener"
 >Make ipset and iptables configurations persistent in Debian/Ubuntu&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://gist.github.com/alonisser/a2c19f5362c2091ac1e7" target="_blank" rel="noopener"
@@ -227,8 +227,8 @@
 >How to read and insert new values into the debconf database&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>低成本 mesh 组网</title><link>https://4ft35t.github.io/post/lowcast-mesh/</link><pubDate>Sun, 04 Dec 2022 17:57:03 +0800</pubDate><guid>https://4ft35t.github.io/post/lowcast-mesh/</guid><description>&lt;img src="https://cdn.unwire.hk/wp-content/uploads/2018/03/999-1.png" alt="Featured image of post 低成本 mesh 组网" />&lt;p>上一次主动看 mesh 路由，单台成本 2000 左右，最近在什么值得买上看到用网件 6300V2 刷机后组 mesh 的，原理是网件6300V2 和华硕 AC68U 使用相同的硬件，修改 CEF 中相关配置，即可伪装成华硕 AC68U，使用华硕固件和功能。&lt;/p>
 &lt;p>6300V2 二手价格单台不到80，立马买两台来组网。&lt;/p>
-&lt;h2 id="硬件成本">硬件成本&lt;/h2>
-&lt;p>自有一台服役多年的 6300V2，淘宝新买2台二手，75.99 一台包邮。&lt;/p>
+&lt;h2 id="硬件成本">硬件成本
+&lt;/h2>&lt;p>自有一台服役多年的 6300V2，淘宝新买2台二手，75.99 一台包邮。&lt;/p>
 &lt;p>不想折腾的可以买刷好梅林386版本的机器，跳过刷机部分，直达 mesh 组网部分。&lt;/p>
 &lt;ul>
 &lt;li>75.99 包邮，原厂固件 &lt;a class="link" href="https://item.taobao.com/item.htm?id=654468086454" target="_blank" rel="noopener"
@@ -236,15 +236,15 @@
 &lt;li>138 包邮，梅林386固件 &lt;a class="link" href="https://item.taobao.com/item.htm?id=690054031769" target="_blank" rel="noopener"
 >https://item.taobao.com/item.htm?id=690054031769&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="刷机">刷机&lt;/h2>
-&lt;p>电脑和路由器用网线连接，推荐使用路由器的 LAN1-LAN3，不要用 LAN4，具体原因下文会提到。&lt;/p>
-&lt;h3 id="1-从官方固件刷梅林">1. 从官方固件刷梅林&lt;/h3>
-&lt;p>下载 380 版本梅林固件，https://fw.koolcenter.com/KoolCenter_Merlin_Legacy_380/Netgear/R6300V2/X7.9.1/R6300V2_380.70_0-X7.9.1-koolshare.chk&lt;/p>
+&lt;h2 id="刷机">刷机
+&lt;/h2>&lt;p>电脑和路由器用网线连接，推荐使用路由器的 LAN1-LAN3，不要用 LAN4，具体原因下文会提到。&lt;/p>
+&lt;h3 id="1-从官方固件刷梅林">1. 从官方固件刷梅林
+&lt;/h3>&lt;p>下载 380 版本梅林固件，https://fw.koolcenter.com/KoolCenter_Merlin_Legacy_380/Netgear/R6300V2/X7.9.1/R6300V2_380.70_0-X7.9.1-koolshare.chk&lt;/p>
 &lt;p>路由器恢复出厂设置:&lt;/p>
 &lt;p>路由器关机，按住reset开机，15秒后松开&lt;/p>
 &lt;p>浏览器打开 192.168.1.1，admin/password 登录，固件升级选择 R6300V2_380.70_0-X7.9.1-koolshare.chk&lt;/p>
-&lt;h3 id="2-备份-cfe-和-board_data">2. 备份 CFE 和 board_data&lt;/h3>
-&lt;p>刷梅林 380 版本后，路由器地址变成 192.168.50.1。登录路由器，帐号密码沿用 admin/password，打开 SSH 服务&lt;/p>
+&lt;h3 id="2-备份-cfe-和-board_data">2. 备份 CFE 和 board_data
+&lt;/h3>&lt;p>刷梅林 380 版本后，路由器地址变成 192.168.50.1。登录路由器，帐号密码沿用 admin/password，打开 SSH 服务&lt;/p>
 &lt;p>系统管理 - 系统设置 - 启用 SSH- LAN only - 应用本页面设置&lt;/p>
 &lt;p>使用 ssh 登录路由器，Windows 可以用 putty 或者 wsl。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
@@ -267,8 +267,8 @@
 &lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">scp -O admin@192.168.50.1:/tmp/backup_cfe.bin .
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="3-刷-cfe">3. 刷 CFE&lt;/h3>
-&lt;p>下载 CEF &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/cfe_2.4Gfix.bin" target="_blank" rel="noopener"
+&lt;/div>&lt;h3 id="3-刷-cfe">3. 刷 CFE
+&lt;/h3>&lt;p>下载 CEF &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/cfe_2.4Gfix.bin" target="_blank" rel="noopener"
 >https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/cfe_2.4Gfix.bin&lt;/a>&lt;/p>
 &lt;p>下载 CEF 修改器 &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/CFEEdit.exe" target="_blank" rel="noopener"
 >https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/CFEEdit.exe&lt;/a>&lt;/p>
@@ -315,8 +315,8 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>重启后路由器会进入 tftp 刷机状态，ip 为 192.168.1.1&lt;/p>
-&lt;h3 id="4-tftp-刷入梅林-386-版本">4. tftp 刷入梅林 386 版本&lt;/h3>
-&lt;p>下载 386 版本固件 &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_386/Netgear/R6300v2/RT-AC6300v2_386.2_4-20210628-91625500b.trx" target="_blank" rel="noopener"
+&lt;h3 id="4-tftp-刷入梅林-386-版本">4. tftp 刷入梅林 386 版本
+&lt;/h3>&lt;p>下载 386 版本固件 &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_386/Netgear/R6300v2/RT-AC6300v2_386.2_4-20210628-91625500b.trx" target="_blank" rel="noopener"
 >https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_386/Netgear/R6300v2/RT-AC6300v2_386.2_4-20210628-91625500b.trx&lt;/a>&lt;/p>
 &lt;p>Windows 电脑安装自带的 tftp 客户端&lt;/p>
 &lt;p>Win+r - 输入 appwiz.cpl - 打开或关闭Windows功能 - 勾选TFTP客户端 - 重启&lt;/p>
@@ -327,8 +327,8 @@
 &lt;p>等 tftp 传输完成后，路由器会在3分钟内重启多次，最后完成刷机。&lt;/p>
 &lt;p>当 ping 的 TTL 变成 64，即表示路由器正常启动。如果 tftp 传输完成后5分钟，TTL 还没变成 64，重启路由器。&lt;/p>
 &lt;p>如果重启后 ping TTL 值一直保持 100，浏览器访问 192.168.1.1，进入 CFE miniWeb，点击 &amp;ldquo;Restore default NVRAM values&amp;rdquo;，然后重启。&lt;/p>
-&lt;h3 id="4-刷机后存在问题">4. 刷机后存在问题&lt;/h3>
-&lt;p>刷机后，WAN 口的位置会发生变化&lt;/p>
+&lt;h3 id="4-刷机后存在问题">4. 刷机后存在问题
+&lt;/h3>&lt;p>刷机后，WAN 口的位置会发生变化&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
@@ -357,8 +357,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------+------+------+------+ +------+
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="mesh-组网">mesh 组网&lt;/h2>
-&lt;p>路由1 做为 mesh 路由，访问 192.168.1.1，按向导完成 pppoe 拨号设置，选路由器模式。&lt;/p>
+&lt;/div>&lt;h2 id="mesh-组网">mesh 组网
+&lt;/h2>&lt;p>路由1 做为 mesh 路由，访问 192.168.1.1，按向导完成 pppoe 拨号设置，选路由器模式。&lt;/p>
 &lt;p>路由器2，作为 AiMesh 节点，按向导完成动态动态 IP 设置；然后&lt;/p>
 &lt;p>系统管理 - 操作模式 - AiMesh 节点 - 保存&lt;/p>
 &lt;p>等界面显示重置完成，路由器2的设置完成。&lt;/p>
@@ -367,12 +367,12 @@
 &lt;p>等待完成后对路由器3重复执行上述操作。&lt;/p>
 &lt;p>所有操作完成后，路由器2和3的用户名密码会变成和路由器1一样。&lt;/p>
 &lt;p>现在可以享受 mesh 组网的无缝切换了，不用再像用扩展器一样手动切换。&lt;/p>
-&lt;h3 id="有线回程">有线回程&lt;/h3>
-&lt;p>路由器1 LAN 连接路由器2 WAN，即可让路由器2 变成有线回程。路由器3 同理。&lt;/p>
-&lt;h2 id="加散热风扇">加散热风扇&lt;/h2>
-&lt;p>使用 3007 风扇，可以藏在机器内，用杜邦接口插在 ttl 针上，VCC 接红线，GND 接黑线。&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;h3 id="有线回程">有线回程
+&lt;/h3>&lt;p>路由器1 LAN 连接路由器2 WAN，即可让路由器2 变成有线回程。路由器3 同理。&lt;/p>
+&lt;h2 id="加散热风扇">加散热风扇
+&lt;/h2>&lt;p>使用 3007 风扇，可以藏在机器内，用杜邦接口插在 ttl 针上，VCC 接红线，GND 接黑线。&lt;/p>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://post.smzdm.com/p/a4dk3zgk/" target="_blank" rel="noopener"
 >最便宜的组Aimesh的方案——R6300V2最后的荣光&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.right.com.cn/forum/thread-7613019-1-1.html" target="_blank" rel="noopener"
@@ -383,13 +383,13 @@
 >无线路由器Mesh组网教程：华硕Aimesh组网篇&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.right.com.cn/forum/forum.php?mod=redirect&amp;amp;goto=findpost&amp;amp;ptid=1686743&amp;amp;pid=5735198" target="_blank" rel="noopener"
 >6300v2主动散热加usb风扇问题&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>修复 Chromecast YouTube 投屏失败问题</title><link>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</link><pubDate>Fri, 29 Jul 2022 01:38:00 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</guid><description>&lt;img src="https://www.right.com.cn/forum/data/attachment/forum/201803/08/102522uwh6r70ssbuh01r5.jpg" alt="Featured image of post 修复 Chromecast YouTube 投屏失败问题" />&lt;h2 id="问题分析">问题分析&lt;/h2>
-&lt;p>软路由 OpenWrt 做网关，同时用 SS 透明代理所有国外 IP 的 TCP 连接，手机、电脑都无感翻墙。&lt;/p>
+&lt;/ul></description></item><item><title>修复 Chromecast YouTube 投屏失败问题</title><link>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</link><pubDate>Fri, 29 Jul 2022 01:38:00 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</guid><description>&lt;img src="https://www.right.com.cn/forum/data/attachment/forum/201803/08/102522uwh6r70ssbuh01r5.jpg" alt="Featured image of post 修复 Chromecast YouTube 投屏失败问题" />&lt;h2 id="问题分析">问题分析
+&lt;/h2>&lt;p>软路由 OpenWrt 做网关，同时用 SS 透明代理所有国外 IP 的 TCP 连接，手机、电脑都无感翻墙。&lt;/p>
 &lt;p>Chromecast 在多个境外网站上投屏正常工作，Google Photos 投屏也正常，唯独 YouTube 无法投屏。&lt;/p>
 &lt;p>使用关键词 &amp;ldquo;chromecast youtube something went wrong&amp;rdquo; 没找到有用信息，把 ChromeCast 的语言改成中文后，用中文的报错信息一下就找到了，果然是天朝特有问题。Google 搜 &lt;code>chromecast youtube &amp;quot;出问题了&amp;quot;&lt;/code>。&lt;/p>
 &lt;p>问题原因在于 Chromecast 不使用 DHCP 分配的 DNS 服务器，用 8.8.8.8 解析，会拿到污染的结果，导致失败。&lt;/p>
-&lt;h2 id="解决方案">解决方案&lt;/h2>
-&lt;p>解决方法很简单，在网关上劫持 8.8.8.8 的 53 端口 UDP 包，重定向到网关的无污染 DNS。&lt;/p>
+&lt;h2 id="解决方案">解决方案
+&lt;/h2>&lt;p>解决方法很简单，在网关上劫持 8.8.8.8 的 53 端口 UDP 包，重定向到网关的无污染 DNS。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -400,8 +400,8 @@
 &lt;/div>
 &lt;/div>&lt;p>OpenWrt 网页 - NetWork - Firewall - Custom Rules, 把上述命令贴进去，保存即可。&lt;/p>
 &lt;p>也可直接修改 &lt;code>/etc/firewall.user&lt;/code> 然后 &lt;code>/etc/init.d/firewall restart&lt;/code> 生效。&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://v2ex.com/t/436014" target="_blank" rel="noopener"
 >Chromecast 如何配搭路由的 SS 看 youtube？&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://iso1.wordpress.com/2017/07/06/install-shadowsocks-on-geek-router-and-fix-chromecast-casting-youtube-issue/" target="_blank" rel="noopener"
@@ -410,27 +410,27 @@
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th style="text-align: left">&lt;/th>
-&lt;th style="text-align: left">自建代理&lt;/th>
-&lt;th style="text-align: left">机场&lt;/th>
+&lt;th>&lt;/th>
+&lt;th>自建代理&lt;/th>
+&lt;th>机场&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td style="text-align: left">速度&lt;/td>
-&lt;td style="text-align: left">慢&lt;/td>
-&lt;td style="text-align: left">快&lt;/td>
+&lt;td>速度&lt;/td>
+&lt;td>慢&lt;/td>
+&lt;td>快&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td style="text-align: left">安全性&lt;/td>
-&lt;td style="text-align: left">高&lt;/td>
-&lt;td style="text-align: left">无&lt;/td>
+&lt;td>安全性&lt;/td>
+&lt;td>高&lt;/td>
+&lt;td>无&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
 &lt;p>有没有兼顾安全性和速度的方案？&lt;/p>
-&lt;h2 id="最终方案">最终方案&lt;/h2>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h2 id="最终方案">最终方案
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
 &lt;/span>&lt;span class="lnt"> 2
@@ -474,28 +474,28 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------------+ +---------------+
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="部署要点">部署要点&lt;/h3>
-&lt;ol>
+&lt;/div>&lt;h3 id="部署要点">部署要点
+&lt;/h3>&lt;ol>
 &lt;li>自建梯子用 tsl+websocket 协议，各种工具都可以，ss+v2ray-plugin、v2ray、gost 等都可以。这一步目的是为了能用 Cloudflare 的 CDN。&lt;/li>
 &lt;li>需要有自己的域名，把域名接入 Cloudflare。&lt;/li>
 &lt;li>在本地用 clash 控制流量走向&lt;/li>
 &lt;/ol>
-&lt;h2 id="方案优势">方案优势&lt;/h2>
-&lt;ol>
+&lt;h2 id="方案优势">方案优势
+&lt;/h2>&lt;ol>
 &lt;li>国内运营商在链路①的位置只能看到你访问了机场的国内 IP&lt;/li>
 &lt;li>机场在链路②③只能看到你在用 tls 流量访问 Cloudflare 节点，目标网站就是你接入 Cloudflare 的域名。&lt;/li>
 &lt;li>&lt;strong>只要你不用代理访问国内网站，运营商和机场都不知道你的自建梯子的出口 IP&lt;/strong>&lt;/li>
 &lt;li>和直连自建梯子比，大幅提升速度和稳定性；和单独使用机场相比，机场无法知道你的访问信息，安全性很大提升&lt;/li>
 &lt;/ol>
-&lt;h2 id="方案实施">方案实施&lt;/h2>
-&lt;ol>
+&lt;h2 id="方案实施">方案实施
+&lt;/h2>&lt;ol>
 &lt;li>各代理软件都有详细文档，如何开启tsl+websocket 协议，此处略&lt;/li>
 &lt;li>域名接入 cloudflare， 略&lt;/li>
 &lt;li>购买机场，略&lt;/li>
 &lt;li>clash 配置&lt;/li>
 &lt;/ol>
-&lt;h3 id="clash-简介">Clash 简介&lt;/h3>
-&lt;p>&lt;a class="link" href="https://github.com/Dreamacro/clash" target="_blank" rel="noopener"
+&lt;h3 id="clash-简介">Clash 简介
+&lt;/h3>&lt;p>&lt;a class="link" href="https://github.com/Dreamacro/clash" target="_blank" rel="noopener"
 >Clash&lt;/a>是一款用 Go 开发的多平台的代理工具，使用强大的策略组来管理节点;可以自动选择节点，不同的网站，在同一时间，可以使用不同的节点去访问。&lt;/p>
 &lt;p>我们用 Clash 强大的策略组功能来套娃。&lt;/p>
 &lt;p>官方文档有示例 &lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
@@ -504,8 +504,8 @@
 &lt;p>relay chains the proxies. proxies shall not contain a relay. No UDP support.
 Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; ss1 &amp;lt;-&amp;gt; ss2 &amp;lt;-&amp;gt; Internet&lt;/p>
 &lt;/blockquote>
-&lt;h3 id="配置文件">配置文件&lt;/h3>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h3 id="配置文件">配置文件
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
 &lt;/span>&lt;span class="lnt"> 2
@@ -669,17 +669,17 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;li>国内 IP 直连&lt;/li>
 &lt;li>国外 IP 走代理&lt;/li>
 &lt;/ul>
-&lt;h3 id="数据流">数据流：&lt;/h3>
-&lt;ol>
+&lt;h3 id="数据流">数据流：
+&lt;/h3>&lt;ol>
 &lt;li>本机请求 -&amp;gt; clash，clash 按 relay 组的 proxies 顺序，从下往上加密，本配置中，先用自建的加密方式加密请求，再用机场的加密方式加密第二次&lt;/li>
 &lt;li>clash -&amp;gt; 机场，机场解开自己的加密，看到目标是一个 Cloudflare 上的网站&lt;/li>
 &lt;li>机场 -&amp;gt; Cloudflare, 用标准的 https 方式转发收到的数据包&lt;/li>
 &lt;li>Cloudflare -&amp;gt; vps，vps 收到 https 包后，先用域名的私钥解密数据，得到加密的 ss 数据，再用 ss 解密得到真正的目标。&lt;/li>
 &lt;/ol>
-&lt;h2 id="更古老的套娃方案">更古老的套娃方案&lt;/h2>
-&lt;p>在遇到 clash 之前，一直在 openwrt 上套娃，使用的是 shadowsocks + iptables-mod-tproxy&lt;/p>
-&lt;h3 id="环境准备">环境准备&lt;/h3>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h2 id="更古老的套娃方案">更古老的套娃方案
+&lt;/h2>&lt;p>在遇到 clash 之前，一直在 openwrt 上套娃，使用的是 shadowsocks + iptables-mod-tproxy&lt;/p>
+&lt;h3 id="环境准备">环境准备
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;/code>&lt;/pre>&lt;/td>
@@ -687,8 +687,8 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">opkg install shadowsocks-libev
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="操作方法">操作方法&lt;/h3>
-&lt;ol>
+&lt;/div>&lt;h3 id="操作方法">操作方法
+&lt;/h3>&lt;ol>
 &lt;li>openwrt 上正常配置自建梯子，能正常使用后进入第2步&lt;/li>
 &lt;li>用 ss-redir 启动机场的 ss&lt;/li>
 &lt;/ol>
@@ -723,8 +723,8 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>&lt;strong>机场的 ss-redir 需要后启动，shadowsocks 默认策略是插入 OUTPUT 链首位，后启动的在首位&lt;/strong>&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://wanchuan.top/e9430b8345c049f8afce602db5f5f773" target="_blank" rel="noopener"
 >使用Clash工具科学上网&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
@@ -734,12 +734,12 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;li>&lt;a class="link" href="http://openwrt-dist.sourceforge.net/" target="_blank" rel="noopener"
 >aa65535 维护的 shadowsocks for openwrt&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Android 远程截图</title><link>https://4ft35t.github.io/post/android-screenshoot-remote/</link><pubDate>Fri, 06 Aug 2021 16:51:31 +0800</pubDate><guid>https://4ft35t.github.io/post/android-screenshoot-remote/</guid><description>&lt;img src="https://img1.mydrivers.com/img/20210226/s_ff489bbf9a884b83a72837c099f23e97.jpg" alt="Featured image of post Android 远程截图" />&lt;p>某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。&lt;/p>
-&lt;h2 id="背景">背景&lt;/h2>
-&lt;p>云闪付公交乘车码，每周使用三次可以获得一张 6-5 消费券，但那一个帐号一周只能领一次，需要多个帐号。&lt;/p>
+&lt;h2 id="背景">背景
+&lt;/h2>&lt;p>云闪付公交乘车码，每周使用三次可以获得一张 6-5 消费券，但那一个帐号一周只能领一次，需要多个帐号。&lt;/p>
 &lt;p>家里有个老华为手机，上面登录的有老人的云闪付帐号，但是注册帐号的手机号失效，无法更换新手机号，新设备登录需要短信验证码，只有拿这个手机去刷。&lt;/p>
 &lt;p>不想带多个手机出门，开启折腾之路。&lt;/p>
-&lt;h2 id="截屏">截屏&lt;/h2>
-&lt;p>系统自带 &lt;code>screencap&lt;/code> 命令，桌面和别的 app 可以截屏，云闪付不行，应该是云闪付设置了&lt;code>FLAG_SECURE&lt;/code>。&lt;/p>
+&lt;h2 id="截屏">截屏
+&lt;/h2>&lt;p>系统自带 &lt;code>screencap&lt;/code> 命令，桌面和别的 app 可以截屏，云闪付不行，应该是云闪付设置了&lt;code>FLAG_SECURE&lt;/code>。&lt;/p>
 &lt;p>&lt;a class="link" href="https://github.com/Genymobile/scrcpy" target="_blank" rel="noopener"
 >scrcpy&lt;/a> 可以显示云闪付内容，猜测 &lt;a class="link" href="https://github.com/Ericwyn/Auto.js" target="_blank" rel="noopener"
 >autojs&lt;/a> 使用 cast 模式也可以截屏，实测确实可以。&lt;/p>
@@ -801,8 +801,8 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;截图完成&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="触发">触发&lt;/h2>
-&lt;p>一开始设想的是 autojs 监听通知，使用 &lt;a class="link" href="https://github.com/Finb/Bark" target="_blank" rel="noopener"
+&lt;/div>&lt;h2 id="触发">触发
+&lt;/h2>&lt;p>一开始设想的是 autojs 监听通知，使用 &lt;a class="link" href="https://github.com/Finb/Bark" target="_blank" rel="noopener"
 >Bark&lt;/a> 的安卓客户端 &lt;a class="link" href="https://github.com/xlvecle/PushLite" target="_blank" rel="noopener"
 >PushLite&lt;/a> 来接收通知触发截图，然而 PushLite 需要 Google FCM，安装太折腾，放弃，寻求电脑端触发的方案。&lt;/p>
 &lt;p>一番搜索，决定用 cgi 来接收外部请求并触发截图，各种依赖最少。&lt;/p>
@@ -935,8 +935,8 @@ loading="lazy"
 >&lt;/p>
 &lt;p>最后，所有相关代码在 &lt;a class="link" href="https://github.com/4ft35t/Android-Screenshoot-Remote" target="_blank" rel="noopener"
 >https://github.com/4ft35t/Android-Screenshoot-Remote&lt;/a>&lt;/p></description></item><item><title>SSH 跳板机与代理</title><link>https://4ft35t.github.io/post/ssh-porxy/</link><pubDate>Wed, 03 Jun 2020 16:55:35 +0800</pubDate><guid>https://4ft35t.github.io/post/ssh-porxy/</guid><description>&lt;img src="https://www.openssh.com/images/openssh.gif" alt="Featured image of post SSH 跳板机与代理" />&lt;p>基于各种复杂环境，ssh 无法直接连接目标主机，需要借助中间的跳板机或者代理来连接。通常使用 ssh-agent 来通过跳板机连接目标主机，使用 ProxyCommand 或者 ProxyJump 连接更方便。&lt;/p>
-&lt;h3 id="跳板机">跳板机&lt;/h3>
-&lt;p>在　&lt;code>~/.ssh/config&lt;/code> 中给跳板机一个方便记忆的别名，比如　jumpserver&lt;/p>
+&lt;h3 id="跳板机">跳板机
+&lt;/h3>&lt;p>在　&lt;code>~/.ssh/config&lt;/code> 中给跳板机一个方便记忆的别名，比如　jumpserver&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -1013,9 +1013,9 @@ loading="lazy"
 &lt;code>ssh -J jumpserver user@dst-host&lt;/code>&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;h3 id="代理">代理&lt;/h3>
-&lt;h4 id="socks-代理">socks 代理&lt;/h4>
-&lt;ul>
+&lt;h3 id="代理">代理
+&lt;/h3>&lt;h4 id="socks-代理">socks 代理
+&lt;/h4>&lt;ul>
 &lt;li>
 &lt;p>nc &lt;code>ProxyCommand nc -x 127.0.0.1:1080 %h %p&lt;/code>&lt;/p>
 &lt;/li>
@@ -1024,8 +1024,8 @@ loading="lazy"
 >https://github.com/larryhou/connect-proxy&lt;/a> &lt;code>ProxyCommand connect-proxy -S 127.0.0.1:1080 %h %p&lt;/code>&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;h4 id="httphttps-代理">HTTP/HTTPS 代理&lt;/h4>
-&lt;ul>
+&lt;h4 id="httphttps-代理">HTTP/HTTPS 代理
+&lt;/h4>&lt;ul>
 &lt;li>
 &lt;p>nc &lt;code>ProxyCommand nc -X connect -x 1.2.3.4:3128 %h %p&lt;/code>&lt;/p>
 &lt;/li>
@@ -1035,12 +1035,12 @@ loading="lazy"
 &lt;/li>
 &lt;/ul>
 &lt;p>&lt;strong>corkscrew 在代理不稳定时比 nc 可靠&lt;/strong>&lt;/p>
-&lt;h3 id="特别注意">特别注意&lt;/h3>
-&lt;p>本文提到的 nc 是 &lt;strong>BSD 版本的 netcat&lt;/strong>， GNU 版本的 natcat 没有代理功能。&lt;/p>
+&lt;h3 id="特别注意">特别注意
+&lt;/h3>&lt;p>本文提到的 nc 是 &lt;strong>BSD 版本的 netcat&lt;/strong>， GNU 版本的 natcat 没有代理功能。&lt;/p>
 &lt;p>更多 netcat 版本见 &lt;a class="link" href="https://wiki.archlinux.org/title/Network_tools#Netcat" target="_blank" rel="noopener"
 >https://wiki.archlinux.org/title/Network_tools#Netcat&lt;/a>&lt;/p>
-&lt;h3 id="使用-socat-突破某些堡垒机">使用 socat 突破某些堡垒机&lt;/h3>
-&lt;p>某堡垒机的OpenSSH版本是&lt;code>OpenSSH_7.8p1&lt;/code>, 使用&lt;code>ssh -J jumpserver user@dst-host&lt;/code>无法连接，从报错信息来看，堡垒机禁止了 SSH 转发功能&lt;/p>
+&lt;h3 id="使用-socat-突破某些堡垒机">使用 socat 突破某些堡垒机
+&lt;/h3>&lt;p>某堡垒机的OpenSSH版本是&lt;code>OpenSSH_7.8p1&lt;/code>, 使用&lt;code>ssh -J jumpserver user@dst-host&lt;/code>无法连接，从报错信息来看，堡垒机禁止了 SSH 转发功能&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -1054,8 +1054,8 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>&lt;code>ssh -tt&lt;/code> 和 &lt;code>ssh -W&lt;/code> 也是同样错误，SSH 自身转发走不通，需要借助第三方软件。&lt;/p>
-&lt;h4 id="尝试1---使用-nc-转发">尝试1 - 使用 nc 转发&lt;/h4>
-&lt;p>使用 &lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code> 连接失败，报错, 跳板机上没有 nc&lt;/p>
+&lt;h4 id="尝试1---使用-nc-转发">尝试1 - 使用 nc 转发
+&lt;/h4>&lt;p>使用 &lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code> 连接失败，报错, 跳板机上没有 nc&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -1067,27 +1067,27 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>用包管理器安装 netcat, 提供的只有 nmap 版本，没有代理功能。&lt;/p>
-&lt;h4 id="尝试2---使用-socat-转发">尝试2 - 使用 socat 转发&lt;/h4>
-&lt;p>Socat 是 Linux 下的一个多功能的网络工具，名字来由是 「Socket CAT」。其功能与有瑞士军刀之称的 Netcat 类似，可以看做是 Netcat 的加强版。Socat 的主要特点就是在两个数据流之间建立通道，支持众多协议和链接方式，如 IP、TCP、 UDP、IPv6、PIPE、EXEC、System、Open、Proxy、Openssl、Socket等。&lt;/p>
+&lt;h4 id="尝试2---使用-socat-转发">尝试2 - 使用 socat 转发
+&lt;/h4>&lt;p>Socat 是 Linux 下的一个多功能的网络工具，名字来由是 「Socket CAT」。其功能与有瑞士军刀之称的 Netcat 类似，可以看做是 Netcat 的加强版。Socat 的主要特点就是在两个数据流之间建立通道，支持众多协议和链接方式，如 IP、TCP、 UDP、IPv6、PIPE、EXEC、System、Open、Proxy、Openssl、Socket等。&lt;/p>
 &lt;p>使用 &lt;code>ProxyCommand ssh jumpserver socat - tcp:%h:%p&lt;/code> 成功通过堡垒机连接目标机器。&lt;/p>
-&lt;h3 id="socat-在proxycommand-中与-netcat-等效用法">socat 在ProxyCommand 中与 netcat 等效用法&lt;/h3>
-&lt;p>socat 稳定版 1.7，beta 版 2 的代理功能更丰富。&lt;/p>
-&lt;h4 id="跳板机堡垒机">跳板机/堡垒机&lt;/h4>
-&lt;p>&lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code> -&amp;gt; &lt;code>ProxyCommand ssh jumpserver socat - tcp:%h:%p&lt;/code>&lt;/p>
-&lt;h4 id="socks-代理-1">socks 代理&lt;/h4>
-&lt;p>&lt;code>ProxyCommand nc -x 127.0.0.1:1080 %h %p&lt;/code> -&amp;gt;&lt;/p>
+&lt;h3 id="socat-在proxycommand-中与-netcat-等效用法">socat 在ProxyCommand 中与 netcat 等效用法
+&lt;/h3>&lt;p>socat 稳定版 1.7，beta 版 2 的代理功能更丰富。&lt;/p>
+&lt;h4 id="跳板机堡垒机">跳板机/堡垒机
+&lt;/h4>&lt;p>&lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code> -&amp;gt; &lt;code>ProxyCommand ssh jumpserver socat - tcp:%h:%p&lt;/code>&lt;/p>
+&lt;h4 id="socks-代理-1">socks 代理
+&lt;/h4>&lt;p>&lt;code>ProxyCommand nc -x 127.0.0.1:1080 %h %p&lt;/code> -&amp;gt;&lt;/p>
 &lt;ul>
 &lt;li>socat1 &lt;code>ProxyCommand socat - &amp;quot;SOCKS4:127.0.0.1:%h:%p,socksport=1080&amp;quot;&lt;/code>&lt;/li>
 &lt;li>socat2 &lt;code>ProxyCommand socat - &amp;quot;SOCKS5:%h:%p|tcp:127.0.0.1:1080&amp;quot;&lt;/code>&lt;/li>
 &lt;/ul>
-&lt;h4 id="httphttps-代理-1">HTTP/HTTPS 代理&lt;/h4>
-&lt;p>&lt;code>ProxyCommand nc -X connect -x 1.2.3.4:3128 %h %p&lt;/code> -&amp;gt;&lt;/p>
+&lt;h4 id="httphttps-代理-1">HTTP/HTTPS 代理
+&lt;/h4>&lt;p>&lt;code>ProxyCommand nc -X connect -x 1.2.3.4:3128 %h %p&lt;/code> -&amp;gt;&lt;/p>
 &lt;ul>
 &lt;li>socat1 &lt;code>ProxyCommand socat - &amp;quot;PROXY:1.2.3.4:%h:%p,proxyport=3128&amp;quot;&lt;/code>&lt;/li>
 &lt;li>socat2 &lt;code>ProxyCommand socat - &amp;quot;PROXY:%h:%p|tcp:1.2.3.4:3128&amp;quot;&lt;/code>&lt;/li>
 &lt;/ul>
-&lt;h3 id="参考链接">参考链接&lt;/h3>
-&lt;ul>
+&lt;h3 id="参考链接">参考链接
+&lt;/h3>&lt;ul>
 &lt;li>&lt;a class="link" href="https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts" target="_blank" rel="noopener"
 >https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/" target="_blank" rel="noopener"
@@ -1101,11 +1101,11 @@ loading="lazy"
 &lt;li>&lt;a class="link" href="https://linux.die.net/man/1/socat" target="_blank" rel="noopener"
 >https://linux.die.net/man/1/socat&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>解决无忧行长时间显示“正在连接电话服务器”问题</title><link>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</link><pubDate>Thu, 09 Apr 2020 21:48:15 +0800</pubDate><guid>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</guid><description>&lt;img src="https://www.jegotrip.cn/m/img/favicon.ico" alt="Featured image of post 解决无忧行长时间显示“正在连接电话服务器”问题" />&lt;p>无忧行(JegoTrip)APP是中国移动专门为出境游用户量身打造的APP。在境内也可以使用，移动号码可以在 APP 内接电话和收短信, 轻松实现一机双号。&lt;/p>
-&lt;h2 id="具体症状">具体症状&lt;/h2>
-&lt;p>家里路由器上部署梯子, 国内 IP 直连，其余 IP 走梯子, 国内 IP 库用的 &lt;a class="link" href="https://github.com/17mon/china_ip_list" target="_blank" rel="noopener"
+&lt;h2 id="具体症状">具体症状
+&lt;/h2>&lt;p>家里路由器上部署梯子, 国内 IP 直连，其余 IP 走梯子, 国内 IP 库用的 &lt;a class="link" href="https://github.com/17mon/china_ip_list" target="_blank" rel="noopener"
 >https://github.com/17mon/china_ip_list&lt;/a>。连接家里 WIFI，无忧行 APP 启动后，显示“正在连接电话服务器”, 持续 30 秒以上才能连接到服务器，之后才能收到短信；用 4G 则没有这个提示，启动 APP 瞬间就能收到短信。猜测是无忧行服务器的香港 IP 走梯子后比直连慢很多所致。&lt;/p>
-&lt;h2 id="排查-ip">排查 IP&lt;/h2>
-&lt;p>从 Pi-hole 导出 jego 相关域名, &lt;code>192.168.1.123&lt;/code> 是手机 IP&lt;/p>
+&lt;h2 id="排查-ip">排查 IP
+&lt;/h2>&lt;p>从 Pi-hole 导出 jego 相关域名, &lt;code>192.168.1.123&lt;/code> 是手机 IP&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -1126,8 +1126,8 @@ oss.jegotrip.com.cn&lt;br>
 cp.jegotrip.com.cn&lt;/p>
 &lt;/blockquote>
 &lt;p>逐一排查后，&lt;strong>tms.jegotrip.com.cn&lt;/strong> 解析到 223.118.41.228, 是香港 IP。&lt;/p>
-&lt;h2 id="更新-ip-列表">更新 IP 列表&lt;/h2>
-&lt;p>223.118.41.228 属于 AS58453 自治域，把这个自治域中的几个 IP 段全部追加到国内 IP 列表。&lt;/p>
+&lt;h2 id="更新-ip-列表">更新 IP 列表
+&lt;/h2>&lt;p>223.118.41.228 属于 AS58453 自治域，把这个自治域中的几个 IP 段全部追加到国内 IP 列表。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1

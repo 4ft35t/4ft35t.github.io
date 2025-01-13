@@ -5,8 +5,8 @@
 &lt;p>这个报错，在 PaddleOCR 官方的 github 仓库 issue 有人发过, ubuntu 20.10 上遇到此报错，https://github.com/PaddlePaddle/Paddle/issues/36801 。&lt;/p>
 &lt;p>只能把 PaddleOCR 放在 Docker 运行了。不过官方镜像的体积高达 11G，我只需要 OCR 功能，不做样本训练，应该有很大的精简空间。&lt;/p>
 &lt;p>此前在 VPS 上的 ubuntu 20.04 里用过 PaddleOCR，故选择 ubuntu 20.04 做基础镜像。群晖 NAS 上有多个 Docker 服务，PaddleOCR 同样丢群晖跑。&lt;/p>
-&lt;h2 id="运行-ubuntu-2004">运行 ubuntu 20.04&lt;/h2>
-&lt;p>ssh 登录群晖后，执行 &lt;code>sudo su&lt;/code>，输入当前用户的密码，切换到 &lt;strong>root&lt;/strong>。&lt;/p>
+&lt;h2 id="运行-ubuntu-2004">运行 ubuntu 20.04
+&lt;/h2>&lt;p>ssh 登录群晖后，执行 &lt;code>sudo su&lt;/code>，输入当前用户的密码，切换到 &lt;strong>root&lt;/strong>。&lt;/p>
 &lt;p>执行下面命令，进入 ubuntu 的 bash 终端&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -18,8 +18,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker run -it ubuntu:20.04 bash
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="系统的软件源换成阿里云">系统的软件源换成阿里云&lt;/h2>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;/div>&lt;h2 id="系统的软件源换成阿里云">系统的软件源换成阿里云
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;span class="lnt">2
@@ -31,8 +31,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">apt-get update
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="安装-python-环境">安装 python 环境&lt;/h2>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;/div>&lt;h2 id="安装-python-环境">安装 python 环境
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;span class="lnt">2
@@ -46,8 +46,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">echo &amp;#39;index-url = https://pypi.doubanio.com/simple&amp;#39; &amp;gt;&amp;gt; /root/.pip/pip.conf
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="安装-paddleocr">安装 PaddleOCR&lt;/h2>
-&lt;p>按官方文档操作，https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.4/doc/doc_ch/quickstart.md&lt;/p>
+&lt;/div>&lt;h2 id="安装-paddleocr">安装 PaddleOCR
+&lt;/h2>&lt;p>按官方文档操作，https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.4/doc/doc_ch/quickstart.md&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -59,10 +59,10 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>一切进展顺利，下面开始踩坑&lt;/p>
-&lt;h2 id="填坑过程">填坑过程&lt;/h2>
-&lt;p>执行 &lt;code>paddleocr -h&lt;/code>, 看是否有报错信息。错误一个接一个的来，下面安出现顺序解决&lt;/p>
-&lt;h3 id="modulenotfounderror-no-module-named-paddlefluidcore_noavx">ModuleNotFoundError: No module named &amp;lsquo;paddle.fluid.core_noavx&amp;rsquo;&lt;/h3>
-&lt;p>群晖的 CPU 太古老了，不支持 AVX(Advanced Vector Extensions) 指令集, 需要 noavx 的预编译包。
+&lt;h2 id="填坑过程">填坑过程
+&lt;/h2>&lt;p>执行 &lt;code>paddleocr -h&lt;/code>, 看是否有报错信息。错误一个接一个的来，下面安出现顺序解决&lt;/p>
+&lt;h3 id="modulenotfounderror-no-module-named-paddlefluidcore_noavx">ModuleNotFoundError: No module named &amp;lsquo;paddle.fluid.core_noavx&amp;rsquo;
+&lt;/h3>&lt;p>群晖的 CPU 太古老了，不支持 AVX(Advanced Vector Extensions) 指令集, 需要 noavx 的预编译包。
 在这个 issue &lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
 >https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a> 中找到线索，官方的预先编译 whl 列表 &lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
 >https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a>&lt;/p>
@@ -92,16 +92,16 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pip install --force-reinstal paddlepaddle-2.2.2-cp38-cp38-linux_x86_64.whl
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="importerror-libglso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libGL.so.1: cannot open shared object file: No such file or directory&lt;/h3>
-&lt;p>&lt;code>pip install opencv-python-headless==4.2.0.32&lt;/code>&lt;/p>
-&lt;h3 id="importerror-libgthread-20so0-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgthread-2.0.so.0: cannot open shared object file: No such file or directory&lt;/h3>
-&lt;p>&lt;code>apt-get install libglib2.0-0 libsm6 libxrender1 libxext6&lt;/code>&lt;/p>
+&lt;/div>&lt;h3 id="importerror-libglso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libGL.so.1: cannot open shared object file: No such file or directory
+&lt;/h3>&lt;p>&lt;code>pip install opencv-python-headless==4.2.0.32&lt;/code>&lt;/p>
+&lt;h3 id="importerror-libgthread-20so0-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgthread-2.0.so.0: cannot open shared object file: No such file or directory
+&lt;/h3>&lt;p>&lt;code>apt-get install libglib2.0-0 libsm6 libxrender1 libxext6&lt;/code>&lt;/p>
 &lt;p>中途会出现选择时区的交互，依次选择 &lt;code>6. Asia&lt;/code> - &lt;code>19. Chongqing&lt;/code>&lt;/p>
-&lt;h3 id="importerror-libgompso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgomp.so.1: cannot open shared object file: No such file or directory&lt;/h3>
-&lt;p>&lt;code>apt-get install libgomp1&lt;/code>&lt;/p>
+&lt;h3 id="importerror-libgompso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgomp.so.1: cannot open shared object file: No such file or directory
+&lt;/h3>&lt;p>&lt;code>apt-get install libgomp1&lt;/code>&lt;/p>
 &lt;p>至此，paddleocr 可以正常运行。&lt;/p>
-&lt;h2 id="添加-api">添加 API&lt;/h2>
-&lt;p>使用 flask 提供简单的 ocr 识别 API，可以上传图片或者从 url 下载图片，输出格式可选 text 或者 json，默认 text。&lt;/p>
+&lt;h2 id="添加-api">添加 API
+&lt;/h2>&lt;p>使用 flask 提供简单的 ocr 识别 API，可以上传图片或者从 url 下载图片，输出格式可选 text 或者 json，默认 text。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
@@ -164,8 +164,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">ret&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="api-使用">API 使用&lt;/h3>
-&lt;ul>
+&lt;/div>&lt;h3 id="api-使用">API 使用
+&lt;/h3>&lt;ul>
 &lt;li>
 &lt;p>上传文件识别, 输出 text 格式&lt;/p>
 &lt;p>&lt;code> curl 127.0.0.1:5000/ocr -F img=@/tmp/img.png&lt;/code>&lt;/p>
@@ -175,8 +175,8 @@
 &lt;code>curl 127.0.0.1:5000/ocr -F imgurl=https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/doc/imgs_en/254.jpg -F outtype=json&lt;/code>&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;h2 id="创建-dockerfile">创建 Dockerfile&lt;/h2>
-&lt;p>上面提到的安装过程中需要交互选择时区，会中断 docker 编译，通过设置 &lt;code>ENV DEBIAN_FRONTEND=noninteractive&lt;/code> 来规避&lt;/p>
+&lt;h2 id="创建-dockerfile">创建 Dockerfile
+&lt;/h2>&lt;p>上面提到的安装过程中需要交互选择时区，会中断 docker 编译，通过设置 &lt;code>ENV DEBIAN_FRONTEND=noninteractive&lt;/code> 来规避&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
@@ -232,8 +232,8 @@
 &lt;p>Docker Hub 地址 &lt;a class="link" href="https://hub.docker.com/r/c403/paddleocr" target="_blank" rel="noopener"
 >https://hub.docker.com/r/c403/paddleocr&lt;/a>&lt;/p>
 &lt;p>最后吐槽一下，PaddleOCR 的文档太混乱了, 很多内容在 issues 里，不在文档。&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
 >https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
@@ -249,15 +249,15 @@
 &lt;li>&lt;a class="link" href="https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai" target="_blank" rel="noopener"
 >https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;img src="https://oss-cn-hangzhou.aliyuncs.com/codingsky/cdn/img/2019-07-25/dc29fbcc14b8c4acce61ba33a7f2af63.jpg" alt="Featured image of post 利用 Pixel 一代的无限存储备份 NAS 照片" />&lt;p>Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p>
-&lt;h2 id="tldr">TLDR&lt;/h2>
-&lt;h3 id="手机端设置">手机端设置&lt;/h3>
-&lt;ol>
+&lt;h2 id="tldr">TLDR
+&lt;/h2>&lt;h3 id="手机端设置">手机端设置
+&lt;/h3>&lt;ol>
 &lt;li>Pixel 手机无需 root，安装 &lt;a class="link" href="https://play.google.com/store/apps/details?id=pl.solidexplorer2" target="_blank" rel="noopener"
 >Solid Explorer&lt;/a>, 开启 FTP 服务。FTP 默认端口 9999, 默认目录 /sdcard/Download/。&lt;/li>
 &lt;li>在 FTP 目录放一张图片（使用 Solid Explorer 复制、浏览器从网上下载、FTP 上传均可），Google Photos 会询问是否备份此目录，选备份。&lt;/li>
 &lt;/ol>
-&lt;h3 id="nas-设置">NAS 设置&lt;/h3>
-&lt;p>群晖自带的 curl 不支持 FTP，需要下载一个静态编译开启 FTP 支持的 curl。可以在 &lt;a class="link" href="https://github.com/moparisthebest/static-curl/releases" target="_blank" rel="noopener"
+&lt;h3 id="nas-设置">NAS 设置
+&lt;/h3>&lt;p>群晖自带的 curl 不支持 FTP，需要下载一个静态编译开启 FTP 支持的 curl。可以在 &lt;a class="link" href="https://github.com/moparisthebest/static-curl/releases" target="_blank" rel="noopener"
 >https://github.com/moparisthebest/static-curl/releases&lt;/a> 下载。&lt;/p>
 &lt;ol>
 &lt;li>下载 curl 并重命名成 &lt;strong>curl-amd64&lt;/strong>, 并执行 &lt;code>chmod +x curl-amd64&lt;/code>&lt;/li>
@@ -279,9 +279,9 @@
 &lt;/ul>
 &lt;p>点击确定后，右键-运行，即可在手机上看到上传的照片/视频。&lt;/p>
 &lt;p>脚本根据 NAS 上照片的修改时间来增量备份，需要定期去手机上释放空间，避免手机空间占满。具体操作路径：Google 相册-右上角头像-释放空间。&lt;/p>
-&lt;h2 id="20220320-更新使用-autojs-自动释放手机空间">2022.03.20 更新，使用 Autojs 自动释放手机空间&lt;/h2>
-&lt;h3 id="环境准备">环境准备&lt;/h3>
-&lt;ul>
+&lt;h2 id="20220320-更新使用-autojs-自动释放手机空间">2022.03.20 更新，使用 Autojs 自动释放手机空间
+&lt;/h2>&lt;h3 id="环境准备">环境准备
+&lt;/h3>&lt;ul>
 &lt;li>&lt;a class="link" href="https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk" target="_blank" rel="noopener"
 >https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://raw.githubusercontent.com/4ft35t/utils/master/autojs/utils.js" target="_blank" rel="noopener"
@@ -289,8 +289,8 @@
 &lt;li>&lt;a class="link" href="https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js" target="_blank" rel="noopener"
 >https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h3 id="操作步骤">操作步骤&lt;/h3>
-&lt;ol>
+&lt;h3 id="操作步骤">操作步骤
+&lt;/h3>&lt;ol>
 &lt;li>安装 autojs, 运行 app， 并按照提示打开无障碍服务。&lt;/li>
 &lt;li>将 utils.js 和 google-photo-free-up-space.js 放到手机 /sdcard/Scripts 目录&lt;/li>
 &lt;li>打开 autojs，下拉刷新，点击 google-photo-free-up-space.js 右边的三角符号运行&lt;/li>
@@ -379,16 +379,16 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">hide&lt;/span>&lt;span class="p">()&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="踩坑过程">踩坑过程&lt;/h2>
-&lt;p>最初的设想，termux 安装 rclone, 然后将 NAS 共享目录挂载到本地目录，最后在相册里备份本地目录。&lt;/p>
+&lt;/div>&lt;h2 id="踩坑过程">踩坑过程
+&lt;/h2>&lt;p>最初的设想，termux 安装 rclone, 然后将 NAS 共享目录挂载到本地目录，最后在相册里备份本地目录。&lt;/p>
 &lt;p>&lt;del>&lt;strong>rclone 挂载 SFTP&lt;/strong>&lt;/del>&lt;/p>
 &lt;p>群晖开启 STFP 支持，手机上 termux 里配置 rclone 一切正常，到执行 rclone mount 时报 &lt;code>/etc/fstab&lt;/code> 问题，具体记不清，因该是和手机没有 root 有关。&lt;/p>
 &lt;p>&lt;del>&lt;strong>rclone 挂载 WebDAV&lt;/strong>&lt;/del>&lt;/p>
 &lt;p>WebDAV 在 rclone 里不支持 rclone mount。&lt;/p>
 &lt;p>&lt;del>&lt;strong>挂载 SMB 共享文件夹&lt;/strong>&lt;/del>&lt;/p>
 &lt;p>找了几个文件管理器，都只能挂载给自己使用，不能提供给别的 app。只有 root 后才能全局挂载。&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ol>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ol>
 &lt;li>&lt;a class="link" href="https://support.google.com/photos/answer/6220791" target="_blank" rel="noopener"
 >Choose the upload size of your photos &amp;amp; videos&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.reddit.com/r/GooglePixel/comments/l9m6nk/how_to_use_og_pixel_as_an_unlimited_google_photos/" target="_blank" rel="noopener"
@@ -400,8 +400,8 @@
 &lt;li>&lt;a class="link" href="https://pmiku.com/note/mount-cifs-in-android.html" target="_blank" rel="noopener"
 >mount-cifs-in-android&lt;/a>&lt;/li>
 &lt;/ol></description></item><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;img src="https://pic1.zhimg.com/v2-6101b6f0fb5664fd5f959332faefb38f_1440w.jpg" alt="Featured image of post bash 条件退出踩坑" />&lt;p>一个小脚本，&lt;code>[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code>,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p>
-&lt;h3 id="排查">排查&lt;/h3>
-&lt;p>这个写法以前在脚本里经常写，稳定运行未出错。对比之前的脚本后发现差异，之前的脚本 exit 是提前退出，后面还有内容；这个脚本exit是上层调用脚本反馈最终结果，exit 是最后一行。&lt;/p>
+&lt;h3 id="排查">排查
+&lt;/h3>&lt;p>这个写法以前在脚本里经常写，稳定运行未出错。对比之前的脚本后发现差异，之前的脚本 exit 是提前退出，后面还有内容；这个脚本exit是上层调用脚本反馈最终结果，exit 是最后一行。&lt;/p>
 &lt;p>修改脚本后一切正常&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -415,8 +415,8 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">echo&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="原因分析">原因分析&lt;/h3>
-&lt;p>使用　bash -x 可以看出差异，&lt;/p>
+&lt;/div>&lt;h3 id="原因分析">原因分析
+&lt;/h3>&lt;p>使用　bash -x 可以看出差异，&lt;/p>
 &lt;p>exit　在最后一行&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -446,8 +446,8 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>shell 会将最后一条命令的返回状态码作为整个脚本的返回状态码。test 在最后一行时，&lt;code>[ $status != &amp;quot;success&amp;quot; ]&lt;/code> 的返回结果非0，后面的　&amp;amp;&amp;amp; 内容不会执行，整个脚本结束，脚本返回状态码就是中括号内test命令的反馈状态码。　　　　　　&lt;/p>
-&lt;h3 id="避坑经验">避坑经验&lt;/h3>
-&lt;ul>
+&lt;h3 id="避坑经验">避坑经验
+&lt;/h3>&lt;ul>
 &lt;li>退出用或逻辑 &lt;code>||&lt;/code>，避免用与逻辑 &lt;del>&amp;amp;&amp;amp;&lt;/del>&lt;/li>
 &lt;li>一定要用 &lt;strong>&amp;amp;&amp;amp; 做退出条件时，不能作为脚本或者函数的最后一条命令&lt;/strong>&lt;/li>
 &lt;/ul>

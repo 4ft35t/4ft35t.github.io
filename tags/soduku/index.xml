@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Soduku on 4ft35t blog</title><link>https://4ft35t.github.io/tags/soduku/</link><description>Recent content in Soduku on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 07 Aug 2024 21:24:32 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/soduku/index.xml" rel="self" type="application/rss+xml"/><item><title>按人的思维方式解开数独</title><link>https://4ft35t.github.io/post/solve-soduku-like-human-without-backtracking/</link><pubDate>Wed, 07 Aug 2024 21:24:32 +0800</pubDate><guid>https://4ft35t.github.io/post/solve-soduku-like-human-without-backtracking/</guid><description>&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Sudoku_Puzzle_by_L2G-20050714_standardized_layout.svg/722px-Sudoku_Puzzle_by_L2G-20050714_standardized_layout.svg.png" alt="Featured image of post 按人的思维方式解开数独" />&lt;p>数独是一种逻辑游戏，目标是填充一个 9x9 的网格，使得每一行、每一列和每一个 3x3 的子网格中的数字都是 1 到 9。&lt;/p>
 &lt;p>数独的规则非常简单，但是解决数独问题却是一个复杂的任务。在这篇文章中，我们将介绍一种按照人的思维方式解开数独的方法，而不是使用传统的回溯算法。&lt;/p>
-&lt;h2 id="人是如何解开数独的">人是如何解开数独的&lt;/h2>
-&lt;p>我自己解数独的时候，通常会按照以下步骤进行：&lt;/p>
+&lt;h2 id="人是如何解开数独的">人是如何解开数独的
+&lt;/h2>&lt;p>我自己解数独的时候，通常会按照以下步骤进行：&lt;/p>
 &lt;ul>
 &lt;li>先找已有 5 个数字的行、列、块，看看是否有数字只能填在某个位置&lt;/li>
 &lt;li>已出现次数较多的某个特定数字，利用行和列的关系，综合确定其在剩余块中的位置&lt;/li>
@@ -16,8 +16,8 @@ loading="lazy"
 &lt;li>再看右边的三个块，有没有 5 出现，右下角的 5 在最右侧，所以右上角的 5 只能在最左侧&lt;/li>
 &lt;/ol>
 &lt;p>人解题的过程，实际是用排除法，逐步缩小数字的可能位置，直到确定唯一位置。&lt;/p>
-&lt;h2 id="202408-更新">2024.08 更新&lt;/h2>
-&lt;p>代码中的 matrix5 无法解开，必须要引入回溯算法。&lt;/p>
+&lt;h2 id="202408-更新">2024.08 更新
+&lt;/h2>&lt;p>代码中的 matrix5 无法解开，必须要引入回溯算法。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
@@ -46,16 +46,16 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">]&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="用-python-实现">用 Python 实现&lt;/h2>
-&lt;h3 id="设计思路">设计思路&lt;/h3>
-&lt;ol>
+&lt;/div>&lt;h2 id="用-python-实现">用 Python 实现
+&lt;/h2>&lt;h3 id="设计思路">设计思路
+&lt;/h3>&lt;ol>
 &lt;li>初始化时，每个格子的可能值都是 1-9&lt;/li>
 &lt;li>当一个格子确定了数字 n，那么这个格子所在的行、列、块中的其他格子, 都不能填 n, 从它们的可能值中删除 n&lt;/li>
 &lt;li>当一个格子的可能值只有一个时，填入这个数字&lt;/li>
 &lt;li>重复 2 和 3，直到所有格子都填满&lt;/li>
 &lt;/ol>
-&lt;h3 id="伪代码">伪代码&lt;/h3>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h3 id="伪代码">伪代码
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
 &lt;/span>&lt;span class="lnt"> 2
@@ -129,11 +129,11 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cells&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="存在的问题">存在的问题&lt;/h3>
-&lt;p>上面的方法在处理初始数字比较多的数独时，效果很好。但是对于初始数字比较少的数独，可能会陷入死循环。因为这种方法只能处理确定的数字，而不能处理可能的数字。&lt;/p>
-&lt;h3 id="解决方案">解决方案&lt;/h3>
-&lt;p>在每次的 while 循环中，增加一个判断，如果没有任何一个格子的可能值只有一个，那么就选择可能值最少的一个格子，填入可能值的第一个数字。&lt;/p>
+&lt;/div>&lt;h3 id="存在的问题">存在的问题
+&lt;/h3>&lt;p>上面的方法在处理初始数字比较多的数独时，效果很好。但是对于初始数字比较少的数独，可能会陷入死循环。因为这种方法只能处理确定的数字，而不能处理可能的数字。&lt;/p>
+&lt;h3 id="解决方案">解决方案
+&lt;/h3>&lt;p>在每次的 while 循环中，增加一个判断，如果没有任何一个格子的可能值只有一个，那么就选择可能值最少的一个格子，填入可能值的第一个数字。&lt;/p>
 &lt;p>这么做的原因是，这种初始数字少的数独，可能会有多个解，我们只需要找到一个解即可。&lt;/p>
-&lt;h3 id="完整代码">完整代码&lt;/h3>
-&lt;p>&lt;a class="link" href="https://gist.github.com/4ft35t/d284860ff96ddc4d7aae5a4262af907a" target="_blank" rel="noopener"
+&lt;h3 id="完整代码">完整代码
+&lt;/h3>&lt;p>&lt;a class="link" href="https://gist.github.com/4ft35t/d284860ff96ddc4d7aae5a4262af907a" target="_blank" rel="noopener"
 >https://gist.github.com/4ft35t/d284860ff96ddc4d7aae5a4262af907a&lt;/a>&lt;/p></description></item></channel></rss>

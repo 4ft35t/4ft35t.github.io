@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Python on 4ft35t blog</title><link>https://4ft35t.github.io/tags/python/</link><description>Recent content in Python on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 07 Aug 2024 21:24:32 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/python/index.xml" rel="self" type="application/rss+xml"/><item><title>按人的思维方式解开数独</title><link>https://4ft35t.github.io/post/solve-soduku-like-human-without-backtracking/</link><pubDate>Wed, 07 Aug 2024 21:24:32 +0800</pubDate><guid>https://4ft35t.github.io/post/solve-soduku-like-human-without-backtracking/</guid><description>&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Sudoku_Puzzle_by_L2G-20050714_standardized_layout.svg/722px-Sudoku_Puzzle_by_L2G-20050714_standardized_layout.svg.png" alt="Featured image of post 按人的思维方式解开数独" />&lt;p>数独是一种逻辑游戏，目标是填充一个 9x9 的网格，使得每一行、每一列和每一个 3x3 的子网格中的数字都是 1 到 9。&lt;/p>
 &lt;p>数独的规则非常简单，但是解决数独问题却是一个复杂的任务。在这篇文章中，我们将介绍一种按照人的思维方式解开数独的方法，而不是使用传统的回溯算法。&lt;/p>
-&lt;h2 id="人是如何解开数独的">人是如何解开数独的&lt;/h2>
-&lt;p>我自己解数独的时候，通常会按照以下步骤进行：&lt;/p>
+&lt;h2 id="人是如何解开数独的">人是如何解开数独的
+&lt;/h2>&lt;p>我自己解数独的时候，通常会按照以下步骤进行：&lt;/p>
 &lt;ul>
 &lt;li>先找已有 5 个数字的行、列、块，看看是否有数字只能填在某个位置&lt;/li>
 &lt;li>已出现次数较多的某个特定数字，利用行和列的关系，综合确定其在剩余块中的位置&lt;/li>
@@ -16,8 +16,8 @@ loading="lazy"
 &lt;li>再看右边的三个块，有没有 5 出现，右下角的 5 在最右侧，所以右上角的 5 只能在最左侧&lt;/li>
 &lt;/ol>
 &lt;p>人解题的过程，实际是用排除法，逐步缩小数字的可能位置，直到确定唯一位置。&lt;/p>
-&lt;h2 id="202408-更新">2024.08 更新&lt;/h2>
-&lt;p>代码中的 matrix5 无法解开，必须要引入回溯算法。&lt;/p>
+&lt;h2 id="202408-更新">2024.08 更新
+&lt;/h2>&lt;p>代码中的 matrix5 无法解开，必须要引入回溯算法。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
@@ -46,16 +46,16 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">]&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="用-python-实现">用 Python 实现&lt;/h2>
-&lt;h3 id="设计思路">设计思路&lt;/h3>
-&lt;ol>
+&lt;/div>&lt;h2 id="用-python-实现">用 Python 实现
+&lt;/h2>&lt;h3 id="设计思路">设计思路
+&lt;/h3>&lt;ol>
 &lt;li>初始化时，每个格子的可能值都是 1-9&lt;/li>
 &lt;li>当一个格子确定了数字 n，那么这个格子所在的行、列、块中的其他格子, 都不能填 n, 从它们的可能值中删除 n&lt;/li>
 &lt;li>当一个格子的可能值只有一个时，填入这个数字&lt;/li>
 &lt;li>重复 2 和 3，直到所有格子都填满&lt;/li>
 &lt;/ol>
-&lt;h3 id="伪代码">伪代码&lt;/h3>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;h3 id="伪代码">伪代码
+&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
 &lt;/span>&lt;span class="lnt"> 2
@@ -129,13 +129,13 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cells&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="存在的问题">存在的问题&lt;/h3>
-&lt;p>上面的方法在处理初始数字比较多的数独时，效果很好。但是对于初始数字比较少的数独，可能会陷入死循环。因为这种方法只能处理确定的数字，而不能处理可能的数字。&lt;/p>
-&lt;h3 id="解决方案">解决方案&lt;/h3>
-&lt;p>在每次的 while 循环中，增加一个判断，如果没有任何一个格子的可能值只有一个，那么就选择可能值最少的一个格子，填入可能值的第一个数字。&lt;/p>
+&lt;/div>&lt;h3 id="存在的问题">存在的问题
+&lt;/h3>&lt;p>上面的方法在处理初始数字比较多的数独时，效果很好。但是对于初始数字比较少的数独，可能会陷入死循环。因为这种方法只能处理确定的数字，而不能处理可能的数字。&lt;/p>
+&lt;h3 id="解决方案">解决方案
+&lt;/h3>&lt;p>在每次的 while 循环中，增加一个判断，如果没有任何一个格子的可能值只有一个，那么就选择可能值最少的一个格子，填入可能值的第一个数字。&lt;/p>
 &lt;p>这么做的原因是，这种初始数字少的数独，可能会有多个解，我们只需要找到一个解即可。&lt;/p>
-&lt;h3 id="完整代码">完整代码&lt;/h3>
-&lt;p>&lt;a class="link" href="https://gist.github.com/4ft35t/d284860ff96ddc4d7aae5a4262af907a" target="_blank" rel="noopener"
+&lt;h3 id="完整代码">完整代码
+&lt;/h3>&lt;p>&lt;a class="link" href="https://gist.github.com/4ft35t/d284860ff96ddc4d7aae5a4262af907a" target="_blank" rel="noopener"
 >https://gist.github.com/4ft35t/d284860ff96ddc4d7aae5a4262af907a&lt;/a>&lt;/p></description></item><item><title>群晖 NAS 上运行 PaddleOCR</title><link>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</link><pubDate>Thu, 21 Apr 2022 19:22:21 +0800</pubDate><guid>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</guid><description>&lt;img src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.6/doc/PaddleOCR_log.png" alt="Featured image of post 群晖 NAS 上运行 PaddleOCR" />&lt;p>本文的起因是 Manjaro 的 python 版本升级到 3.10 后，PaddleOCR 无法运行。尝试用 pyenv 安装 3.9.10 版 python 后，执行命令 &lt;code>paddleocr&lt;/code> 报错&lt;/p>
 &lt;blockquote>
 &lt;p>ImportError: /opt/github/ocr/venv3910/lib/python3.9/site-packages/paddle/fluid/core_avx.so: undefined symbol: _dl_sym, version GLIBC_PRIVATE&lt;/p>
@@ -143,8 +143,8 @@ loading="lazy"
 &lt;p>这个报错，在 PaddleOCR 官方的 github 仓库 issue 有人发过, ubuntu 20.10 上遇到此报错，https://github.com/PaddlePaddle/Paddle/issues/36801 。&lt;/p>
 &lt;p>只能把 PaddleOCR 放在 Docker 运行了。不过官方镜像的体积高达 11G，我只需要 OCR 功能，不做样本训练，应该有很大的精简空间。&lt;/p>
 &lt;p>此前在 VPS 上的 ubuntu 20.04 里用过 PaddleOCR，故选择 ubuntu 20.04 做基础镜像。群晖 NAS 上有多个 Docker 服务，PaddleOCR 同样丢群晖跑。&lt;/p>
-&lt;h2 id="运行-ubuntu-2004">运行 ubuntu 20.04&lt;/h2>
-&lt;p>ssh 登录群晖后，执行 &lt;code>sudo su&lt;/code>，输入当前用户的密码，切换到 &lt;strong>root&lt;/strong>。&lt;/p>
+&lt;h2 id="运行-ubuntu-2004">运行 ubuntu 20.04
+&lt;/h2>&lt;p>ssh 登录群晖后，执行 &lt;code>sudo su&lt;/code>，输入当前用户的密码，切换到 &lt;strong>root&lt;/strong>。&lt;/p>
 &lt;p>执行下面命令，进入 ubuntu 的 bash 终端&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
@@ -156,8 +156,8 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker run -it ubuntu:20.04 bash
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="系统的软件源换成阿里云">系统的软件源换成阿里云&lt;/h2>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;/div>&lt;h2 id="系统的软件源换成阿里云">系统的软件源换成阿里云
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;span class="lnt">2
@@ -169,8 +169,8 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">apt-get update
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="安装-python-环境">安装 python 环境&lt;/h2>
-&lt;div class="highlight">&lt;div class="chroma">
+&lt;/div>&lt;h2 id="安装-python-环境">安装 python 环境
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
 &lt;/span>&lt;span class="lnt">2
@@ -184,8 +184,8 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">echo &amp;#39;index-url = https://pypi.doubanio.com/simple&amp;#39; &amp;gt;&amp;gt; /root/.pip/pip.conf
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="安装-paddleocr">安装 PaddleOCR&lt;/h2>
-&lt;p>按官方文档操作，https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.4/doc/doc_ch/quickstart.md&lt;/p>
+&lt;/div>&lt;h2 id="安装-paddleocr">安装 PaddleOCR
+&lt;/h2>&lt;p>按官方文档操作，https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.4/doc/doc_ch/quickstart.md&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
@@ -197,10 +197,10 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
 &lt;/div>&lt;p>一切进展顺利，下面开始踩坑&lt;/p>
-&lt;h2 id="填坑过程">填坑过程&lt;/h2>
-&lt;p>执行 &lt;code>paddleocr -h&lt;/code>, 看是否有报错信息。错误一个接一个的来，下面安出现顺序解决&lt;/p>
-&lt;h3 id="modulenotfounderror-no-module-named-paddlefluidcore_noavx">ModuleNotFoundError: No module named &amp;lsquo;paddle.fluid.core_noavx&amp;rsquo;&lt;/h3>
-&lt;p>群晖的 CPU 太古老了，不支持 AVX(Advanced Vector Extensions) 指令集, 需要 noavx 的预编译包。
+&lt;h2 id="填坑过程">填坑过程
+&lt;/h2>&lt;p>执行 &lt;code>paddleocr -h&lt;/code>, 看是否有报错信息。错误一个接一个的来，下面安出现顺序解决&lt;/p>
+&lt;h3 id="modulenotfounderror-no-module-named-paddlefluidcore_noavx">ModuleNotFoundError: No module named &amp;lsquo;paddle.fluid.core_noavx&amp;rsquo;
+&lt;/h3>&lt;p>群晖的 CPU 太古老了，不支持 AVX(Advanced Vector Extensions) 指令集, 需要 noavx 的预编译包。
 在这个 issue &lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
 >https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a> 中找到线索，官方的预先编译 whl 列表 &lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
 >https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a>&lt;/p>
@@ -230,16 +230,16 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pip install --force-reinstal paddlepaddle-2.2.2-cp38-cp38-linux_x86_64.whl
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="importerror-libglso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libGL.so.1: cannot open shared object file: No such file or directory&lt;/h3>
-&lt;p>&lt;code>pip install opencv-python-headless==4.2.0.32&lt;/code>&lt;/p>
-&lt;h3 id="importerror-libgthread-20so0-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgthread-2.0.so.0: cannot open shared object file: No such file or directory&lt;/h3>
-&lt;p>&lt;code>apt-get install libglib2.0-0 libsm6 libxrender1 libxext6&lt;/code>&lt;/p>
+&lt;/div>&lt;h3 id="importerror-libglso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libGL.so.1: cannot open shared object file: No such file or directory
+&lt;/h3>&lt;p>&lt;code>pip install opencv-python-headless==4.2.0.32&lt;/code>&lt;/p>
+&lt;h3 id="importerror-libgthread-20so0-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgthread-2.0.so.0: cannot open shared object file: No such file or directory
+&lt;/h3>&lt;p>&lt;code>apt-get install libglib2.0-0 libsm6 libxrender1 libxext6&lt;/code>&lt;/p>
 &lt;p>中途会出现选择时区的交互，依次选择 &lt;code>6. Asia&lt;/code> - &lt;code>19. Chongqing&lt;/code>&lt;/p>
-&lt;h3 id="importerror-libgompso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgomp.so.1: cannot open shared object file: No such file or directory&lt;/h3>
-&lt;p>&lt;code>apt-get install libgomp1&lt;/code>&lt;/p>
+&lt;h3 id="importerror-libgompso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgomp.so.1: cannot open shared object file: No such file or directory
+&lt;/h3>&lt;p>&lt;code>apt-get install libgomp1&lt;/code>&lt;/p>
 &lt;p>至此，paddleocr 可以正常运行。&lt;/p>
-&lt;h2 id="添加-api">添加 API&lt;/h2>
-&lt;p>使用 flask 提供简单的 ocr 识别 API，可以上传图片或者从 url 下载图片，输出格式可选 text 或者 json，默认 text。&lt;/p>
+&lt;h2 id="添加-api">添加 API
+&lt;/h2>&lt;p>使用 flask 提供简单的 ocr 识别 API，可以上传图片或者从 url 下载图片，输出格式可选 text 或者 json，默认 text。&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
@@ -302,8 +302,8 @@ loading="lazy"
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">ret&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h3 id="api-使用">API 使用&lt;/h3>
-&lt;ul>
+&lt;/div>&lt;h3 id="api-使用">API 使用
+&lt;/h3>&lt;ul>
 &lt;li>
 &lt;p>上传文件识别, 输出 text 格式&lt;/p>
 &lt;p>&lt;code> curl 127.0.0.1:5000/ocr -F img=@/tmp/img.png&lt;/code>&lt;/p>
@@ -313,8 +313,8 @@ loading="lazy"
 &lt;code>curl 127.0.0.1:5000/ocr -F imgurl=https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/doc/imgs_en/254.jpg -F outtype=json&lt;/code>&lt;/p>
 &lt;/li>
 &lt;/ul>
-&lt;h2 id="创建-dockerfile">创建 Dockerfile&lt;/h2>
-&lt;p>上面提到的安装过程中需要交互选择时区，会中断 docker 编译，通过设置 &lt;code>ENV DEBIAN_FRONTEND=noninteractive&lt;/code> 来规避&lt;/p>
+&lt;h2 id="创建-dockerfile">创建 Dockerfile
+&lt;/h2>&lt;p>上面提到的安装过程中需要交互选择时区，会中断 docker 编译，通过设置 &lt;code>ENV DEBIAN_FRONTEND=noninteractive&lt;/code> 来规避&lt;/p>
 &lt;div class="highlight">&lt;div class="chroma">
 &lt;table class="lntable">&lt;tr>&lt;td class="lntd">
 &lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
@@ -370,8 +370,8 @@ loading="lazy"
 &lt;p>Docker Hub 地址 &lt;a class="link" href="https://hub.docker.com/r/c403/paddleocr" target="_blank" rel="noopener"
 >https://hub.docker.com/r/c403/paddleocr&lt;/a>&lt;/p>
 &lt;p>最后吐槽一下，PaddleOCR 的文档太混乱了, 很多内容在 issues 里，不在文档。&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ul>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
 >https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"

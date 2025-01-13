@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Google on 4ft35t blog</title><link>https://4ft35t.github.io/tags/google/</link><description>Recent content in Google on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 27 Feb 2022 23:41:49 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/google/index.xml" rel="self" type="application/rss+xml"/><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;img src="https://oss-cn-hangzhou.aliyuncs.com/codingsky/cdn/img/2019-07-25/dc29fbcc14b8c4acce61ba33a7f2af63.jpg" alt="Featured image of post 利用 Pixel 一代的无限存储备份 NAS 照片" />&lt;p>Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p>
-&lt;h2 id="tldr">TLDR&lt;/h2>
-&lt;h3 id="手机端设置">手机端设置&lt;/h3>
-&lt;ol>
+&lt;h2 id="tldr">TLDR
+&lt;/h2>&lt;h3 id="手机端设置">手机端设置
+&lt;/h3>&lt;ol>
 &lt;li>Pixel 手机无需 root，安装 &lt;a class="link" href="https://play.google.com/store/apps/details?id=pl.solidexplorer2" target="_blank" rel="noopener"
 >Solid Explorer&lt;/a>, 开启 FTP 服务。FTP 默认端口 9999, 默认目录 /sdcard/Download/。&lt;/li>
 &lt;li>在 FTP 目录放一张图片（使用 Solid Explorer 复制、浏览器从网上下载、FTP 上传均可），Google Photos 会询问是否备份此目录，选备份。&lt;/li>
 &lt;/ol>
-&lt;h3 id="nas-设置">NAS 设置&lt;/h3>
-&lt;p>群晖自带的 curl 不支持 FTP，需要下载一个静态编译开启 FTP 支持的 curl。可以在 &lt;a class="link" href="https://github.com/moparisthebest/static-curl/releases" target="_blank" rel="noopener"
+&lt;h3 id="nas-设置">NAS 设置
+&lt;/h3>&lt;p>群晖自带的 curl 不支持 FTP，需要下载一个静态编译开启 FTP 支持的 curl。可以在 &lt;a class="link" href="https://github.com/moparisthebest/static-curl/releases" target="_blank" rel="noopener"
 >https://github.com/moparisthebest/static-curl/releases&lt;/a> 下载。&lt;/p>
 &lt;ol>
 &lt;li>下载 curl 并重命名成 &lt;strong>curl-amd64&lt;/strong>, 并执行 &lt;code>chmod +x curl-amd64&lt;/code>&lt;/li>
@@ -29,9 +29,9 @@
 &lt;/ul>
 &lt;p>点击确定后，右键-运行，即可在手机上看到上传的照片/视频。&lt;/p>
 &lt;p>脚本根据 NAS 上照片的修改时间来增量备份，需要定期去手机上释放空间，避免手机空间占满。具体操作路径：Google 相册-右上角头像-释放空间。&lt;/p>
-&lt;h2 id="20220320-更新使用-autojs-自动释放手机空间">2022.03.20 更新，使用 Autojs 自动释放手机空间&lt;/h2>
-&lt;h3 id="环境准备">环境准备&lt;/h3>
-&lt;ul>
+&lt;h2 id="20220320-更新使用-autojs-自动释放手机空间">2022.03.20 更新，使用 Autojs 自动释放手机空间
+&lt;/h2>&lt;h3 id="环境准备">环境准备
+&lt;/h3>&lt;ul>
 &lt;li>&lt;a class="link" href="https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk" target="_blank" rel="noopener"
 >https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://raw.githubusercontent.com/4ft35t/utils/master/autojs/utils.js" target="_blank" rel="noopener"
@@ -39,8 +39,8 @@
 &lt;li>&lt;a class="link" href="https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js" target="_blank" rel="noopener"
 >https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h3 id="操作步骤">操作步骤&lt;/h3>
-&lt;ol>
+&lt;h3 id="操作步骤">操作步骤
+&lt;/h3>&lt;ol>
 &lt;li>安装 autojs, 运行 app， 并按照提示打开无障碍服务。&lt;/li>
 &lt;li>将 utils.js 和 google-photo-free-up-space.js 放到手机 /sdcard/Scripts 目录&lt;/li>
 &lt;li>打开 autojs，下拉刷新，点击 google-photo-free-up-space.js 右边的三角符号运行&lt;/li>
@@ -129,16 +129,16 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">hide&lt;/span>&lt;span class="p">()&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
 &lt;/div>
-&lt;/div>&lt;h2 id="踩坑过程">踩坑过程&lt;/h2>
-&lt;p>最初的设想，termux 安装 rclone, 然后将 NAS 共享目录挂载到本地目录，最后在相册里备份本地目录。&lt;/p>
+&lt;/div>&lt;h2 id="踩坑过程">踩坑过程
+&lt;/h2>&lt;p>最初的设想，termux 安装 rclone, 然后将 NAS 共享目录挂载到本地目录，最后在相册里备份本地目录。&lt;/p>
 &lt;p>&lt;del>&lt;strong>rclone 挂载 SFTP&lt;/strong>&lt;/del>&lt;/p>
 &lt;p>群晖开启 STFP 支持，手机上 termux 里配置 rclone 一切正常，到执行 rclone mount 时报 &lt;code>/etc/fstab&lt;/code> 问题，具体记不清，因该是和手机没有 root 有关。&lt;/p>
 &lt;p>&lt;del>&lt;strong>rclone 挂载 WebDAV&lt;/strong>&lt;/del>&lt;/p>
 &lt;p>WebDAV 在 rclone 里不支持 rclone mount。&lt;/p>
 &lt;p>&lt;del>&lt;strong>挂载 SMB 共享文件夹&lt;/strong>&lt;/del>&lt;/p>
 &lt;p>找了几个文件管理器，都只能挂载给自己使用，不能提供给别的 app。只有 root 后才能全局挂载。&lt;/p>
-&lt;h2 id="参考链接">参考链接&lt;/h2>
-&lt;ol>
+&lt;h2 id="参考链接">参考链接
+&lt;/h2>&lt;ol>
 &lt;li>&lt;a class="link" href="https://support.google.com/photos/answer/6220791" target="_blank" rel="noopener"
 >Choose the upload size of your photos &amp;amp; videos&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="https://www.reddit.com/r/GooglePixel/comments/l9m6nk/how_to_use_og_pixel_as_an_unlimited_google_photos/" target="_blank" rel="noopener"
