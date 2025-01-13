@@ -1,7 +1,8 @@
 baseURL: https://4ft35t.github.io
 languageCode: zh-cn
 theme: hugo-theme-stack
-paginate: 10
+pagination:
+  pagerSize: 10
 title: "4ft35t blog"
 
 languages:
