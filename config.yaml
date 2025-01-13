@@ -25,12 +25,6 @@ permalinks:
     page: /:slug/
 
 params:
-    customcss:
-    customjs:
-    customjscssraw:
-        - '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9669039894343567" crossorigin="anonymous">
-        </script>'
-
     mainSections:
         - post
     featuredImageField: image
