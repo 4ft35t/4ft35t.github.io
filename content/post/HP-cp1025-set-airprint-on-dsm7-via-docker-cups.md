@@ -31,6 +31,7 @@ chuckcharlie/cups-avahi-airprint 能找到打印机, 但无法打印，提示 "F
 
 ### 玩客云测试
 为了测试 foo2zjs 驱动是否有效， 打开了另一件吃灰的老古董玩客云, 系统是 armbian, 安装了 openmediavault 4。
+
 从 omv-extras 里安装 openmediavault-cups, 然后在 cups web 界面添加打印机, 选择 "HP LaserJet Pro CP1025nw Foomatic/foo2zjs-z3 (en)" 驱动，成功打印测试页。
 
 如果选择 "HP LaserJet Cp1025, hpcups 3.23.12 (en)" 驱动，打印测试页失败，提示 "Filter failed"。
@@ -51,6 +52,7 @@ sudo synosystemctl disable cups-service-handler
 
 #### 运行 docker 容器
 创建配置目录 ` mkdir -p /volume1/docker/airprint/config /volume1/docker/airprint/services `
+
 创建 `/volume1/docker/airprint/docker-compose.yml` 文件:
 ```yaml
 version: '3'
@@ -101,6 +103,7 @@ make install
 打开浏览器访问 `http://群晖IP:631`, 进入 CUPS web 界面, 添加打印机。
 
 Administration - Add Printer - 选择 HP CP1025 打印机 - 下一步勾选 "Share This Printer" - 选择驱动 "HP LaserJet Pro CP1025nw Foomatic/foo2zjs-z3 (en)" - 完成添加。
+
 下一步修改打印机默认选项:
  - Color Mode: Color
  - Resolution: 600x600dpi
@@ -162,7 +165,7 @@ Windows 设备需要去惠普网站下载安装 HP CP1025 驱动，然后添加�
 
 
 ### 参考链接
-- [记一次群辉dsm6.2.3使用cups实现老款打印机cp1025](airprint https://www.bilibili.com/opus/774732308492058647)
+- [记一次群辉dsm6.2.3使用cups实现老款打印机cp1025](https://www.bilibili.com/opus/774732308492058647)
 - [群晖、威联通NAS实现共享打印机+Airprint隔空打印教程，Docker版CUPS，让NAS变身打印服务器！](https://post.smzdm.com/p/ag4p7k7m/)
 - [通过Docker的cups实现定期打印，防止爱普生墨仓式打印机堵墨](https://post.smzdm.com/p/a5xwr0x7/)
 - [群晖dsm7.1 实现老款打印机AirPrint](https://www.bilibili.com/opus/720655857020305463)
