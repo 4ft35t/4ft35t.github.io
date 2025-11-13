@@ -1,162 +1,162 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Bank on 4ft35t blog</title><link>https://4ft35t.github.io/categories/bank/</link><description>Recent content in Bank on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 09 Apr 2023 13:39:11 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/categories/bank/index.xml" rel="self" type="application/rss+xml"/><item><title>中国大陆资料自主激活 Wise</title><link>https://4ft35t.github.io/post/chinese-activate-wise-by-self/</link><pubDate>Sun, 09 Apr 2023 13:39:11 +0800</pubDate><guid>https://4ft35t.github.io/post/chinese-activate-wise-by-self/</guid><description>&lt;img src="https://wise.com/public-resources/assets/icons/wise-personal/share_landscape.png" alt="Featured image of post 中国大陆资料自主激活 Wise" />&lt;p>Wise.com（原TransferWise）是一家总部位于英国的金融科技公司，成立于2011年。该公司的主要业务是提供跨境汇款服务，以低廉的费用和实时汇率吸引了全球数百万用户。与传统银行不同，Wise.com采用P2P（点对点）技术，直接将汇款的资金汇入接收方的账户，从而避免了传统银行的中间商和高昂的手续费。&lt;/p>
-&lt;p>除了跨境汇款服务，Wise.com 还提供了多种其他金融服务，例如多币种账户、预付卡、汇率换算器等。Wise.com的目标是使跨境金融交易更加便捷和透明，并减少用户支付的费用。该公司已经在全球40多个国家和地区设立了办事处，获得了众多投资者的支持，成为金融科技领域的领军企业之一。&lt;/p>
-&lt;h2 id="tldr">TLDR
-&lt;/h2>&lt;p>&lt;strong>国内地址激活的 wise 无法申请 wise 卡。&lt;/strong>&lt;/p>
-&lt;ol>
-&lt;li>护照+国内真实资料注册杜高斯贝银行，获得 IBAN(International Bank Account Number, 国际银行账户号码)&lt;/li>
-&lt;li>护照+国内真实资料注册 bitfinex, 认证后获得 openpayd 提现通道使用资格&lt;/li>
-&lt;li>okex/币安购买 usdt, 再转账到 bitfinex，&lt;/li>
-&lt;li>在 bitfinex 把 usdt 换成欧元，使用 openpayd 通道超低手续费提现到杜高&lt;/li>
-&lt;li>杜高同名转欧元到 wise&lt;/li>
-&lt;/ol>
-&lt;h3 id="202403-更新">2024.03 更新
-&lt;/h3>&lt;p>中国居民已无法在 bitfinex 获得个人 IBAN, 境外交易所不再推荐 bitfinex。&lt;/p>
-&lt;p>kraken.com 交易所提现欧元费用, 单笔 1 欧元，推荐使用。&lt;/p>
-&lt;p>当前路径
-&lt;code>人民币 -&amp;gt; OKX USDT -&amp;gt; Kraken USDT -&amp;gt; EUR -&amp;gt; 杜高 -&amp;gt; wise&lt;/code>&lt;/p>
-&lt;h3 id="202406-更新">2024.06 更新
-&lt;/h3>&lt;ol>
-&lt;li>全套国内资料可以开奕丰集团的&lt;a class="link" href="https://www.ifastgb.com/" target="_blank" rel="noopener"
->iFAST&lt;/a>, 替代杜高，iFAST 汇出英镑免费。视频验证选中文客服，首次入金需要同名，可以用兴业银行寰宇人生借记卡直接汇英镑，&amp;lt;=100 英镑，全程免费。&lt;/li>
-&lt;/ol>
-&lt;p>&lt;strong>有案例反映，iFAST 的银行地址被外汇管理局拉黑，汇款时需要修改银行的地址，银行地址中间随便加几个字母可以汇出。&lt;/strong> 国际汇款地址不影响收款。&lt;/p>
-&lt;p>当前路径
-&lt;code>兴业银行人民币 -&amp;gt; iFAST 英镑 -&amp;gt; wise&lt;/code>&lt;/p>
-&lt;p>iFAST 注册参考 &lt;a class="link" href="https://blog.xiaoz.org/archives/19069" target="_blank" rel="noopener"
->https://blog.xiaoz.org/archives/19069&lt;/a>&lt;/p>
-&lt;ol start="2">
-&lt;li>有案例反映, 兴业寰宇可以直接汇款激活 wise。&lt;/li>
-&lt;/ol>
-&lt;p>汇出给 wise，同样需要修改银行地址&lt;/p>
-&lt;p>当前路径
-&lt;code>兴业银行人民币 -&amp;gt; wise 英镑&lt;/code>&lt;/p>
-&lt;h3 id="我的邀请链接">我的邀请链接
-&lt;/h3>&lt;ul>
-&lt;li>杜高 &lt;a class="link" href="https://www.dukascopy.bank/swiss/open-mca-account/?ref=JER-LXV&amp;amp;lang=cn" target="_blank" rel="noopener"
->https://www.dukascopy.bank/swiss/open-mca-account/?ref=JER-LXV&amp;lang=cn&lt;/a>&lt;/li>
-&lt;li>bitfinex &lt;a class="link" href="https://www.bitfinex.com/sign-up?refcode=5-_prc0oV" target="_blank" rel="noopener"
->https://www.bitfinex.com/sign-up?refcode=5-_prc0oV&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="注册瑞士杜高斯贝银行">注册瑞士杜高斯贝银行
-&lt;/h2>&lt;p>杜高斯贝免开户费、免账户管理费及年费，用全套国内资料可以0成本注册一个正规银行账户。&lt;/p>
-&lt;p>杜高通过 SEPA（简单理解成欧洲的电汇） 转欧元，每笔固定收费 2.3 欧元。&lt;/p>
-&lt;h3 id="注册参考">注册参考
-&lt;/h3>&lt;ul>
-&lt;li>&lt;a class="link" href="https://zhuanlan.zhihu.com/p/369487155" target="_blank" rel="noopener"
->https://zhuanlan.zhihu.com/p/369487155&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=fZCFH4-x_6E" target="_blank" rel="noopener"
->https://www.youtube.com/watch?v=fZCFH4-x_6E&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=zVwwsrwky1k" target="_blank" rel="noopener"
->https://www.youtube.com/watch?v=zVwwsrwky1k&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h3 id="注册要点">注册要点
-&lt;/h3>&lt;ul>
-&lt;li>全部资料用拼音，不要出现中文。比如地址是人民路7号2栋301，直接用拼音就行，不用翻译成英文，Ren min lu 7 hao 2 dong 301&lt;/li>
-&lt;li>使用手机 app 做视频验证时，需要开 VPN，要快就选英文客服，英文不好就等中文客服。英文内容很简单，问下生日、职业，转动一下护照，调整反光角度，来张自拍，基本1分钟就能完成。初中英语就能完成。&lt;/li>
-&lt;li>开户成功后，可以下载账单，0 金额也无所谓。账单可以在 bitfinex 验证时用。操作路径，网页-左上角三横线-history-右侧statement-This Month/Last Month-LOAD REPORT-PDF&lt;/li>
-&lt;li>&lt;strong>从 bitfinex 提现到杜高时，杜高地址里的&lt;code>Pré-Bois&lt;/code>会提示不支持，换成&lt;code>Pre-Bois&lt;/code> 即可&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;h2 id="注册-bitfinex-并完成高级认证">注册 bitfinex 并完成高级认证
-&lt;/h2>&lt;p>bitfinex 完成高级认证后，可以使用 openpayd 通道提现，提现欧元费用超低，单笔 0.5 欧元。&lt;/p>
-&lt;p>openpayd 会用你的姓名开一个账户，收款方看到的转账人就是你自己。openpayd 只能同名转账，所以不能直接接活 wise，wise 激活时的收款人是 wise 的对公账户，所以需要用杜高来中转。wise 激活后会给用你名字开的 IBAN，可以用 openpayd 直接出金到 wise。&lt;/p>
-&lt;h3 id="注册参考-1">注册参考
-&lt;/h3>&lt;ul>
-&lt;li>&lt;a class="link" href="https://www.v2ex.com/t/910724" target="_blank" rel="noopener"
->https://www.v2ex.com/t/910724&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=nCkdbqbSAxw" target="_blank" rel="noopener"
->https://www.youtube.com/watch?v=nCkdbqbSAxw&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h3 id="注册要点-1">注册要点
-&lt;/h3>&lt;ul>
-&lt;li>注册时界面选英文，不要选中文，选中文会因为地址是中文导致出金一直卡在 &amp;lsquo;processing&amp;rsquo; 状态&lt;/li>
-&lt;li>注意 first name 与 last name，中文名张三四，first name: Sansi, last name: Zhang&lt;/li>
-&lt;li>全部资料用拼音，不要出现中文。比如地址是人民路7号2栋301，直接用拼音就行，不用翻译成英文，Ren min lu 7 hao 2 dong 301。我一开始按网上教程填中文地址，完成认证后，提现在processing卡了半个月，咨询客服得到如下回复。修改成拼音，并上传杜高账单做为证明文件，修改成功后再次提现大概3小时到帐。&lt;/li>
-&lt;/ul>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;span class="lnt">6
-&lt;/span>&lt;span class="lnt">7
-&lt;/span>&lt;span class="lnt">8
-&lt;/span>&lt;span class="lnt">9
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">&lt;span class="line">&lt;span class="cl">The withdrawal appears failure due to the resid_street contains non-western chars: xx街; resid_city contains non-western chars: 北京; resid_state contains non-western chars: 北京.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">It means that you had entered residential address in Chinese when you submitted for account verification.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">The withdrawal will be canceled shortly.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">To solve the issue, could you upload a document which contains residential address in English to verification page. Our relevant team can help to update to English accordingly.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">You can retry after it is updated.
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;ul>
-&lt;li>
-&lt;p>金融账户证明和居住地址证明，不能用同一家银行账单。建议居住地址证明用杜高，金融账户用国内银行账单。&lt;/p>
-&lt;p>国内银行账单测试结果&lt;/p>
-&lt;ul>
-&lt;li>中国银行外币信用卡账单可用&lt;/li>
-&lt;li>建行储蓄卡的明细可以用。获取路径，建行app-首页-账户-详情-明细导出-明细导出申请，完成后会发 pdf 到邮箱，解压密码在申请记录里查看&lt;/li>
-&lt;li>招行信用卡的账单不行，只有银行卡尾号。如果要用，需要修改 pdf，4 位尾号改成&lt;code>前8位****后4位&lt;/code>&lt;/li>
-&lt;li>参考建行的流水单，其它银行的储蓄卡电子流水单应该也可以&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>
-&lt;p>如果高级认证提交资料2个工作日后还没有完成，可以用英文发邮件给 &lt;a class="link" href="mailto:support@bitfinex.com" >support@bitfinex.com&lt;/a> 咨询，一般发邮件当天就处理完成了&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="激活-wise">激活 wise
-&lt;/h2>&lt;p>wise 入金 20 欧元，杜高转 wise 需要 2.3 欧元的手续费，大概需要 25 usdt，买 200 人民币的 usdt 足够。&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>okex/币安注册帐号后买 200 人民币 usdt，大概 29 个；推荐okex，实名认证几分钟，币安大概要2周；交易 24 小时后可提现&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>bitfinex 网页-右上角Wallet-Deposit-Tether Tokens-协议选Tether(USD) on Tron-continue，获得钱包地址&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>okex/币安提现 usdt，选择链上交易，网络/协议选 TRC20, 地址填上一步 bitfinex 的钱包地址，扣除 1 usdt 的手续费，大概5分钟后 bitfinex 收到 28 usdt&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>bitfinex usdt 换欧元，可以直接换，网上教程不会操作，中转几次；操作如图，右侧选 usdt，左侧输入eur，点eur，即可开始欧元的USDT的交易；把 Limit（限价）改成 Market（市价），绿色条拉到100%，点绿色Exchange Buy，即可把 usdt 全部换成欧元, 大概 26 欧元&lt;/p>
-&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/04/upgit_20230410_1681119751.jpg"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Bank on 4ft35t blog</title><link>https://4ft35t.github.io/categories/bank/</link><description>Recent content in Bank on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 09 Apr 2023 13:39:11 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/categories/bank/index.xml" rel="self" type="application/rss+xml"/><item><title>中国大陆资料自主激活 Wise</title><link>https://4ft35t.github.io/post/chinese-activate-wise-by-self/</link><pubDate>Sun, 09 Apr 2023 13:39:11 +0800</pubDate><guid>https://4ft35t.github.io/post/chinese-activate-wise-by-self/</guid><description>&lt;img src="https://wise.com/public-resources/assets/icons/wise-personal/share_landscape.png" alt="Featured image of post 中国大陆资料自主激活 Wise" /&gt;&lt;p&gt;Wise.com（原TransferWise）是一家总部位于英国的金融科技公司，成立于2011年。该公司的主要业务是提供跨境汇款服务，以低廉的费用和实时汇率吸引了全球数百万用户。与传统银行不同，Wise.com采用P2P（点对点）技术，直接将汇款的资金汇入接收方的账户，从而避免了传统银行的中间商和高昂的手续费。&lt;/p&gt;
+&lt;p&gt;除了跨境汇款服务，Wise.com 还提供了多种其他金融服务，例如多币种账户、预付卡、汇率换算器等。Wise.com的目标是使跨境金融交易更加便捷和透明，并减少用户支付的费用。该公司已经在全球40多个国家和地区设立了办事处，获得了众多投资者的支持，成为金融科技领域的领军企业之一。&lt;/p&gt;
+&lt;h2 id="tldr"&gt;TLDR
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;国内地址激活的 wise 无法申请 wise 卡。&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;护照+国内真实资料注册杜高斯贝银行，获得 IBAN(International Bank Account Number, 国际银行账户号码)&lt;/li&gt;
+&lt;li&gt;护照+国内真实资料注册 bitfinex, 认证后获得 openpayd 提现通道使用资格&lt;/li&gt;
+&lt;li&gt;okex/币安购买 usdt, 再转账到 bitfinex，&lt;/li&gt;
+&lt;li&gt;在 bitfinex 把 usdt 换成欧元，使用 openpayd 通道超低手续费提现到杜高&lt;/li&gt;
+&lt;li&gt;杜高同名转欧元到 wise&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="202403-更新"&gt;2024.03 更新
+&lt;/h3&gt;&lt;p&gt;中国居民已无法在 bitfinex 获得个人 IBAN, 境外交易所不再推荐 bitfinex。&lt;/p&gt;
+&lt;p&gt;kraken.com 交易所提现欧元费用, 单笔 1 欧元，推荐使用。&lt;/p&gt;
+&lt;p&gt;当前路径
+&lt;code&gt;人民币 -&amp;gt; OKX USDT -&amp;gt; Kraken USDT -&amp;gt; EUR -&amp;gt; 杜高 -&amp;gt; wise&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id="202406-更新"&gt;2024.06 更新
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;全套国内资料可以开奕丰集团的&lt;a class="link" href="https://www.ifastgb.com/" target="_blank" rel="noopener"
+&gt;iFAST&lt;/a&gt;, 替代杜高，iFAST 汇出英镑免费。视频验证选中文客服，首次入金需要同名，可以用兴业银行寰宇人生借记卡直接汇英镑，&amp;lt;=100 英镑，全程免费。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;有案例反映，iFAST 的银行地址被外汇管理局拉黑，汇款时需要修改银行的地址，银行地址中间随便加几个字母可以汇出。&lt;/strong&gt; 国际汇款地址不影响收款。&lt;/p&gt;
+&lt;p&gt;当前路径
+&lt;code&gt;兴业银行人民币 -&amp;gt; iFAST 英镑 -&amp;gt; wise&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;iFAST 注册参考 &lt;a class="link" href="https://blog.xiaoz.org/archives/19069" target="_blank" rel="noopener"
+&gt;https://blog.xiaoz.org/archives/19069&lt;/a&gt;&lt;/p&gt;
+&lt;ol start="2"&gt;
+&lt;li&gt;有案例反映, 兴业寰宇可以直接汇款激活 wise。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;汇出给 wise，同样需要修改银行地址&lt;/p&gt;
+&lt;p&gt;当前路径
+&lt;code&gt;兴业银行人民币 -&amp;gt; wise 英镑&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id="我的邀请链接"&gt;我的邀请链接
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;杜高 &lt;a class="link" href="https://www.dukascopy.bank/swiss/open-mca-account/?ref=JER-LXV&amp;amp;lang=cn" target="_blank" rel="noopener"
+&gt;https://www.dukascopy.bank/swiss/open-mca-account/?ref=JER-LXV&amp;lang=cn&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;bitfinex &lt;a class="link" href="https://www.bitfinex.com/sign-up?refcode=5-_prc0oV" target="_blank" rel="noopener"
+&gt;https://www.bitfinex.com/sign-up?refcode=5-_prc0oV&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="注册瑞士杜高斯贝银行"&gt;注册瑞士杜高斯贝银行
+&lt;/h2&gt;&lt;p&gt;杜高斯贝免开户费、免账户管理费及年费，用全套国内资料可以0成本注册一个正规银行账户。&lt;/p&gt;
+&lt;p&gt;杜高通过 SEPA（简单理解成欧洲的电汇） 转欧元，每笔固定收费 2.3 欧元。&lt;/p&gt;
+&lt;h3 id="注册参考"&gt;注册参考
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://zhuanlan.zhihu.com/p/369487155" target="_blank" rel="noopener"
+&gt;https://zhuanlan.zhihu.com/p/369487155&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.youtube.com/watch?v=fZCFH4-x_6E" target="_blank" rel="noopener"
+&gt;https://www.youtube.com/watch?v=fZCFH4-x_6E&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.youtube.com/watch?v=zVwwsrwky1k" target="_blank" rel="noopener"
+&gt;https://www.youtube.com/watch?v=zVwwsrwky1k&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="注册要点"&gt;注册要点
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;全部资料用拼音，不要出现中文。比如地址是人民路7号2栋301，直接用拼音就行，不用翻译成英文，Ren min lu 7 hao 2 dong 301&lt;/li&gt;
+&lt;li&gt;使用手机 app 做视频验证时，需要开 VPN，要快就选英文客服，英文不好就等中文客服。英文内容很简单，问下生日、职业，转动一下护照，调整反光角度，来张自拍，基本1分钟就能完成。初中英语就能完成。&lt;/li&gt;
+&lt;li&gt;开户成功后，可以下载账单，0 金额也无所谓。账单可以在 bitfinex 验证时用。操作路径，网页-左上角三横线-history-右侧statement-This Month/Last Month-LOAD REPORT-PDF&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;从 bitfinex 提现到杜高时，杜高地址里的&lt;code&gt;Pré-Bois&lt;/code&gt;会提示不支持，换成&lt;code&gt;Pre-Bois&lt;/code&gt; 即可&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="注册-bitfinex-并完成高级认证"&gt;注册 bitfinex 并完成高级认证
+&lt;/h2&gt;&lt;p&gt;bitfinex 完成高级认证后，可以使用 openpayd 通道提现，提现欧元费用超低，单笔 0.5 欧元。&lt;/p&gt;
+&lt;p&gt;openpayd 会用你的姓名开一个账户，收款方看到的转账人就是你自己。openpayd 只能同名转账，所以不能直接接活 wise，wise 激活时的收款人是 wise 的对公账户，所以需要用杜高来中转。wise 激活后会给用你名字开的 IBAN，可以用 openpayd 直接出金到 wise。&lt;/p&gt;
+&lt;h3 id="注册参考-1"&gt;注册参考
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.v2ex.com/t/910724" target="_blank" rel="noopener"
+&gt;https://www.v2ex.com/t/910724&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.youtube.com/watch?v=nCkdbqbSAxw" target="_blank" rel="noopener"
+&gt;https://www.youtube.com/watch?v=nCkdbqbSAxw&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="注册要点-1"&gt;注册要点
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;注册时界面选英文，不要选中文，选中文会因为地址是中文导致出金一直卡在 &amp;lsquo;processing&amp;rsquo; 状态&lt;/li&gt;
+&lt;li&gt;注意 first name 与 last name，中文名张三四，first name: Sansi, last name: Zhang&lt;/li&gt;
+&lt;li&gt;全部资料用拼音，不要出现中文。比如地址是人民路7号2栋301，直接用拼音就行，不用翻译成英文，Ren min lu 7 hao 2 dong 301。我一开始按网上教程填中文地址，完成认证后，提现在processing卡了半个月，咨询客服得到如下回复。修改成拼音，并上传杜高账单做为证明文件，修改成功后再次提现大概3小时到帐。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;span class="lnt"&gt;6
+&lt;/span&gt;&lt;span class="lnt"&gt;7
+&lt;/span&gt;&lt;span class="lnt"&gt;8
+&lt;/span&gt;&lt;span class="lnt"&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;The withdrawal appears failure due to the resid_street contains non-western chars: xx街; resid_city contains non-western chars: 北京; resid_state contains non-western chars: 北京.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;It means that you had entered residential address in Chinese when you submitted for account verification.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;The withdrawal will be canceled shortly.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;To solve the issue, could you upload a document which contains residential address in English to verification page. Our relevant team can help to update to English accordingly.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;You can retry after it is updated.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;金融账户证明和居住地址证明，不能用同一家银行账单。建议居住地址证明用杜高，金融账户用国内银行账单。&lt;/p&gt;
+&lt;p&gt;国内银行账单测试结果&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;中国银行外币信用卡账单可用&lt;/li&gt;
+&lt;li&gt;建行储蓄卡的明细可以用。获取路径，建行app-首页-账户-详情-明细导出-明细导出申请，完成后会发 pdf 到邮箱，解压密码在申请记录里查看&lt;/li&gt;
+&lt;li&gt;招行信用卡的账单不行，只有银行卡尾号。如果要用，需要修改 pdf，4 位尾号改成&lt;code&gt;前8位****后4位&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;参考建行的流水单，其它银行的储蓄卡电子流水单应该也可以&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;如果高级认证提交资料2个工作日后还没有完成，可以用英文发邮件给 &lt;a class="link" href="mailto:support@bitfinex.com" &gt;support@bitfinex.com&lt;/a&gt; 咨询，一般发邮件当天就处理完成了&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="激活-wise"&gt;激活 wise
+&lt;/h2&gt;&lt;p&gt;wise 入金 20 欧元，杜高转 wise 需要 2.3 欧元的手续费，大概需要 25 usdt，买 200 人民币的 usdt 足够。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;okex/币安注册帐号后买 200 人民币 usdt，大概 29 个；推荐okex，实名认证几分钟，币安大概要2周；交易 24 小时后可提现&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;bitfinex 网页-右上角Wallet-Deposit-Tether Tokens-协议选Tether(USD) on Tron-continue，获得钱包地址&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;okex/币安提现 usdt，选择链上交易，网络/协议选 TRC20, 地址填上一步 bitfinex 的钱包地址，扣除 1 usdt 的手续费，大概5分钟后 bitfinex 收到 28 usdt&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;bitfinex usdt 换欧元，可以直接换，网上教程不会操作，中转几次；操作如图，右侧选 usdt，左侧输入eur，点eur，即可开始欧元的USDT的交易；把 Limit（限价）改成 Market（市价），绿色条拉到100%，点绿色Exchange Buy，即可把 usdt 全部换成欧元, 大概 26 欧元&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/04/upgit_20230410_1681119751.jpg"
 loading="lazy"
->&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>杜高网页选择欧元账户-DEPOSIT-BANK TRANSFER-EUR-PROCEED，获得杜高的收款信息，有 IBAN、你的地址、还有银行地址&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>bitfinex 网页-右上角Wallet-WithDraw-Bank transfer-EUR-Max-Openpayd，可以看到手续费只要0.5欧元；下一页先天你杜高收款信息的姓名 IBAN 和地址，再下一页填杜高银行的地址以及 SWIFT；大概3-5小时候杜高收到 25.5 欧元&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>wise 选择入金 20 欧元-Manually transfer the money from your bank-Continue to payment-I understand-Continue-Continue to our bank details 获得收款信息&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>杜高网页选择欧元账户-SEND MONEY-BANK TRANSFER, 填写 wise 的收款信息，货币选 EUR，金额20，会显示总费用22.3欧元, &lt;strong>千万别忘了填 wise 给的转账附言&lt;/strong>，对公帐号是靠附言来判断转账是给谁的。大概3-5小时后，wise 收到20欧元，账户完成激活。&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="总结">总结
-&lt;/h2>&lt;p>200 人民币，到最后 wise 账户最大余额约 23 欧元，约等于 172 人民币，损失大概 15%，如果一切顺利，耗时一周以内。和淘宝的 230 入金 20 美元比，投入产出比没有任何优势。&lt;/p>
-&lt;p>也不知道 wise 账户被风控时，自己用杜高走完激活流程的帐号，是否会比淘宝虚拟卡激活的账户多一些申诉机会？&lt;/p>
-&lt;h2 id="参考链接">参考链接
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://zhuanlan.zhihu.com/p/369487155" target="_blank" rel="noopener"
->https://zhuanlan.zhihu.com/p/369487155&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=fZCFH4-x_6E" target="_blank" rel="noopener"
->https://www.youtube.com/watch?v=fZCFH4-x_6E&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=zVwwsrwky1k" target="_blank" rel="noopener"
->https://www.youtube.com/watch?v=zVwwsrwky1k&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.v2ex.com/t/910724" target="_blank" rel="noopener"
->https://www.v2ex.com/t/910724&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.youtube.com/watch?v=nCkdbqbSAxw" target="_blank" rel="noopener"
->https://www.youtube.com/watch?v=nCkdbqbSAxw&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.dukascopy.bank/swiss/fees-limits/?lang=cn#acc-fees" target="_blank" rel="noopener"
->https://www.dukascopy.bank/swiss/fees-limits/?lang=cn#acc-fees&lt;/a>&lt;/li>
-&lt;/ul></description></item></channel></rss>
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;杜高网页选择欧元账户-DEPOSIT-BANK TRANSFER-EUR-PROCEED，获得杜高的收款信息，有 IBAN、你的地址、还有银行地址&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;bitfinex 网页-右上角Wallet-WithDraw-Bank transfer-EUR-Max-Openpayd，可以看到手续费只要0.5欧元；下一页先天你杜高收款信息的姓名 IBAN 和地址，再下一页填杜高银行的地址以及 SWIFT；大概3-5小时候杜高收到 25.5 欧元&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;wise 选择入金 20 欧元-Manually transfer the money from your bank-Continue to payment-I understand-Continue-Continue to our bank details 获得收款信息&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;杜高网页选择欧元账户-SEND MONEY-BANK TRANSFER, 填写 wise 的收款信息，货币选 EUR，金额20，会显示总费用22.3欧元, &lt;strong&gt;千万别忘了填 wise 给的转账附言&lt;/strong&gt;，对公帐号是靠附言来判断转账是给谁的。大概3-5小时后，wise 收到20欧元，账户完成激活。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="总结"&gt;总结
+&lt;/h2&gt;&lt;p&gt;200 人民币，到最后 wise 账户最大余额约 23 欧元，约等于 172 人民币，损失大概 15%，如果一切顺利，耗时一周以内。和淘宝的 230 入金 20 美元比，投入产出比没有任何优势。&lt;/p&gt;
+&lt;p&gt;也不知道 wise 账户被风控时，自己用杜高走完激活流程的帐号，是否会比淘宝虚拟卡激活的账户多一些申诉机会？&lt;/p&gt;
+&lt;h2 id="参考链接"&gt;参考链接
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://zhuanlan.zhihu.com/p/369487155" target="_blank" rel="noopener"
+&gt;https://zhuanlan.zhihu.com/p/369487155&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.youtube.com/watch?v=fZCFH4-x_6E" target="_blank" rel="noopener"
+&gt;https://www.youtube.com/watch?v=fZCFH4-x_6E&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.youtube.com/watch?v=zVwwsrwky1k" target="_blank" rel="noopener"
+&gt;https://www.youtube.com/watch?v=zVwwsrwky1k&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.v2ex.com/t/910724" target="_blank" rel="noopener"
+&gt;https://www.v2ex.com/t/910724&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.youtube.com/watch?v=nCkdbqbSAxw" target="_blank" rel="noopener"
+&gt;https://www.youtube.com/watch?v=nCkdbqbSAxw&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.dukascopy.bank/swiss/fees-limits/?lang=cn#acc-fees" target="_blank" rel="noopener"
+&gt;https://www.dukascopy.bank/swiss/fees-limits/?lang=cn#acc-fees&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

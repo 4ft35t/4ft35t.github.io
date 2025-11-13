@@ -1,71 +1,71 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Test on 4ft35t blog</title><link>https://4ft35t.github.io/tags/test/</link><description>Recent content in Test on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 19 Jun 2020 17:55:19 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/test/index.xml" rel="self" type="application/rss+xml"/><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;img src="https://pic1.zhimg.com/v2-6101b6f0fb5664fd5f959332faefb38f_1440w.jpg" alt="Featured image of post bash 条件退出踩坑" />&lt;p>一个小脚本，&lt;code>[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code>,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p>
-&lt;h3 id="排查">排查
-&lt;/h3>&lt;p>这个写法以前在脚本里经常写，稳定运行未出错。对比之前的脚本后发现差异，之前的脚本 exit 是提前退出，后面还有内容；这个脚本exit是上层调用脚本反馈最终结果，exit 是最后一行。&lt;/p>
-&lt;p>修改脚本后一切正常&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">status&lt;/span>&lt;span class="o">=&lt;/span>success
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> &lt;span class="nv">$status&lt;/span> !&lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;success&amp;#34;&lt;/span> &lt;span class="o">]&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nb">exit&lt;/span> &lt;span class="m">２&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">echo&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="原因分析">原因分析
-&lt;/h3>&lt;p>使用　bash -x 可以看出差异，&lt;/p>
-&lt;p>exit　在最后一行&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">bash -x t.sh
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+ &lt;span class="nv">status&lt;/span>&lt;span class="o">=&lt;/span>success
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+ &lt;span class="s1">&amp;#39;[&amp;#39;&lt;/span> success &lt;span class="s1">&amp;#39;!=&amp;#39;&lt;/span> success &lt;span class="s1">&amp;#39;]&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>exit 不在最后一行&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">bash -x t.sh
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+ &lt;span class="nv">status&lt;/span>&lt;span class="o">=&lt;/span>success
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+ &lt;span class="s1">&amp;#39;[&amp;#39;&lt;/span> success &lt;span class="s1">&amp;#39;!=&amp;#39;&lt;/span> success &lt;span class="s1">&amp;#39;]&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+ &lt;span class="nb">echo&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>shell 会将最后一条命令的返回状态码作为整个脚本的返回状态码。test 在最后一行时，&lt;code>[ $status != &amp;quot;success&amp;quot; ]&lt;/code> 的返回结果非0，后面的　&amp;amp;&amp;amp; 内容不会执行，整个脚本结束，脚本返回状态码就是中括号内test命令的反馈状态码。　　　　　　&lt;/p>
-&lt;h3 id="避坑经验">避坑经验
-&lt;/h3>&lt;ul>
-&lt;li>退出用或逻辑 &lt;code>||&lt;/code>，避免用与逻辑 &lt;del>&amp;amp;&amp;amp;&lt;/del>&lt;/li>
-&lt;li>一定要用 &lt;strong>&amp;amp;&amp;amp; 做退出条件时，不能作为脚本或者函数的最后一条命令&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;p>上面脚本改造成||退出&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> &lt;span class="nv">$status&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;success&amp;#34;&lt;/span> &lt;span class="o">]&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="nb">exit&lt;/span> &lt;span class="m">２&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>因为是最后一行，还可以直接省略后面的内容&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> &lt;span class="nv">$status&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;success&amp;#34;&lt;/span> &lt;span class="o">]&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Test on 4ft35t blog</title><link>https://4ft35t.github.io/tags/test/</link><description>Recent content in Test on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 19 Jun 2020 17:55:19 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/test/index.xml" rel="self" type="application/rss+xml"/><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;img src="https://pic1.zhimg.com/v2-6101b6f0fb5664fd5f959332faefb38f_1440w.jpg" alt="Featured image of post bash 条件退出踩坑" /&gt;&lt;p&gt;一个小脚本，&lt;code&gt;[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code&gt;,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p&gt;
+&lt;h3 id="排查"&gt;排查
+&lt;/h3&gt;&lt;p&gt;这个写法以前在脚本里经常写，稳定运行未出错。对比之前的脚本后发现差异，之前的脚本 exit 是提前退出，后面还有内容；这个脚本exit是上层调用脚本反馈最终结果，exit 是最后一行。&lt;/p&gt;
+&lt;p&gt;修改脚本后一切正常&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nv"&gt;status&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;success
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt; &lt;span class="nv"&gt;$status&lt;/span&gt; !&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;success&amp;#34;&lt;/span&gt; &lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="nb"&gt;exit&lt;/span&gt; &lt;span class="m"&gt;２&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="原因分析"&gt;原因分析
+&lt;/h3&gt;&lt;p&gt;使用　bash -x 可以看出差异，&lt;/p&gt;
+&lt;p&gt;exit　在最后一行&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;bash -x t.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+ &lt;span class="nv"&gt;status&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;success
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+ &lt;span class="s1"&gt;&amp;#39;[&amp;#39;&lt;/span&gt; success &lt;span class="s1"&gt;&amp;#39;!=&amp;#39;&lt;/span&gt; success &lt;span class="s1"&gt;&amp;#39;]&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;exit 不在最后一行&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;bash -x t.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+ &lt;span class="nv"&gt;status&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;success
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+ &lt;span class="s1"&gt;&amp;#39;[&amp;#39;&lt;/span&gt; success &lt;span class="s1"&gt;&amp;#39;!=&amp;#39;&lt;/span&gt; success &lt;span class="s1"&gt;&amp;#39;]&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+ &lt;span class="nb"&gt;echo&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;shell 会将最后一条命令的返回状态码作为整个脚本的返回状态码。test 在最后一行时，&lt;code&gt;[ $status != &amp;quot;success&amp;quot; ]&lt;/code&gt; 的返回结果非0，后面的　&amp;amp;&amp;amp; 内容不会执行，整个脚本结束，脚本返回状态码就是中括号内test命令的反馈状态码。　　　　　　&lt;/p&gt;
+&lt;h3 id="避坑经验"&gt;避坑经验
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;退出用或逻辑 &lt;code&gt;||&lt;/code&gt;，避免用与逻辑 &lt;del&gt;&amp;amp;&amp;amp;&lt;/del&gt;&lt;/li&gt;
+&lt;li&gt;一定要用 &lt;strong&gt;&amp;amp;&amp;amp; 做退出条件时，不能作为脚本或者函数的最后一条命令&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;上面脚本改造成||退出&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt; &lt;span class="nv"&gt;$status&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;success&amp;#34;&lt;/span&gt; &lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="nb"&gt;exit&lt;/span&gt; &lt;span class="m"&gt;２&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;因为是最后一行，还可以直接省略后面的内容&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt; &lt;span class="nv"&gt;$status&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;success&amp;#34;&lt;/span&gt; &lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item></channel></rss>

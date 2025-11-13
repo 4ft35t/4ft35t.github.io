@@ -1,472 +1,678 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 4ft35t blog</title><link>https://4ft35t.github.io/categories/linux/</link><description>Recent content in Linux on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 21 Apr 2022 19:22:21 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>群晖 NAS 上运行 PaddleOCR</title><link>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</link><pubDate>Thu, 21 Apr 2022 19:22:21 +0800</pubDate><guid>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</guid><description>&lt;img src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.6/doc/PaddleOCR_log.png" alt="Featured image of post 群晖 NAS 上运行 PaddleOCR" />&lt;p>本文的起因是 Manjaro 的 python 版本升级到 3.10 后，PaddleOCR 无法运行。尝试用 pyenv 安装 3.9.10 版 python 后，执行命令 &lt;code>paddleocr&lt;/code> 报错&lt;/p>
-&lt;blockquote>
-&lt;p>ImportError: /opt/github/ocr/venv3910/lib/python3.9/site-packages/paddle/fluid/core_avx.so: undefined symbol: _dl_sym, version GLIBC_PRIVATE&lt;/p>
-&lt;/blockquote>
-&lt;p>这个报错，在 PaddleOCR 官方的 github 仓库 issue 有人发过, ubuntu 20.10 上遇到此报错，https://github.com/PaddlePaddle/Paddle/issues/36801 。&lt;/p>
-&lt;p>只能把 PaddleOCR 放在 Docker 运行了。不过官方镜像的体积高达 11G，我只需要 OCR 功能，不做样本训练，应该有很大的精简空间。&lt;/p>
-&lt;p>此前在 VPS 上的 ubuntu 20.04 里用过 PaddleOCR，故选择 ubuntu 20.04 做基础镜像。群晖 NAS 上有多个 Docker 服务，PaddleOCR 同样丢群晖跑。&lt;/p>
-&lt;h2 id="运行-ubuntu-2004">运行 ubuntu 20.04
-&lt;/h2>&lt;p>ssh 登录群晖后，执行 &lt;code>sudo su&lt;/code>，输入当前用户的密码，切换到 &lt;strong>root&lt;/strong>。&lt;/p>
-&lt;p>执行下面命令，进入 ubuntu 的 bash 终端&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">docker pull ubuntu:20.04
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker run -it ubuntu:20.04 bash
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="系统的软件源换成阿里云">系统的软件源换成阿里云
-&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">cp /etc/apt/sources.list{,.bak}
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sed -i &amp;#39;s/archive.ubuntu.com/mirrors.aliyun.com/&amp;#39; /etc/apt/sources.list
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">apt-get update
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="安装-python-环境">安装 python 环境
-&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">apt-get install python3 python3-pip wget
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mkdir /root/.pip
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">echo &amp;#39;[global]&amp;#39; &amp;gt; /root/.pip/pip.conf
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">echo &amp;#39;index-url = https://pypi.doubanio.com/simple&amp;#39; &amp;gt;&amp;gt; /root/.pip/pip.conf
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="安装-paddleocr">安装 PaddleOCR
-&lt;/h2>&lt;p>按官方文档操作，https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.4/doc/doc_ch/quickstart.md&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">pip install paddlepaddle -i https://mirror.baidu.com/pypi/simple
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pip install paddleocr
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>一切进展顺利，下面开始踩坑&lt;/p>
-&lt;h2 id="填坑过程">填坑过程
-&lt;/h2>&lt;p>执行 &lt;code>paddleocr -h&lt;/code>, 看是否有报错信息。错误一个接一个的来，下面安出现顺序解决&lt;/p>
-&lt;h3 id="modulenotfounderror-no-module-named-paddlefluidcore_noavx">ModuleNotFoundError: No module named &amp;lsquo;paddle.fluid.core_noavx&amp;rsquo;
-&lt;/h3>&lt;p>群晖的 CPU 太古老了，不支持 AVX(Advanced Vector Extensions) 指令集, 需要 noavx 的预编译包。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 4ft35t blog</title><link>https://4ft35t.github.io/categories/linux/</link><description>Recent content in Linux on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 23 Oct 2025 17:29:21 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>群晖 DSM7 上使用古董打印机 HP CP1025</title><link>https://4ft35t.github.io/post/hp-cp1025-set-airprint-on-dsm7-via-docker-cups/</link><pubDate>Thu, 23 Oct 2025 17:29:21 +0800</pubDate><guid>https://4ft35t.github.io/post/hp-cp1025-set-airprint-on-dsm7-via-docker-cups/</guid><description>&lt;img src="https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c02768865.png" alt="Featured image of post 群晖 DSM7 上使用古董打印机 HP CP1025" /&gt;&lt;p&gt;想在群晖 DSM7.2 上使用 老古董 HP CP1025 打印机, 但群晖自带的打印服务器不支持该打印机驱动, 只能通过 Docker 安装 CUPS 来实现.&lt;/p&gt;
+&lt;p&gt;搜索多篇文章，找到几个 docker 镜像，大部分无法识别 HP CP1025 打印机, 只有 chuckcharlie/cups-avahi-airprint 能找到打印机。&lt;/p&gt;
+&lt;p&gt;文章中提到的几个 docker 镜像:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;olbat/cupsd 找不到打印机&lt;/li&gt;
+&lt;li&gt;ydkn/cups 找不到打印机&lt;/li&gt;
+&lt;li&gt;chuckcharlie/cups-avahi-airprint 能找到打印机&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;chuckcharlie/cups-avahi-airprint 能找到打印机, 但无法打印，提示 &amp;ldquo;Filter failed&amp;rdquo;。&lt;/p&gt;
+&lt;p&gt;一番搜索后，在&lt;a class="link" href="https://forums.raspberrypi.com/viewtopic.php?t=118732" target="_blank" rel="noopener"
+&gt;树莓派论坛&lt;/a&gt;找到了原因， hplip 驱动有问题，需要安装 foo2zjs 开源驱动。&lt;/p&gt;
+&lt;h3 id="玩客云测试"&gt;玩客云测试
+&lt;/h3&gt;&lt;p&gt;为了测试 foo2zjs 驱动是否有效， 打开了另一件吃灰的老古董玩客云, 系统是 armbian, 安装了 openmediavault 4。
+从 omv-extras 里安装 openmediavault-cups, 然后在 cups web 界面添加打印机, 选择 &amp;ldquo;HP LaserJet Pro CP1025nw Foomatic/foo2zjs-z3 (en)&amp;rdquo; 驱动，成功打印测试页。&lt;/p&gt;
+&lt;p&gt;如果选择 &amp;ldquo;HP LaserJet Cp1025, hpcups 3.23.12 (en)&amp;rdquo; 驱动，打印测试页失败，提示 &amp;ldquo;Filter failed&amp;rdquo;。&lt;/p&gt;
+&lt;p&gt;确认 foo2zjs 驱动可以正常使用。&lt;/p&gt;
+&lt;h3 id="在群晖-dsm7-上安装-cups"&gt;在群晖 DSM7 上安装 CUPS
+&lt;/h3&gt;&lt;h4 id="关闭自带-cups-服务"&gt;关闭自带 cups 服务
+&lt;/h4&gt;&lt;p&gt;在群晖 DSM7 上, 需要先关闭自带的打印服务器服务, 否则会占用 631 端口.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo synosystemctl stop cupsd
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo synosystemctl disable cupsd
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;systemctl mask cupsd
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo synosystemctl stop cups-service-handler
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo synosystemctl disable cups-service-handler
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id="运行-docker-容器"&gt;运行 docker 容器
+&lt;/h4&gt;&lt;p&gt;创建配置目录 &lt;code&gt;mkdir -p /volume1/docker/airprint/config /volume1/docker/airprint/services&lt;/code&gt;
+创建 &lt;code&gt;/volume1/docker/airprint/docker-compose.yml&lt;/code&gt; 文件:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;version&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;3&amp;#39;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;&lt;/span&gt;&lt;span class="nt"&gt;services&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;airprint&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;chuckcharlie/cups-avahi-airprint&amp;#39;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;privileged&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;restart&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;unless-stopped&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;environment&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;TZ=Asia/Shanghai&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;CUPSADMIN=admin&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;CUPSPASSWORD=pass&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;devices&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;/dev/bus&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;/dev/usb&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;volumes&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;/var/run/dbus:/var/run/dbus&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;./config/:/config&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;./services/:/services&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;ports&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="s1"&gt;&amp;#39;631:631&amp;#39;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;启动容器: &lt;code&gt;cd /volume1/docker/airprint &amp;amp;&amp;amp; sudo docker-compose up -d&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id="安装-foo2zjs-驱动"&gt;安装 foo2zjs 驱动
+&lt;/h4&gt;&lt;p&gt;foo2zjs 官网 &lt;a class="link" href="http://foo2zjs.rkkda.com" target="_blank" rel="noopener"
+&gt;http://foo2zjs.rkkda.com&lt;/a&gt; 已经无法访问，幸好 webarchive.org 上有存档可以下载。
+进入容器: &lt;code&gt; cd /volume1/docker/airprint &amp;amp;&amp;amp; sudo docker-compose exec airprint sh&lt;/code&gt;
+在容器内下载并安装 foo2zjs 驱动。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;span class="lnt"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;cd /tmp
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;wget https://web.archive.org/web/20210224094943if_/http://foo2zjs.rkkda.com/foo2zjs.tar.gz
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;tar zxf foo2zjs.tar.gz
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;cd foo2zjs
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;make
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;make install
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;安装完成后，运行 &lt;code&gt;make cups&lt;/code&gt; 进行配置修改, 会修改 &lt;code&gt;/etc/cups/cups-files.conf&lt;/code&gt; 文件, 允许使用 file 设备。
+但是这里会依赖 &lt;code&gt;vim&lt;/code&gt;，镜像里没有；对比修改前后的文件，发现只需要添加两行配置, 直接用 &lt;code&gt;echo&lt;/code&gt; 命令添加即可。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;echo -e 'FileDevice Yes\nSandboxing Relaxed' &amp;gt;&amp;gt; /etc/cups/cups-files.conf&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;修改完成后，重启容器。&lt;/p&gt;
+&lt;h3 id="添加打印机"&gt;添加打印机
+&lt;/h3&gt;&lt;p&gt;打开浏览器访问 &lt;code&gt;http://群晖IP:631&lt;/code&gt;, 进入 CUPS web 界面, 添加打印机。&lt;/p&gt;
+&lt;p&gt;Administration - Add Printer - 选择 HP CP1025 打印机 - 下一步勾选 &amp;ldquo;Share This Printer&amp;rdquo; - 选择驱动 &amp;ldquo;HP LaserJet Pro CP1025nw Foomatic/foo2zjs-z3 (en)&amp;rdquo; - 完成添加。
+下一步修改打印机默认选项:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Color Mode: Color&lt;/li&gt;
+&lt;li&gt;Resolution: 600x600dpi&lt;/li&gt;
+&lt;li&gt;Paper Size: A4&lt;/li&gt;
+&lt;li&gt;Media Source: Auto Source&lt;/li&gt;
+&lt;li&gt;Media Type: Standard Paper&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;点击 &amp;ldquo;Set Default Options&amp;rdquo; 保存。&lt;/p&gt;
+&lt;p&gt;打印测试页，成功打印。&lt;/p&gt;
+&lt;h3 id="设置自动启动"&gt;设置自动启动
+&lt;/h3&gt;&lt;p&gt;打印从休眠中恢复，需要重启 docker 容器才能使用。
+在群晖里创建&lt;code&gt;udev&lt;/code&gt; 规则，检测到打印机连接时，自动重启 docker 容器。&lt;/p&gt;
+&lt;h4 id="获取打印机属性"&gt;获取打印机属性
+&lt;/h4&gt;&lt;p&gt;ssh 到群晖，运行 &lt;code&gt;sudo udevadm monitor --kernel --property --subsystem-match=usb&lt;/code&gt;，然后插入打印机 USB 线，记录打印机的属性:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;KERNEL[69024.879332] add /devices/pci0000:00/0000:00:13.1/0000:02:00.0/usb3/3-1/3-1:1.0 (usb)
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;ACTION=add
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;DEVNAME=/dev/3-1:1.0
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;DEVPATH=/devices/pci0000:00/0000:00:13.1/0000:02:00.0/usb3/3-1/3-1:1.0
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;DEVTYPE=usb_interface
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;INTERFACE=7/1/2
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;MODALIAS=usb:v03F0p112Ad0001dc00dsc00dp00ic07isc01ip02in00
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;PHYSDEVBUS=usb
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;PRODUCT=3f0/112a/1
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;SEQNUM=2984
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;SUBSYSTEM=usb
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;TYPE=0/0/0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;记录 &lt;code&gt;PRODUCT=3f0/112a/1&lt;/code&gt;。&lt;/p&gt;
+&lt;h4 id="创建-udev-规则"&gt;创建 udev 规则
+&lt;/h4&gt;&lt;p&gt;创建文件 &lt;code&gt;/lib/udev/rules.d/50-hp-cp1025.rules&lt;/code&gt;，内容如下:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;ACTION==&amp;#34;add&amp;#34;, SUBSYSTEM==&amp;#34;usb&amp;#34;, ENV{DEVTYPE}==&amp;#34;usb_device&amp;#34;, ENV{PRODUCT}==&amp;#34;3f0/112a/1&amp;#34;, RUN+=&amp;#34;/volume1/docker/airprint/restart-cups.sh&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;上面的规则在检测到 HP CP1025 打印机连接时，运行 &lt;code&gt;/volume1/docker/airprint/restart-cups.sh&lt;/code&gt; 脚本。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;/volume1/docker/airprint/restart-cups.sh&lt;/code&gt; 脚本内容如下:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;#!/bin/sh
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;&lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /volume1/docker/airprint
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;docker-compose restart
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这里已经完成了全部配置，局域网内的 Mac 和 iOS 设备都可以通过 AirPrint 使用 HP CP1025 打印机了，windows 设备也可以通过添加网络打印机使用。&lt;/p&gt;
+&lt;h3 id="无线打印使用"&gt;无线打印使用
+&lt;/h3&gt;&lt;h3 id="ios-设备"&gt;iOS 设备
+&lt;/h3&gt;&lt;p&gt;iOS 设备可以直接通过 AirPrint 使用打印机，连接 wifi 后自动搜索网络打印机，无需额外配置。需要打印的文件，点击分享按钮，选择打印机即可。&lt;/p&gt;
+&lt;h3 id="mac-设备"&gt;Mac 设备
+&lt;/h3&gt;&lt;p&gt;同样无需设置，自动出现在打印机列表中，直接选择打印机打印即可。&lt;/p&gt;
+&lt;h3 id="windows-设备"&gt;Windows 设备
+&lt;/h3&gt;&lt;p&gt;Windows 设备需要去惠普网站下载安装 HP CP1025 驱动，然后添加网络打印机。
+控制面版 - 设备和打印机 - 添加打印机 - 选择 &amp;ldquo;我需要的打印机不在列表中&amp;rdquo; - 选择 &amp;ldquo;使用 TCP/IP 地址或主机名添加打印机&amp;rdquo; - 设备类型选择 &amp;ldquo;TCP/IP 设备&amp;rdquo; - 主机名或 IP 地址填写群晖 IP 地址&lt;/p&gt;
+&lt;h3 id="参考链接"&gt;参考链接
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;[记一次群辉dsm6.2.3使用cups实现老款打印机cp1025](airprint &lt;a class="link" href="https://www.bilibili.com/opus/774732308492058647" target="_blank" rel="noopener"
+&gt;https://www.bilibili.com/opus/774732308492058647&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://post.smzdm.com/p/ag4p7k7m/" target="_blank" rel="noopener"
+&gt;群晖、威联通NAS实现共享打印机+Airprint隔空打印教程，Docker版CUPS，让NAS变身打印服务器！&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://post.smzdm.com/p/a5xwr0x7/" target="_blank" rel="noopener"
+&gt;通过Docker的cups实现定期打印，防止爱普生墨仓式打印机堵墨&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.bilibili.com/opus/720655857020305463" target="_blank" rel="noopener"
+&gt;群晖dsm7.1 实现老款打印机AirPrint&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://forums.raspberrypi.com/viewtopic.php?t=118732" target="_blank" rel="noopener"
+&gt;CP1025 printer&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://blog.zhoujie218.top/archives/2540.html" target="_blank" rel="noopener"
+&gt;DOCKER安装CUPS容器实现无线打印（支持大部分ARM设备&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>群晖 NAS 上运行 PaddleOCR</title><link>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</link><pubDate>Thu, 21 Apr 2022 19:22:21 +0800</pubDate><guid>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</guid><description>&lt;img src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.6/doc/PaddleOCR_log.png" alt="Featured image of post 群晖 NAS 上运行 PaddleOCR" /&gt;&lt;p&gt;本文的起因是 Manjaro 的 python 版本升级到 3.10 后，PaddleOCR 无法运行。尝试用 pyenv 安装 3.9.10 版 python 后，执行命令 &lt;code&gt;paddleocr&lt;/code&gt; 报错&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ImportError: /opt/github/ocr/venv3910/lib/python3.9/site-packages/paddle/fluid/core_avx.so: undefined symbol: _dl_sym, version GLIBC_PRIVATE&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这个报错，在 PaddleOCR 官方的 github 仓库 issue 有人发过, ubuntu 20.10 上遇到此报错，https://github.com/PaddlePaddle/Paddle/issues/36801 。&lt;/p&gt;
+&lt;p&gt;只能把 PaddleOCR 放在 Docker 运行了。不过官方镜像的体积高达 11G，我只需要 OCR 功能，不做样本训练，应该有很大的精简空间。&lt;/p&gt;
+&lt;p&gt;此前在 VPS 上的 ubuntu 20.04 里用过 PaddleOCR，故选择 ubuntu 20.04 做基础镜像。群晖 NAS 上有多个 Docker 服务，PaddleOCR 同样丢群晖跑。&lt;/p&gt;
+&lt;h2 id="运行-ubuntu-2004"&gt;运行 ubuntu 20.04
+&lt;/h2&gt;&lt;p&gt;ssh 登录群晖后，执行 &lt;code&gt;sudo su&lt;/code&gt;，输入当前用户的密码，切换到 &lt;strong&gt;root&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;执行下面命令，进入 ubuntu 的 bash 终端&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;docker pull ubuntu:20.04
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;docker run -it ubuntu:20.04 bash
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="系统的软件源换成阿里云"&gt;系统的软件源换成阿里云
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;cp /etc/apt/sources.list{,.bak}
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sed -i &amp;#39;s/archive.ubuntu.com/mirrors.aliyun.com/&amp;#39; /etc/apt/sources.list
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;apt-get update
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="安装-python-环境"&gt;安装 python 环境
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;apt-get install python3 python3-pip wget
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;mkdir /root/.pip
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;echo &amp;#39;[global]&amp;#39; &amp;gt; /root/.pip/pip.conf
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;echo &amp;#39;index-url = https://pypi.doubanio.com/simple&amp;#39; &amp;gt;&amp;gt; /root/.pip/pip.conf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="安装-paddleocr"&gt;安装 PaddleOCR
+&lt;/h2&gt;&lt;p&gt;按官方文档操作，https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.4/doc/doc_ch/quickstart.md&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;pip install paddlepaddle -i https://mirror.baidu.com/pypi/simple
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;pip install paddleocr
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;一切进展顺利，下面开始踩坑&lt;/p&gt;
+&lt;h2 id="填坑过程"&gt;填坑过程
+&lt;/h2&gt;&lt;p&gt;执行 &lt;code&gt;paddleocr -h&lt;/code&gt;, 看是否有报错信息。错误一个接一个的来，下面安出现顺序解决&lt;/p&gt;
+&lt;h3 id="modulenotfounderror-no-module-named-paddlefluidcore_noavx"&gt;ModuleNotFoundError: No module named &amp;lsquo;paddle.fluid.core_noavx&amp;rsquo;
+&lt;/h3&gt;&lt;p&gt;群晖的 CPU 太古老了，不支持 AVX(Advanced Vector Extensions) 指令集, 需要 noavx 的预编译包。
 在这个 issue &lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
->https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a> 中找到线索，官方的预先编译 whl 列表 &lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
->https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a>&lt;/p>
-&lt;p>&lt;code>cpu-mkl-noavx&lt;/code> 版本的预编译 whl 只有 python 3.8 的，正好和 ubuntu 20.04 的 python 版本一致。&lt;/p>
-&lt;p>下载地址&lt;/p>
-&lt;blockquote>
-&lt;p>&lt;a class="link" href="https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl" target="_blank" rel="noopener"
->https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl&lt;/a>&lt;/p>
-&lt;/blockquote>
-&lt;p>当前版本已是 2.2.2, 把连接中 2.2.1 全部替换成 2.2.2&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">echo https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl | sed &amp;#39;s/2.2.1/2.2.2/g&amp;#39;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>下载安装, 此问题解决&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">wget https://paddle-wheel.bj.bcebos.com/2.2.2/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.2-cp38-cp38-linux_x86_64.whl
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pip install --force-reinstal paddlepaddle-2.2.2-cp38-cp38-linux_x86_64.whl
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="importerror-libglso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libGL.so.1: cannot open shared object file: No such file or directory
-&lt;/h3>&lt;p>&lt;code>pip install opencv-python-headless==4.2.0.32&lt;/code>&lt;/p>
-&lt;h3 id="importerror-libgthread-20so0-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgthread-2.0.so.0: cannot open shared object file: No such file or directory
-&lt;/h3>&lt;p>&lt;code>apt-get install libglib2.0-0 libsm6 libxrender1 libxext6&lt;/code>&lt;/p>
-&lt;p>中途会出现选择时区的交互，依次选择 &lt;code>6. Asia&lt;/code> - &lt;code>19. Chongqing&lt;/code>&lt;/p>
-&lt;h3 id="importerror-libgompso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgomp.so.1: cannot open shared object file: No such file or directory
-&lt;/h3>&lt;p>&lt;code>apt-get install libgomp1&lt;/code>&lt;/p>
-&lt;p>至此，paddleocr 可以正常运行。&lt;/p>
-&lt;h2 id="添加-api">添加 API
-&lt;/h2>&lt;p>使用 flask 提供简单的 ocr 识别 API，可以上传图片或者从 url 下载图片，输出格式可选 text 或者 json，默认 text。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;span class="lnt">27
-&lt;/span>&lt;span class="lnt">28
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@app.route&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/ocr&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">methods&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;PUT&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;POST&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">ocr_text&lt;/span>&lt;span class="p">():&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">files&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;img&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">img&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img_url&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;imgurl&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">requests&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">img_url&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">content&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">BytesIO&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">img&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">file_obj&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">BytesIO&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">save&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">file_obj&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">file_obj&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Image&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">open&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">img&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">convert&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;RGB&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">ocr&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ocr&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">array&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">img&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">det&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">rec&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">cls&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">text&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">join&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">result&lt;/span>&lt;span class="p">])&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">output_format&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;outtype&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;text&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">output_format&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s1">&amp;#39;text&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">text&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ret&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="s1">&amp;#39;success&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">True&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;results&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[]}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">each&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">result&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">item&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;confidence&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">each&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">(),&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;text&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">each&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">],&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;text_region&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">each&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ret&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;results&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">append&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">ret&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="api-使用">API 使用
-&lt;/h3>&lt;ul>
-&lt;li>
-&lt;p>上传文件识别, 输出 text 格式&lt;/p>
-&lt;p>&lt;code> curl 127.0.0.1:5000/ocr -F img=@/tmp/img.png&lt;/code>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>从图片url识别, 并输出 json 格式
-&lt;code>curl 127.0.0.1:5000/ocr -F imgurl=https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/doc/imgs_en/254.jpg -F outtype=json&lt;/code>&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="创建-dockerfile">创建 Dockerfile
-&lt;/h2>&lt;p>上面提到的安装过程中需要交互选择时区，会中断 docker 编译，通过设置 &lt;code>ENV DEBIAN_FRONTEND=noninteractive&lt;/code> 来规避&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">FROM&lt;/span> &lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.04&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">EXPOSE&lt;/span> &lt;span class="mi">5000&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ENV&lt;/span> &lt;span class="n">TZ&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">Asia&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Shanghai&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ENV&lt;/span> &lt;span class="n">DEBIAN_FRONTEND&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">noninteractive&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ARG&lt;/span> &lt;span class="n">PADDLE_VER&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mf">2.2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">2&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">COPY&lt;/span> &lt;span class="n">app&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">py&lt;/span> &lt;span class="o">/&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">COPY&lt;/span> &lt;span class="n">requirements&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">txt&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">tmp&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">RUN&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="n">update&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="n">install&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">y&lt;/span> &lt;span class="n">python3&lt;/span> &lt;span class="n">python3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">pip&lt;/span> &lt;span class="n">libgomp1&lt;/span> &lt;span class="n">libglib2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span> &lt;span class="n">libsm6&lt;/span> &lt;span class="n">libxrender1&lt;/span> &lt;span class="n">libxext6&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">pip&lt;/span> &lt;span class="n">install&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">r&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">tmp&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">requirements&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">txt&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">wget&lt;/span> &lt;span class="o">--&lt;/span>&lt;span class="n">directory&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">prefix&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">tmp&lt;/span>&lt;span class="o">/&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">paddle&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">wheel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bj&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bcebos&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/$&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">PADDLE_VER&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cpu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">mkl&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">noavx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">paddlepaddle&lt;/span>&lt;span class="o">-$&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">PADDLE_VER&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cp38&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cp38&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">linux_x86_64&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">whl&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">pip&lt;/span> &lt;span class="n">install&lt;/span> &lt;span class="o">--&lt;/span>&lt;span class="n">force&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">reinstall&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">tmp&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">paddlepaddle&lt;/span>&lt;span class="o">-$&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">PADDLE_VER&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cp38&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cp38&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">linux_x86_64&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">whl&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">RUN&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">y&lt;/span> &lt;span class="n">remove&lt;/span> &lt;span class="n">python3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">pip&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">y&lt;/span> &lt;span class="n">autoremove&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">y&lt;/span> &lt;span class="n">install&lt;/span> &lt;span class="o">--&lt;/span>&lt;span class="n">no&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">install&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">recommends&lt;/span> &lt;span class="n">python3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">setuptools&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">rm&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">rf&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">lib&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">apt&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">dpkg&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">cache&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">root&lt;/span>&lt;span class="o">/.&lt;/span>&lt;span class="n">cache&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">tmp&lt;/span>&lt;span class="o">/*&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">CMD&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;python3&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;/app.py&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>Dockerfile 及其它文件在 Github Repo &lt;a class="link" href="https://github.com/4ft35t/Paddleocr-docker" target="_blank" rel="noopener"
->https://github.com/4ft35t/Paddleocr-docker&lt;/a>&lt;/p>
-&lt;p>Docker Hub 地址 &lt;a class="link" href="https://hub.docker.com/r/c403/paddleocr" target="_blank" rel="noopener"
->https://hub.docker.com/r/c403/paddleocr&lt;/a>&lt;/p>
-&lt;p>最后吐槽一下，PaddleOCR 的文档太混乱了, 很多内容在 issues 里，不在文档。&lt;/p>
-&lt;h2 id="参考链接">参考链接
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
->https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
->https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://blog.csdn.net/Max_ZhangJF/article/details/108920050" target="_blank" rel="noopener"
->https://blog.csdn.net/Max_ZhangJF/article/details/108920050&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/1735" target="_blank" rel="noopener"
->https://github.com/PaddlePaddle/PaddleOCR/issues/1735&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o" target="_blank" rel="noopener"
->https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://github.com/explosion/spaCy/issues/1110" target="_blank" rel="noopener"
->https://github.com/explosion/spaCy/issues/1110&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai" target="_blank" rel="noopener"
->https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;img src="https://oss-cn-hangzhou.aliyuncs.com/codingsky/cdn/img/2019-07-25/dc29fbcc14b8c4acce61ba33a7f2af63.jpg" alt="Featured image of post 利用 Pixel 一代的无限存储备份 NAS 照片" />&lt;p>Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p>
-&lt;h2 id="tldr">TLDR
-&lt;/h2>&lt;h3 id="手机端设置">手机端设置
-&lt;/h3>&lt;ol>
-&lt;li>Pixel 手机无需 root，安装 &lt;a class="link" href="https://play.google.com/store/apps/details?id=pl.solidexplorer2" target="_blank" rel="noopener"
->Solid Explorer&lt;/a>, 开启 FTP 服务。FTP 默认端口 9999, 默认目录 /sdcard/Download/。&lt;/li>
-&lt;li>在 FTP 目录放一张图片（使用 Solid Explorer 复制、浏览器从网上下载、FTP 上传均可），Google Photos 会询问是否备份此目录，选备份。&lt;/li>
-&lt;/ol>
-&lt;h3 id="nas-设置">NAS 设置
-&lt;/h3>&lt;p>群晖自带的 curl 不支持 FTP，需要下载一个静态编译开启 FTP 支持的 curl。可以在 &lt;a class="link" href="https://github.com/moparisthebest/static-curl/releases" target="_blank" rel="noopener"
->https://github.com/moparisthebest/static-curl/releases&lt;/a> 下载。&lt;/p>
-&lt;ol>
-&lt;li>下载 curl 并重命名成 &lt;strong>curl-amd64&lt;/strong>, 并执行 &lt;code>chmod +x curl-amd64&lt;/code>&lt;/li>
-&lt;li>下载上传脚本&lt;a class="link" href="https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5" target="_blank" rel="noopener"
->https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5&lt;/a>, 和 curl-amd64 一起放到家目录。&lt;/li>
-&lt;li>修改 photo-upload.sh 中配置&lt;/li>
-&lt;/ol>
-&lt;ul>
-&lt;li>ftp_server 手机 FTP server 地址，Solid Explorer 中可以看到&lt;/li>
-&lt;li>limit_size 脚本运行一次上传的图片/视频数量，过大会导致手机存储空间被占满&lt;/li>
-&lt;li>PHOTO_DIRS 19 行不动，修改 16 行，一行一个目录。我的群晖照片总库 &lt;code>/volume1/photo&lt;/code>, 同时各用户使用 Synology Photos 备份手机照片到自己 home 目录, 17 行会加载所有用户目录下的照片，无需单独配置。&lt;/li>
-&lt;li>控制面板-任务计划-新增-计划的任务-用户定义的脚本
-&lt;ul>
-&lt;li>用户帐号选 &lt;code>admin&lt;/code>&lt;/li>
-&lt;li>计划-运行频率-每小时&lt;/li>
-&lt;li>任务设置-用户定义的脚本，&lt;code>bash /volume1/homes/xx/photo-upload.sh&lt;/code>，xx 是自己在 NAS 上用户&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;p>点击确定后，右键-运行，即可在手机上看到上传的照片/视频。&lt;/p>
-&lt;p>脚本根据 NAS 上照片的修改时间来增量备份，需要定期去手机上释放空间，避免手机空间占满。具体操作路径：Google 相册-右上角头像-释放空间。&lt;/p>
-&lt;h2 id="20220320-更新使用-autojs-自动释放手机空间">2022.03.20 更新，使用 Autojs 自动释放手机空间
-&lt;/h2>&lt;h3 id="环境准备">环境准备
-&lt;/h3>&lt;ul>
-&lt;li>&lt;a class="link" href="https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk" target="_blank" rel="noopener"
->https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://raw.githubusercontent.com/4ft35t/utils/master/autojs/utils.js" target="_blank" rel="noopener"
->https://raw.githubusercontent.com/4ft35t/utils/master/autojs/utils.js&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js" target="_blank" rel="noopener"
->https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h3 id="操作步骤">操作步骤
-&lt;/h3>&lt;ol>
-&lt;li>安装 autojs, 运行 app， 并按照提示打开无障碍服务。&lt;/li>
-&lt;li>将 utils.js 和 google-photo-free-up-space.js 放到手机 /sdcard/Scripts 目录&lt;/li>
-&lt;li>打开 autojs，下拉刷新，点击 google-photo-free-up-space.js 右边的三角符号运行&lt;/li>
-&lt;li>确认正常后，点击 google-photo-free-up-space.js 右边三点&amp;ndash;更多&amp;ndash;定时任务，设置每天运行时间&lt;/li>
-&lt;/ol>
-&lt;p>google-photo-free-up-space.js 中 &lt;code>text()&lt;/code> 函数是在界面查找文本，如果系统语言不是英文，需要自行调整 21-22 行内容&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="hl">&lt;span class="lnt">21
-&lt;/span>&lt;/span>&lt;span class="hl">&lt;span class="lnt">22
-&lt;/span>&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;span class="lnt">27
-&lt;/span>&lt;span class="lnt">28
-&lt;/span>&lt;span class="lnt">29
-&lt;/span>&lt;span class="lnt">30
-&lt;/span>&lt;span class="lnt">31
-&lt;/span>&lt;span class="lnt">32
-&lt;/span>&lt;span class="lnt">33
-&lt;/span>&lt;span class="lnt">34
-&lt;/span>&lt;span class="lnt">35
-&lt;/span>&lt;span class="lnt">36
-&lt;/span>&lt;span class="lnt">37
-&lt;/span>&lt;span class="lnt">38
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-js" data-lang="js">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">auto&lt;/span>&lt;span class="p">();&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">show&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kd">var&lt;/span> &lt;span class="nx">utils&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">require&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;utils.js&amp;#39;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">pkgName&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;com.google.android.apps.photos&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">utils&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">startApp&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">pkgName&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;启动&amp;#39;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="nx">pkgName&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s1">&amp;#39;，等待检测中&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">waitForPackage&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">pkgName&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;检测到&amp;#39;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="nx">pkgName&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="s1">&amp;#39;等待 Activity&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">waitForActivity&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;com.google.android.apps.photos.home.HomeActivity&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;找到首页 Activity&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 点击头像
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">id&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;og_apd_internal_image_view&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nx">waitFor&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">utils&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">click&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">id&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;og_apd_internal_image_view&amp;#34;&lt;/span>&lt;span class="p">))&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;找到头像，点击&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 点击 free up
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line hl">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Free up space&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nx">waitFor&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line hl">&lt;span class="cl">&lt;span class="nx">utils&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">click&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Free up space&amp;#34;&lt;/span>&lt;span class="p">))&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;进入释放界面&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">sleep&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">500&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 点击释放按钮
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">id&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;free_up_button&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nx">exists&lt;/span>&lt;span class="p">())&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">utils&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">click&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">id&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;free_up_button&amp;#34;&lt;/span>&lt;span class="p">))&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;任务完成&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 返回 app 主界面
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">back&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 2 次返回退出 app
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">back&lt;/span>&lt;span class="p">();&lt;/span> &lt;span class="nx">back&lt;/span>&lt;span class="p">();&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">console&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">hide&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="踩坑过程">踩坑过程
-&lt;/h2>&lt;p>最初的设想，termux 安装 rclone, 然后将 NAS 共享目录挂载到本地目录，最后在相册里备份本地目录。&lt;/p>
-&lt;p>&lt;del>&lt;strong>rclone 挂载 SFTP&lt;/strong>&lt;/del>&lt;/p>
-&lt;p>群晖开启 STFP 支持，手机上 termux 里配置 rclone 一切正常，到执行 rclone mount 时报 &lt;code>/etc/fstab&lt;/code> 问题，具体记不清，因该是和手机没有 root 有关。&lt;/p>
-&lt;p>&lt;del>&lt;strong>rclone 挂载 WebDAV&lt;/strong>&lt;/del>&lt;/p>
-&lt;p>WebDAV 在 rclone 里不支持 rclone mount。&lt;/p>
-&lt;p>&lt;del>&lt;strong>挂载 SMB 共享文件夹&lt;/strong>&lt;/del>&lt;/p>
-&lt;p>找了几个文件管理器，都只能挂载给自己使用，不能提供给别的 app。只有 root 后才能全局挂载。&lt;/p>
-&lt;h2 id="参考链接">参考链接
-&lt;/h2>&lt;ol>
-&lt;li>&lt;a class="link" href="https://support.google.com/photos/answer/6220791" target="_blank" rel="noopener"
->Choose the upload size of your photos &amp;amp; videos&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.reddit.com/r/GooglePixel/comments/l9m6nk/how_to_use_og_pixel_as_an_unlimited_google_photos/" target="_blank" rel="noopener"
->How to use OG Pixel as an unlimited Google Photos uploader&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://repaynt.com/2021/02/original-pixel-unlimited-google-photos-uploader/" target="_blank" rel="noopener"
->Original Pixel Phone – The Unlimited Google Photos Uploader&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://rclone.org/sftp/" target="_blank" rel="noopener"
->rclone SFTP configuration&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://pmiku.com/note/mount-cifs-in-android.html" target="_blank" rel="noopener"
->mount-cifs-in-android&lt;/a>&lt;/li>
-&lt;/ol></description></item><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;img src="https://pic1.zhimg.com/v2-6101b6f0fb5664fd5f959332faefb38f_1440w.jpg" alt="Featured image of post bash 条件退出踩坑" />&lt;p>一个小脚本，&lt;code>[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code>,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p>
-&lt;h3 id="排查">排查
-&lt;/h3>&lt;p>这个写法以前在脚本里经常写，稳定运行未出错。对比之前的脚本后发现差异，之前的脚本 exit 是提前退出，后面还有内容；这个脚本exit是上层调用脚本反馈最终结果，exit 是最后一行。&lt;/p>
-&lt;p>修改脚本后一切正常&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">status&lt;/span>&lt;span class="o">=&lt;/span>success
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> &lt;span class="nv">$status&lt;/span> !&lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;success&amp;#34;&lt;/span> &lt;span class="o">]&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nb">exit&lt;/span> &lt;span class="m">２&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">echo&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="原因分析">原因分析
-&lt;/h3>&lt;p>使用　bash -x 可以看出差异，&lt;/p>
-&lt;p>exit　在最后一行&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">bash -x t.sh
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+ &lt;span class="nv">status&lt;/span>&lt;span class="o">=&lt;/span>success
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+ &lt;span class="s1">&amp;#39;[&amp;#39;&lt;/span> success &lt;span class="s1">&amp;#39;!=&amp;#39;&lt;/span> success &lt;span class="s1">&amp;#39;]&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>exit 不在最后一行&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">bash -x t.sh
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+ &lt;span class="nv">status&lt;/span>&lt;span class="o">=&lt;/span>success
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+ &lt;span class="s1">&amp;#39;[&amp;#39;&lt;/span> success &lt;span class="s1">&amp;#39;!=&amp;#39;&lt;/span> success &lt;span class="s1">&amp;#39;]&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+ &lt;span class="nb">echo&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>shell 会将最后一条命令的返回状态码作为整个脚本的返回状态码。test 在最后一行时，&lt;code>[ $status != &amp;quot;success&amp;quot; ]&lt;/code> 的返回结果非0，后面的　&amp;amp;&amp;amp; 内容不会执行，整个脚本结束，脚本返回状态码就是中括号内test命令的反馈状态码。　　　　　　&lt;/p>
-&lt;h3 id="避坑经验">避坑经验
-&lt;/h3>&lt;ul>
-&lt;li>退出用或逻辑 &lt;code>||&lt;/code>，避免用与逻辑 &lt;del>&amp;amp;&amp;amp;&lt;/del>&lt;/li>
-&lt;li>一定要用 &lt;strong>&amp;amp;&amp;amp; 做退出条件时，不能作为脚本或者函数的最后一条命令&lt;/strong>&lt;/li>
-&lt;/ul>
-&lt;p>上面脚本改造成||退出&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> &lt;span class="nv">$status&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;success&amp;#34;&lt;/span> &lt;span class="o">]&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="nb">exit&lt;/span> &lt;span class="m">２&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>因为是最后一行，还可以直接省略后面的内容&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span> &lt;span class="nv">$status&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;success&amp;#34;&lt;/span> &lt;span class="o">]&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div></description></item></channel></rss>
+&gt;https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a&gt; 中找到线索，官方的预先编译 whl 列表 &lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
+&gt;https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;cpu-mkl-noavx&lt;/code&gt; 版本的预编译 whl 只有 python 3.8 的，正好和 ubuntu 20.04 的 python 版本一致。&lt;/p&gt;
+&lt;p&gt;下载地址&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a class="link" href="https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl" target="_blank" rel="noopener"
+&gt;https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;当前版本已是 2.2.2, 把连接中 2.2.1 全部替换成 2.2.2&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;echo https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl | sed &amp;#39;s/2.2.1/2.2.2/g&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;下载安装, 此问题解决&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;wget https://paddle-wheel.bj.bcebos.com/2.2.2/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.2-cp38-cp38-linux_x86_64.whl
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;pip install --force-reinstal paddlepaddle-2.2.2-cp38-cp38-linux_x86_64.whl
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="importerror-libglso1-cannot-open-shared-object-file-no-such-file-or-directory"&gt;ImportError: libGL.so.1: cannot open shared object file: No such file or directory
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;pip install opencv-python-headless==4.2.0.32&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id="importerror-libgthread-20so0-cannot-open-shared-object-file-no-such-file-or-directory"&gt;ImportError: libgthread-2.0.so.0: cannot open shared object file: No such file or directory
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;apt-get install libglib2.0-0 libsm6 libxrender1 libxext6&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;中途会出现选择时区的交互，依次选择 &lt;code&gt;6. Asia&lt;/code&gt; - &lt;code&gt;19. Chongqing&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id="importerror-libgompso1-cannot-open-shared-object-file-no-such-file-or-directory"&gt;ImportError: libgomp.so.1: cannot open shared object file: No such file or directory
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;apt-get install libgomp1&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;至此，paddleocr 可以正常运行。&lt;/p&gt;
+&lt;h2 id="添加-api"&gt;添加 API
+&lt;/h2&gt;&lt;p&gt;使用 flask 提供简单的 ocr 识别 API，可以上传图片或者从 url 下载图片，输出格式可选 text 或者 json，默认 text。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;span class="lnt"&gt;20
+&lt;/span&gt;&lt;span class="lnt"&gt;21
+&lt;/span&gt;&lt;span class="lnt"&gt;22
+&lt;/span&gt;&lt;span class="lnt"&gt;23
+&lt;/span&gt;&lt;span class="lnt"&gt;24
+&lt;/span&gt;&lt;span class="lnt"&gt;25
+&lt;/span&gt;&lt;span class="lnt"&gt;26
+&lt;/span&gt;&lt;span class="lnt"&gt;27
+&lt;/span&gt;&lt;span class="lnt"&gt;28
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nd"&gt;@app.route&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/ocr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;methods&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;PUT&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;POST&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;ocr_text&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;img&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;files&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;img&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;img&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;img_url&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;imgurl&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;img&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;img_url&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;content&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;img&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BytesIO&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;img&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;file_obj&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BytesIO&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;img&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;save&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;file_obj&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;img&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;file_obj&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;img&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Image&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;img&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;convert&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;RGB&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ocr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ocr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;img&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;det&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;rec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;cls&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;output_format&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;outtype&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;text&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;output_format&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;text&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;ret&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;success&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;results&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[]}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;each&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;item&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="s1"&gt;&amp;#39;confidence&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;each&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="s1"&gt;&amp;#39;text&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;each&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="s1"&gt;&amp;#39;text_region&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;each&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;ret&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;results&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;ret&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="api-使用"&gt;API 使用
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;上传文件识别, 输出 text 格式&lt;/p&gt;
+&lt;p&gt;&lt;code&gt; curl 127.0.0.1:5000/ocr -F img=@/tmp/img.png&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;从图片url识别, 并输出 json 格式
+&lt;code&gt;curl 127.0.0.1:5000/ocr -F imgurl=https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/doc/imgs_en/254.jpg -F outtype=json&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="创建-dockerfile"&gt;创建 Dockerfile
+&lt;/h2&gt;&lt;p&gt;上面提到的安装过程中需要交互选择时区，会中断 docker 编译，通过设置 &lt;code&gt;ENV DEBIAN_FRONTEND=noninteractive&lt;/code&gt; 来规避&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;span class="lnt"&gt;20
+&lt;/span&gt;&lt;span class="lnt"&gt;21
+&lt;/span&gt;&lt;span class="lnt"&gt;22
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-gdscript3" data-lang="gdscript3"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;FROM&lt;/span&gt; &lt;span class="n"&gt;ubuntu&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mf"&gt;20.04&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;EXPOSE&lt;/span&gt; &lt;span class="mi"&gt;5000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;ENV&lt;/span&gt; &lt;span class="n"&gt;TZ&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Asia&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Shanghai&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;ENV&lt;/span&gt; &lt;span class="n"&gt;DEBIAN_FRONTEND&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;noninteractive&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;ARG&lt;/span&gt; &lt;span class="n"&gt;PADDLE_VER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;2.2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;COPY&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;COPY&lt;/span&gt; &lt;span class="n"&gt;requirements&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;txt&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;tmp&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;RUN&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt; \
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="n"&gt;python3&lt;/span&gt; &lt;span class="n"&gt;python3&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;libgomp1&lt;/span&gt; &lt;span class="n"&gt;libglib2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="n"&gt;libsm6&lt;/span&gt; &lt;span class="n"&gt;libxrender1&lt;/span&gt; &lt;span class="n"&gt;libxext6&lt;/span&gt; \
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;requirements&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;txt&lt;/span&gt; \
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;wget&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;directory&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;https&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;paddle&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;wheel&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bj&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bcebos&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/$&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;PADDLE_VER&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cpu&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;mkl&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;noavx&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;paddlepaddle&lt;/span&gt;&lt;span class="o"&gt;-$&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;PADDLE_VER&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cp38&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cp38&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;linux_x86_64&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;whl&lt;/span&gt; \
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;force&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;reinstall&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;paddlepaddle&lt;/span&gt;&lt;span class="o"&gt;-$&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;PADDLE_VER&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cp38&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cp38&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;linux_x86_64&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;whl&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;RUN&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="n"&gt;remove&lt;/span&gt; &lt;span class="n"&gt;python3&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;pip&lt;/span&gt; \
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="n"&gt;autoremove&lt;/span&gt; \
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;no&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;install&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;recommends&lt;/span&gt; &lt;span class="n"&gt;python3&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;setuptools&lt;/span&gt; \
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;rm&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rf&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="k"&gt;var&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;dpkg&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;cache&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nb"&gt;log&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;root&lt;/span&gt;&lt;span class="o"&gt;/.&lt;/span&gt;&lt;span class="n"&gt;cache&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="o"&gt;/*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;CMD&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;python3&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;/app.py&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Dockerfile 及其它文件在 Github Repo &lt;a class="link" href="https://github.com/4ft35t/Paddleocr-docker" target="_blank" rel="noopener"
+&gt;https://github.com/4ft35t/Paddleocr-docker&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Docker Hub 地址 &lt;a class="link" href="https://hub.docker.com/r/c403/paddleocr" target="_blank" rel="noopener"
+&gt;https://hub.docker.com/r/c403/paddleocr&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;最后吐槽一下，PaddleOCR 的文档太混乱了, 很多内容在 issues 里，不在文档。&lt;/p&gt;
+&lt;h2 id="参考链接"&gt;参考链接
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
+&gt;https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
+&gt;https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://blog.csdn.net/Max_ZhangJF/article/details/108920050" target="_blank" rel="noopener"
+&gt;https://blog.csdn.net/Max_ZhangJF/article/details/108920050&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/1735" target="_blank" rel="noopener"
+&gt;https://github.com/PaddlePaddle/PaddleOCR/issues/1735&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o" target="_blank" rel="noopener"
+&gt;https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/explosion/spaCy/issues/1110" target="_blank" rel="noopener"
+&gt;https://github.com/explosion/spaCy/issues/1110&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai" target="_blank" rel="noopener"
+&gt;https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;img src="https://oss-cn-hangzhou.aliyuncs.com/codingsky/cdn/img/2019-07-25/dc29fbcc14b8c4acce61ba33a7f2af63.jpg" alt="Featured image of post 利用 Pixel 一代的无限存储备份 NAS 照片" /&gt;&lt;p&gt;Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p&gt;
+&lt;h2 id="tldr"&gt;TLDR
+&lt;/h2&gt;&lt;h3 id="手机端设置"&gt;手机端设置
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;Pixel 手机无需 root，安装 &lt;a class="link" href="https://play.google.com/store/apps/details?id=pl.solidexplorer2" target="_blank" rel="noopener"
+&gt;Solid Explorer&lt;/a&gt;, 开启 FTP 服务。FTP 默认端口 9999, 默认目录 /sdcard/Download/。&lt;/li&gt;
+&lt;li&gt;在 FTP 目录放一张图片（使用 Solid Explorer 复制、浏览器从网上下载、FTP 上传均可），Google Photos 会询问是否备份此目录，选备份。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="nas-设置"&gt;NAS 设置
+&lt;/h3&gt;&lt;p&gt;群晖自带的 curl 不支持 FTP，需要下载一个静态编译开启 FTP 支持的 curl。可以在 &lt;a class="link" href="https://github.com/moparisthebest/static-curl/releases" target="_blank" rel="noopener"
+&gt;https://github.com/moparisthebest/static-curl/releases&lt;/a&gt; 下载。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;下载 curl 并重命名成 &lt;strong&gt;curl-amd64&lt;/strong&gt;, 并执行 &lt;code&gt;chmod +x curl-amd64&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;下载上传脚本&lt;a class="link" href="https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5" target="_blank" rel="noopener"
+&gt;https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5&lt;/a&gt;, 和 curl-amd64 一起放到家目录。&lt;/li&gt;
+&lt;li&gt;修改 photo-upload.sh 中配置&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;ftp_server 手机 FTP server 地址，Solid Explorer 中可以看到&lt;/li&gt;
+&lt;li&gt;limit_size 脚本运行一次上传的图片/视频数量，过大会导致手机存储空间被占满&lt;/li&gt;
+&lt;li&gt;PHOTO_DIRS 19 行不动，修改 16 行，一行一个目录。我的群晖照片总库 &lt;code&gt;/volume1/photo&lt;/code&gt;, 同时各用户使用 Synology Photos 备份手机照片到自己 home 目录, 17 行会加载所有用户目录下的照片，无需单独配置。&lt;/li&gt;
+&lt;li&gt;控制面板-任务计划-新增-计划的任务-用户定义的脚本
+&lt;ul&gt;
+&lt;li&gt;用户帐号选 &lt;code&gt;admin&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;计划-运行频率-每小时&lt;/li&gt;
+&lt;li&gt;任务设置-用户定义的脚本，&lt;code&gt;bash /volume1/homes/xx/photo-upload.sh&lt;/code&gt;，xx 是自己在 NAS 上用户&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;点击确定后，右键-运行，即可在手机上看到上传的照片/视频。&lt;/p&gt;
+&lt;p&gt;脚本根据 NAS 上照片的修改时间来增量备份，需要定期去手机上释放空间，避免手机空间占满。具体操作路径：Google 相册-右上角头像-释放空间。&lt;/p&gt;
+&lt;h2 id="20220320-更新使用-autojs-自动释放手机空间"&gt;2022.03.20 更新，使用 Autojs 自动释放手机空间
+&lt;/h2&gt;&lt;h3 id="环境准备"&gt;环境准备
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk" target="_blank" rel="noopener"
+&gt;https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://raw.githubusercontent.com/4ft35t/utils/master/autojs/utils.js" target="_blank" rel="noopener"
+&gt;https://raw.githubusercontent.com/4ft35t/utils/master/autojs/utils.js&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js" target="_blank" rel="noopener"
+&gt;https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="操作步骤"&gt;操作步骤
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;安装 autojs, 运行 app， 并按照提示打开无障碍服务。&lt;/li&gt;
+&lt;li&gt;将 utils.js 和 google-photo-free-up-space.js 放到手机 /sdcard/Scripts 目录&lt;/li&gt;
+&lt;li&gt;打开 autojs，下拉刷新，点击 google-photo-free-up-space.js 右边的三角符号运行&lt;/li&gt;
+&lt;li&gt;确认正常后，点击 google-photo-free-up-space.js 右边三点&amp;ndash;更多&amp;ndash;定时任务，设置每天运行时间&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;google-photo-free-up-space.js 中 &lt;code&gt;text()&lt;/code&gt; 函数是在界面查找文本，如果系统语言不是英文，需要自行调整 21-22 行内容&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;span class="lnt"&gt;20
+&lt;/span&gt;&lt;span class="hl"&gt;&lt;span class="lnt"&gt;21
+&lt;/span&gt;&lt;/span&gt;&lt;span class="hl"&gt;&lt;span class="lnt"&gt;22
+&lt;/span&gt;&lt;/span&gt;&lt;span class="lnt"&gt;23
+&lt;/span&gt;&lt;span class="lnt"&gt;24
+&lt;/span&gt;&lt;span class="lnt"&gt;25
+&lt;/span&gt;&lt;span class="lnt"&gt;26
+&lt;/span&gt;&lt;span class="lnt"&gt;27
+&lt;/span&gt;&lt;span class="lnt"&gt;28
+&lt;/span&gt;&lt;span class="lnt"&gt;29
+&lt;/span&gt;&lt;span class="lnt"&gt;30
+&lt;/span&gt;&lt;span class="lnt"&gt;31
+&lt;/span&gt;&lt;span class="lnt"&gt;32
+&lt;/span&gt;&lt;span class="lnt"&gt;33
+&lt;/span&gt;&lt;span class="lnt"&gt;34
+&lt;/span&gt;&lt;span class="lnt"&gt;35
+&lt;/span&gt;&lt;span class="lnt"&gt;36
+&lt;/span&gt;&lt;span class="lnt"&gt;37
+&lt;/span&gt;&lt;span class="lnt"&gt;38
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-js" data-lang="js"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;show&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;utils&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;utils.js&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;pkgName&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;com.google.android.apps.photos&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;utils&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;startApp&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;pkgName&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;toastLog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;启动&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nx"&gt;pkgName&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;，等待检测中&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;waitForPackage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;pkgName&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;toastLog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;检测到&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nx"&gt;pkgName&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;等待 Activity&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;waitForActivity&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;com.google.android.apps.photos.home.HomeActivity&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;toastLog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;找到首页 Activity&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;// 点击头像
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;&lt;/span&gt;&lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;og_apd_internal_image_view&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;waitFor&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;utils&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;click&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;og_apd_internal_image_view&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;toastLog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;找到头像，点击&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;// 点击 free up
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line hl"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;&lt;/span&gt;&lt;span class="nx"&gt;text&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;Free up space&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;waitFor&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line hl"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;utils&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;click&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;text&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;Free up space&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;toastLog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;进入释放界面&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;500&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;// 点击释放按钮
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;free_up_button&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;utils&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;click&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;id&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;free_up_button&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;toastLog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;任务完成&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;// 返回 app 主界面
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;&lt;/span&gt;&lt;span class="nx"&gt;back&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;// 2 次返回退出 app
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;&lt;/span&gt;&lt;span class="nx"&gt;back&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt; &lt;span class="nx"&gt;back&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;hide&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="踩坑过程"&gt;踩坑过程
+&lt;/h2&gt;&lt;p&gt;最初的设想，termux 安装 rclone, 然后将 NAS 共享目录挂载到本地目录，最后在相册里备份本地目录。&lt;/p&gt;
+&lt;p&gt;&lt;del&gt;&lt;strong&gt;rclone 挂载 SFTP&lt;/strong&gt;&lt;/del&gt;&lt;/p&gt;
+&lt;p&gt;群晖开启 STFP 支持，手机上 termux 里配置 rclone 一切正常，到执行 rclone mount 时报 &lt;code&gt;/etc/fstab&lt;/code&gt; 问题，具体记不清，因该是和手机没有 root 有关。&lt;/p&gt;
+&lt;p&gt;&lt;del&gt;&lt;strong&gt;rclone 挂载 WebDAV&lt;/strong&gt;&lt;/del&gt;&lt;/p&gt;
+&lt;p&gt;WebDAV 在 rclone 里不支持 rclone mount。&lt;/p&gt;
+&lt;p&gt;&lt;del&gt;&lt;strong&gt;挂载 SMB 共享文件夹&lt;/strong&gt;&lt;/del&gt;&lt;/p&gt;
+&lt;p&gt;找了几个文件管理器，都只能挂载给自己使用，不能提供给别的 app。只有 root 后才能全局挂载。&lt;/p&gt;
+&lt;h2 id="参考链接"&gt;参考链接
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;a class="link" href="https://support.google.com/photos/answer/6220791" target="_blank" rel="noopener"
+&gt;Choose the upload size of your photos &amp;amp; videos&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.reddit.com/r/GooglePixel/comments/l9m6nk/how_to_use_og_pixel_as_an_unlimited_google_photos/" target="_blank" rel="noopener"
+&gt;How to use OG Pixel as an unlimited Google Photos uploader&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://repaynt.com/2021/02/original-pixel-unlimited-google-photos-uploader/" target="_blank" rel="noopener"
+&gt;Original Pixel Phone – The Unlimited Google Photos Uploader&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://rclone.org/sftp/" target="_blank" rel="noopener"
+&gt;rclone SFTP configuration&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://pmiku.com/note/mount-cifs-in-android.html" target="_blank" rel="noopener"
+&gt;mount-cifs-in-android&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;img src="https://pic1.zhimg.com/v2-6101b6f0fb5664fd5f959332faefb38f_1440w.jpg" alt="Featured image of post bash 条件退出踩坑" /&gt;&lt;p&gt;一个小脚本，&lt;code&gt;[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code&gt;,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p&gt;
+&lt;h3 id="排查"&gt;排查
+&lt;/h3&gt;&lt;p&gt;这个写法以前在脚本里经常写，稳定运行未出错。对比之前的脚本后发现差异，之前的脚本 exit 是提前退出，后面还有内容；这个脚本exit是上层调用脚本反馈最终结果，exit 是最后一行。&lt;/p&gt;
+&lt;p&gt;修改脚本后一切正常&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nv"&gt;status&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;success
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt; &lt;span class="nv"&gt;$status&lt;/span&gt; !&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;success&amp;#34;&lt;/span&gt; &lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="nb"&gt;exit&lt;/span&gt; &lt;span class="m"&gt;２&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;echo&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="原因分析"&gt;原因分析
+&lt;/h3&gt;&lt;p&gt;使用　bash -x 可以看出差异，&lt;/p&gt;
+&lt;p&gt;exit　在最后一行&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;bash -x t.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+ &lt;span class="nv"&gt;status&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;success
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+ &lt;span class="s1"&gt;&amp;#39;[&amp;#39;&lt;/span&gt; success &lt;span class="s1"&gt;&amp;#39;!=&amp;#39;&lt;/span&gt; success &lt;span class="s1"&gt;&amp;#39;]&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;exit 不在最后一行&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;bash -x t.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+ &lt;span class="nv"&gt;status&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;success
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+ &lt;span class="s1"&gt;&amp;#39;[&amp;#39;&lt;/span&gt; success &lt;span class="s1"&gt;&amp;#39;!=&amp;#39;&lt;/span&gt; success &lt;span class="s1"&gt;&amp;#39;]&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+ &lt;span class="nb"&gt;echo&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;shell 会将最后一条命令的返回状态码作为整个脚本的返回状态码。test 在最后一行时，&lt;code&gt;[ $status != &amp;quot;success&amp;quot; ]&lt;/code&gt; 的返回结果非0，后面的　&amp;amp;&amp;amp; 内容不会执行，整个脚本结束，脚本返回状态码就是中括号内test命令的反馈状态码。　　　　　　&lt;/p&gt;
+&lt;h3 id="避坑经验"&gt;避坑经验
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;退出用或逻辑 &lt;code&gt;||&lt;/code&gt;，避免用与逻辑 &lt;del&gt;&amp;amp;&amp;amp;&lt;/del&gt;&lt;/li&gt;
+&lt;li&gt;一定要用 &lt;strong&gt;&amp;amp;&amp;amp; 做退出条件时，不能作为脚本或者函数的最后一条命令&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;上面脚本改造成||退出&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt; &lt;span class="nv"&gt;$status&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;success&amp;#34;&lt;/span&gt; &lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="nb"&gt;exit&lt;/span&gt; &lt;span class="m"&gt;２&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;因为是最后一行，还可以直接省略后面的内容&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt; &lt;span class="nv"&gt;$status&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;success&amp;#34;&lt;/span&gt; &lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item></channel></rss>

@@ -1,494 +1,494 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Proxy on 4ft35t blog</title><link>https://4ft35t.github.io/tags/proxy/</link><description>Recent content in Proxy on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 25 Jun 2022 11:14:47 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/proxy/index.xml" rel="self" type="application/rss+xml"/><item><title>使用机场加速自建代理</title><link>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</link><pubDate>Sat, 25 Jun 2022 11:14:47 +0800</pubDate><guid>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</guid><description>&lt;img src="https://raw.githubusercontent.com/Dreamacro/clash/master/docs/logo.png" alt="Featured image of post 使用机场加速自建代理" />&lt;p>自建代理与机场比较&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>&lt;/th>
-&lt;th>自建代理&lt;/th>
-&lt;th>机场&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>速度&lt;/td>
-&lt;td>慢&lt;/td>
-&lt;td>快&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>安全性&lt;/td>
-&lt;td>高&lt;/td>
-&lt;td>无&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;p>有没有兼顾安全性和速度的方案？&lt;/p>
-&lt;h2 id="最终方案">最终方案
-&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">+-----------+ +---------------+
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| | | |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| 墙内机器 +--①---&amp;gt; 机场国内中转 |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| | | |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+-----------+ +-------+-------+
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |②
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------------+ +-------v-------+
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| | | |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| Cloudflare &amp;lt;--③--+ 机场国外节点 |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| | | |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------+-----+ +---------------+
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |④
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------v-----+ +---------------+
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| | | |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| 自建梯子 +--⑤--&amp;gt; 目标网站 |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| | | |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------------+ +---------------+
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="部署要点">部署要点
-&lt;/h3>&lt;ol>
-&lt;li>自建梯子用 tsl+websocket 协议，各种工具都可以，ss+v2ray-plugin、v2ray、gost 等都可以。这一步目的是为了能用 Cloudflare 的 CDN。&lt;/li>
-&lt;li>需要有自己的域名，把域名接入 Cloudflare。&lt;/li>
-&lt;li>在本地用 clash 控制流量走向&lt;/li>
-&lt;/ol>
-&lt;h2 id="方案优势">方案优势
-&lt;/h2>&lt;ol>
-&lt;li>国内运营商在链路①的位置只能看到你访问了机场的国内 IP&lt;/li>
-&lt;li>机场在链路②③只能看到你在用 tls 流量访问 Cloudflare 节点，目标网站就是你接入 Cloudflare 的域名。&lt;/li>
-&lt;li>&lt;strong>只要你不用代理访问国内网站，运营商和机场都不知道你的自建梯子的出口 IP&lt;/strong>&lt;/li>
-&lt;li>和直连自建梯子比，大幅提升速度和稳定性；和单独使用机场相比，机场无法知道你的访问信息，安全性很大提升&lt;/li>
-&lt;/ol>
-&lt;h2 id="方案实施">方案实施
-&lt;/h2>&lt;ol>
-&lt;li>各代理软件都有详细文档，如何开启tsl+websocket 协议，此处略&lt;/li>
-&lt;li>域名接入 cloudflare， 略&lt;/li>
-&lt;li>购买机场，略&lt;/li>
-&lt;li>clash 配置&lt;/li>
-&lt;/ol>
-&lt;h3 id="clash-简介">Clash 简介
-&lt;/h3>&lt;p>&lt;a class="link" href="https://github.com/Dreamacro/clash" target="_blank" rel="noopener"
->Clash&lt;/a>是一款用 Go 开发的多平台的代理工具，使用强大的策略组来管理节点;可以自动选择节点，不同的网站，在同一时间，可以使用不同的节点去访问。&lt;/p>
-&lt;p>我们用 Clash 强大的策略组功能来套娃。&lt;/p>
-&lt;p>官方文档有示例 &lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
->https://github.com/Dreamacro/clash/wiki/configuration&lt;/a>&lt;/p>
-&lt;blockquote>
-&lt;p>relay chains the proxies. proxies shall not contain a relay. No UDP support.
-Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; ss1 &amp;lt;-&amp;gt; ss2 &amp;lt;-&amp;gt; Internet&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="配置文件">配置文件
-&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;span class="lnt">27
-&lt;/span>&lt;span class="lnt">28
-&lt;/span>&lt;span class="lnt">29
-&lt;/span>&lt;span class="lnt">30
-&lt;/span>&lt;span class="lnt">31
-&lt;/span>&lt;span class="lnt">32
-&lt;/span>&lt;span class="lnt">33
-&lt;/span>&lt;span class="lnt">34
-&lt;/span>&lt;span class="lnt">35
-&lt;/span>&lt;span class="lnt">36
-&lt;/span>&lt;span class="lnt">37
-&lt;/span>&lt;span class="lnt">38
-&lt;/span>&lt;span class="lnt">39
-&lt;/span>&lt;span class="lnt">40
-&lt;/span>&lt;span class="lnt">41
-&lt;/span>&lt;span class="lnt">42
-&lt;/span>&lt;span class="lnt">43
-&lt;/span>&lt;span class="lnt">44
-&lt;/span>&lt;span class="lnt">45
-&lt;/span>&lt;span class="lnt">46
-&lt;/span>&lt;span class="lnt">47
-&lt;/span>&lt;span class="lnt">48
-&lt;/span>&lt;span class="lnt">49
-&lt;/span>&lt;span class="lnt">50
-&lt;/span>&lt;span class="lnt">51
-&lt;/span>&lt;span class="lnt">52
-&lt;/span>&lt;span class="lnt">53
-&lt;/span>&lt;span class="lnt">54
-&lt;/span>&lt;span class="lnt">55
-&lt;/span>&lt;span class="lnt">56
-&lt;/span>&lt;span class="lnt">57
-&lt;/span>&lt;span class="lnt">58
-&lt;/span>&lt;span class="lnt">59
-&lt;/span>&lt;span class="lnt">60
-&lt;/span>&lt;span class="lnt">61
-&lt;/span>&lt;span class="lnt">62
-&lt;/span>&lt;span class="lnt">63
-&lt;/span>&lt;span class="lnt">64
-&lt;/span>&lt;span class="lnt">65
-&lt;/span>&lt;span class="lnt">66
-&lt;/span>&lt;span class="lnt">67
-&lt;/span>&lt;span class="lnt">68
-&lt;/span>&lt;span class="lnt">69
-&lt;/span>&lt;span class="lnt">70
-&lt;/span>&lt;span class="lnt">71
-&lt;/span>&lt;span class="lnt">72
-&lt;/span>&lt;span class="lnt">73
-&lt;/span>&lt;span class="lnt">74
-&lt;/span>&lt;span class="lnt">75
-&lt;/span>&lt;span class="lnt">76
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">mixed-port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">7890&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">mode&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">rule&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">proxies&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 自建 ss&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;my-vps-ss&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ss&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">server&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">mydomain.xx.cc&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c"># 这里也可以是 Cloudflare 的 IP&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">443&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">cipher&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">chacha20-ietf-poly1305&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">password&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;password&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">plugin&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">v2ray-plugin&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">plugin-opts&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">mode&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">websocket&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">tls&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">skip-cert-verify&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">host&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">mydomain.xx.cc&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 机场 ss1&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;jichang-ss-hk&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ss&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">server&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">jichang.abc.com&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">12345&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">cipher&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">chacha20-ietf-poly1305&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">password&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;password&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">plugin&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">obfs&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">plugin-opts&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">mode&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">http&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">host&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">bing.com&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 机场 ss2&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;jichang-ss-tw&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ss&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">server&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">jichang.abc.com&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">12346&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">cipher&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">chacha20-ietf-poly1305&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">password&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;password&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">plugin&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">obfs&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">plugin-opts&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">mode&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">http&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">host&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">bing.com&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 机场 v2ray&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;jichang-v2ray-hk&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">vmess&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">server&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">jichang.abc.com&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">12347&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">cipher&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">auto&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">uuid&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">xxxx-xxxx-xxxx-xxxx&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">alterId&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">64&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">proxy-groups&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 先把所有机场结点放在一个组&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;机场&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 自动选择延时最小的结点&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">url-test&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">proxies&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">jichang-ss-hk&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">jichang-ss-tw&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">jichang-v2ray-hk&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">url&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;http://www.gstatic.com/generate_204&amp;#39;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">interval&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">300&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 创建一个 type 是 relay 的组，流量按 proxies 里的顺序，从上往下走&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;myproxy&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 自动选择延时最小的结点&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">url-test&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">proxies&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">机场&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">my-vps-ss&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">rules&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">IP-CIDR,127.0.0.0/8,DIRECT&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">IP-CIDR,192.168.0.0/16,DIRECT&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">GEOIP,CN,DIRECT&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">MATCH,myproxy&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>至此，配置完成，7980 端口同时提供 http 和 socks4、socks5 代理。&lt;/p>
-&lt;p>分流策略是：&lt;/p>
-&lt;ul>
-&lt;li>国内 IP 直连&lt;/li>
-&lt;li>国外 IP 走代理&lt;/li>
-&lt;/ul>
-&lt;h3 id="数据流">数据流：
-&lt;/h3>&lt;ol>
-&lt;li>本机请求 -&amp;gt; clash，clash 按 relay 组的 proxies 顺序，从下往上加密，本配置中，先用自建的加密方式加密请求，再用机场的加密方式加密第二次&lt;/li>
-&lt;li>clash -&amp;gt; 机场，机场解开自己的加密，看到目标是一个 Cloudflare 上的网站&lt;/li>
-&lt;li>机场 -&amp;gt; Cloudflare, 用标准的 https 方式转发收到的数据包&lt;/li>
-&lt;li>Cloudflare -&amp;gt; vps，vps 收到 https 包后，先用域名的私钥解密数据，得到加密的 ss 数据，再用 ss 解密得到真正的目标。&lt;/li>
-&lt;/ol>
-&lt;h2 id="更古老的套娃方案">更古老的套娃方案
-&lt;/h2>&lt;p>在遇到 clash 之前，一直在 openwrt 上套娃，使用的是 shadowsocks + iptables-mod-tproxy&lt;/p>
-&lt;h3 id="环境准备">环境准备
-&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">opkg install shadowsocks-libev
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="操作方法">操作方法
-&lt;/h3>&lt;ol>
-&lt;li>openwrt 上正常配置自建梯子，能正常使用后进入第2步&lt;/li>
-&lt;li>用 ss-redir 启动机场的 ss&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ss-redir -c jichang.json -l &lt;span class="m">12346&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;ol start="3">
-&lt;li>iptables 把自建的流量重定向到机场。假设自建的 IP 是 1.1.1.1&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">iptables -t nat -I OUTPUT -p tcp -d 1.1.1.1 -j REDIRECT --to-ports &lt;span class="m">12346&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>等效 nftables 指令&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">nft add chain inet fw4 jichang_rules_out &lt;span class="s1">&amp;#39;{type nat hook output priority filter -2;}&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">nft add rule inet fw4 jichang_rules_out ip protocol tcp ip &lt;span class="nv">daddr&lt;/span> &lt;span class="o">==&lt;/span> 172.67.134.143 redirect to :12346
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>&lt;strong>机场的 ss-redir 需要后启动，shadowsocks 默认策略是插入 OUTPUT 链首位，后启动的在首位&lt;/strong>&lt;/p>
-&lt;h2 id="参考链接">参考链接
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://wanchuan.top/e9430b8345c049f8afce602db5f5f773" target="_blank" rel="noopener"
->使用Clash工具科学上网&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
->clash 官方配置文档&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://guide.v2fly.org/app/tproxy.html#%E9%85%8D%E7%BD%AE%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E8%A7%84%E5%88%99" target="_blank" rel="noopener"
->v2ay 配置透明代理规则&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="http://openwrt-dist.sourceforge.net/" target="_blank" rel="noopener"
->aa65535 维护的 shadowsocks for openwrt&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>SSH 跳板机与代理</title><link>https://4ft35t.github.io/post/ssh-porxy/</link><pubDate>Wed, 03 Jun 2020 16:55:35 +0800</pubDate><guid>https://4ft35t.github.io/post/ssh-porxy/</guid><description>&lt;img src="https://www.openssh.com/images/openssh.gif" alt="Featured image of post SSH 跳板机与代理" />&lt;p>基于各种复杂环境，ssh 无法直接连接目标主机，需要借助中间的跳板机或者代理来连接。通常使用 ssh-agent 来通过跳板机连接目标主机，使用 ProxyCommand 或者 ProxyJump 连接更方便。&lt;/p>
-&lt;h3 id="跳板机">跳板机
-&lt;/h3>&lt;p>在　&lt;code>~/.ssh/config&lt;/code> 中给跳板机一个方便记忆的别名，比如　jumpserver&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Host jumpserver
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> User root
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> HostName 1.2.3.4
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Port 2222
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> IdentityFile ~/.ssh/jump.pem
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>之后就可以通过　&lt;code>ssh jumpserver&lt;/code> 登录到跳板机。&lt;/p>
-&lt;p>通过跳板机连接目标主机：&lt;/p>
-&lt;p>&lt;code>ssh -o ProxyCommand=&amp;quot;ssh -W %h:%p jumpserver&amp;quot; usr@10.0.0.1&lt;/code>&lt;/p>
-&lt;p>或者写入 config 文件，使用 &lt;code>ssh dst&lt;/code> 直接登录目标主机&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Host dst
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> User usr
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> HostName 10.0.0.1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Port 22
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ProxyCommand ssh -W %h:%p jumpserver
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>较新版本的 ssh 客户端可以使用 ProxyJump&lt;/p>
-&lt;p>&lt;code>ssh -J jumpserver usr@10.0.0.1&lt;/code>&lt;/p>
-&lt;p>或者写入 config 文件&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Host dst
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> User usr
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> HostName 10.0.0.1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Port 22
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ProxyJump jumpserver
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>不同版本 ssh 客户端的差异如下&lt;/p>
-&lt;p>&lt;strong>ProxyCommand 与 ProxyJump&lt;/strong>
-所有命令向后兼容，新版本可以使用老版本命令&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>远古 SSH 客户端，OpenSSH &amp;lt; 5.4&lt;/p>
-&lt;p>&lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code>&lt;/p>
-&lt;p>或者
-&lt;code>ssh -tt usr1@Jumphost ssh -tt usr2@FooServer&lt;/code>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>中古 SSH 客户端，5.4 &amp;lt;= OpenSSH &amp;lt;= 7.2&lt;/p>
-&lt;p>&lt;code>ProxyCommand ssh jumpserver -W %h:%p&lt;/code>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>现代 SSH 客户端，OpenSSH &amp;gt;= 7.3&lt;/p>
-&lt;p>&lt;code>ProxyJump jumpserver&lt;/code>&lt;/p>
-&lt;p>命令行使用
-&lt;code>ssh -J jumpserver user@dst-host&lt;/code>&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h3 id="代理">代理
-&lt;/h3>&lt;h4 id="socks-代理">socks 代理
-&lt;/h4>&lt;ul>
-&lt;li>
-&lt;p>nc &lt;code>ProxyCommand nc -x 127.0.0.1:1080 %h %p&lt;/code>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;a class="link" href="https://github.com/larryhou/connect-proxy" target="_blank" rel="noopener"
->https://github.com/larryhou/connect-proxy&lt;/a> &lt;code>ProxyCommand connect-proxy -S 127.0.0.1:1080 %h %p&lt;/code>&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h4 id="httphttps-代理">HTTP/HTTPS 代理
-&lt;/h4>&lt;ul>
-&lt;li>
-&lt;p>nc &lt;code>ProxyCommand nc -X connect -x 1.2.3.4:3128 %h %p&lt;/code>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;a class="link" href="https://github.com/bryanpkc/corkscrew" target="_blank" rel="noopener"
->https://github.com/bryanpkc/corkscrew&lt;/a> &lt;code>ProxyCommand /usr/local/bin/corkscrew 1.2.3.4 3128 %h %p&lt;/code>&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>corkscrew 在代理不稳定时比 nc 可靠&lt;/strong>&lt;/p>
-&lt;h3 id="特别注意">特别注意
-&lt;/h3>&lt;p>本文提到的 nc 是 &lt;strong>BSD 版本的 netcat&lt;/strong>， GNU 版本的 natcat 没有代理功能。&lt;/p>
-&lt;p>更多 netcat 版本见 &lt;a class="link" href="https://wiki.archlinux.org/title/Network_tools#Netcat" target="_blank" rel="noopener"
->https://wiki.archlinux.org/title/Network_tools#Netcat&lt;/a>&lt;/p>
-&lt;h3 id="使用-socat-突破某些堡垒机">使用 socat 突破某些堡垒机
-&lt;/h3>&lt;p>某堡垒机的OpenSSH版本是&lt;code>OpenSSH_7.8p1&lt;/code>, 使用&lt;code>ssh -J jumpserver user@dst-host&lt;/code>无法连接，从报错信息来看，堡垒机禁止了 SSH 转发功能&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">debug1: Local version string SSH-2.0-OpenSSH_8.1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Stdio forwarding request failed: Session open refused by peer
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">kex_exchange_identification: Connection closed by remote host
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>&lt;code>ssh -tt&lt;/code> 和 &lt;code>ssh -W&lt;/code> 也是同样错误，SSH 自身转发走不通，需要借助第三方软件。&lt;/p>
-&lt;h4 id="尝试1---使用-nc-转发">尝试1 - 使用 nc 转发
-&lt;/h4>&lt;p>使用 &lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code> 连接失败，报错, 跳板机上没有 nc&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">debug1: Local version string SSH-2.0-OpenSSH_8.1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">bash: nc: &lt;span class="nb">command&lt;/span> not found
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>用包管理器安装 netcat, 提供的只有 nmap 版本，没有代理功能。&lt;/p>
-&lt;h4 id="尝试2---使用-socat-转发">尝试2 - 使用 socat 转发
-&lt;/h4>&lt;p>Socat 是 Linux 下的一个多功能的网络工具，名字来由是 「Socket CAT」。其功能与有瑞士军刀之称的 Netcat 类似，可以看做是 Netcat 的加强版。Socat 的主要特点就是在两个数据流之间建立通道，支持众多协议和链接方式，如 IP、TCP、 UDP、IPv6、PIPE、EXEC、System、Open、Proxy、Openssl、Socket等。&lt;/p>
-&lt;p>使用 &lt;code>ProxyCommand ssh jumpserver socat - tcp:%h:%p&lt;/code> 成功通过堡垒机连接目标机器。&lt;/p>
-&lt;h3 id="socat-在proxycommand-中与-netcat-等效用法">socat 在ProxyCommand 中与 netcat 等效用法
-&lt;/h3>&lt;p>socat 稳定版 1.7，beta 版 2 的代理功能更丰富。&lt;/p>
-&lt;h4 id="跳板机堡垒机">跳板机/堡垒机
-&lt;/h4>&lt;p>&lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code> -&amp;gt; &lt;code>ProxyCommand ssh jumpserver socat - tcp:%h:%p&lt;/code>&lt;/p>
-&lt;h4 id="socks-代理-1">socks 代理
-&lt;/h4>&lt;p>&lt;code>ProxyCommand nc -x 127.0.0.1:1080 %h %p&lt;/code> -&amp;gt;&lt;/p>
-&lt;ul>
-&lt;li>socat1 &lt;code>ProxyCommand socat - &amp;quot;SOCKS4:127.0.0.1:%h:%p,socksport=1080&amp;quot;&lt;/code>&lt;/li>
-&lt;li>socat2 &lt;code>ProxyCommand socat - &amp;quot;SOCKS5:%h:%p|tcp:127.0.0.1:1080&amp;quot;&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;h4 id="httphttps-代理-1">HTTP/HTTPS 代理
-&lt;/h4>&lt;p>&lt;code>ProxyCommand nc -X connect -x 1.2.3.4:3128 %h %p&lt;/code> -&amp;gt;&lt;/p>
-&lt;ul>
-&lt;li>socat1 &lt;code>ProxyCommand socat - &amp;quot;PROXY:1.2.3.4:%h:%p,proxyport=3128&amp;quot;&lt;/code>&lt;/li>
-&lt;li>socat2 &lt;code>ProxyCommand socat - &amp;quot;PROXY:%h:%p|tcp:1.2.3.4:3128&amp;quot;&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;h3 id="参考链接">参考链接
-&lt;/h3>&lt;ul>
-&lt;li>&lt;a class="link" href="https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts" target="_blank" rel="noopener"
->https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/" target="_blank" rel="noopener"
->https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.endpointdev.com/blog/2013/04/socat-and-netcat-proxycommand-ssh/" target="_blank" rel="noopener"
->https://www.endpointdev.com/blog/2013/04/socat-and-netcat-proxycommand-ssh/&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://unix.stackexchange.com/questions/68826/connecting-to-host-by-ssh-client-in-linux-by-proxy" target="_blank" rel="noopener"
->https://unix.stackexchange.com/questions/68826/connecting-to-host-by-ssh-client-in-linux-by-proxy&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://gitolite.com/git-over-proxy.html" target="_blank" rel="noopener"
->https://gitolite.com/git-over-proxy.html&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://linux.die.net/man/1/socat" target="_blank" rel="noopener"
->https://linux.die.net/man/1/socat&lt;/a>&lt;/li>
-&lt;/ul></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Proxy on 4ft35t blog</title><link>https://4ft35t.github.io/tags/proxy/</link><description>Recent content in Proxy on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 25 Jun 2022 11:14:47 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/proxy/index.xml" rel="self" type="application/rss+xml"/><item><title>使用机场加速自建代理</title><link>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</link><pubDate>Sat, 25 Jun 2022 11:14:47 +0800</pubDate><guid>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</guid><description>&lt;img src="https://raw.githubusercontent.com/Dreamacro/clash/master/docs/logo.png" alt="Featured image of post 使用机场加速自建代理" /&gt;&lt;p&gt;自建代理与机场比较&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;自建代理&lt;/th&gt;
+&lt;th&gt;机场&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;速度&lt;/td&gt;
+&lt;td&gt;慢&lt;/td&gt;
+&lt;td&gt;快&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;安全性&lt;/td&gt;
+&lt;td&gt;高&lt;/td&gt;
+&lt;td&gt;无&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;有没有兼顾安全性和速度的方案？&lt;/p&gt;
+&lt;h2 id="最终方案"&gt;最终方案
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+-----------+ +---------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| | | |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| 墙内机器 +--①---&amp;gt; 机场国内中转 |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| | | |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+-----------+ +-------+-------+
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; |②
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+------------+ +-------v-------+
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| | | |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| Cloudflare &amp;lt;--③--+ 机场国外节点 |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| | | |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+------+-----+ +---------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; |④
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+------v-----+ +---------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| | | |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| 自建梯子 +--⑤--&amp;gt; 目标网站 |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| | | |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+------------+ +---------------+
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="部署要点"&gt;部署要点
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;自建梯子用 tsl+websocket 协议，各种工具都可以，ss+v2ray-plugin、v2ray、gost 等都可以。这一步目的是为了能用 Cloudflare 的 CDN。&lt;/li&gt;
+&lt;li&gt;需要有自己的域名，把域名接入 Cloudflare。&lt;/li&gt;
+&lt;li&gt;在本地用 clash 控制流量走向&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="方案优势"&gt;方案优势
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;国内运营商在链路①的位置只能看到你访问了机场的国内 IP&lt;/li&gt;
+&lt;li&gt;机场在链路②③只能看到你在用 tls 流量访问 Cloudflare 节点，目标网站就是你接入 Cloudflare 的域名。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;只要你不用代理访问国内网站，运营商和机场都不知道你的自建梯子的出口 IP&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;和直连自建梯子比，大幅提升速度和稳定性；和单独使用机场相比，机场无法知道你的访问信息，安全性很大提升&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="方案实施"&gt;方案实施
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;各代理软件都有详细文档，如何开启tsl+websocket 协议，此处略&lt;/li&gt;
+&lt;li&gt;域名接入 cloudflare， 略&lt;/li&gt;
+&lt;li&gt;购买机场，略&lt;/li&gt;
+&lt;li&gt;clash 配置&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="clash-简介"&gt;Clash 简介
+&lt;/h3&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/Dreamacro/clash" target="_blank" rel="noopener"
+&gt;Clash&lt;/a&gt;是一款用 Go 开发的多平台的代理工具，使用强大的策略组来管理节点;可以自动选择节点，不同的网站，在同一时间，可以使用不同的节点去访问。&lt;/p&gt;
+&lt;p&gt;我们用 Clash 强大的策略组功能来套娃。&lt;/p&gt;
+&lt;p&gt;官方文档有示例 &lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
+&gt;https://github.com/Dreamacro/clash/wiki/configuration&lt;/a&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;relay chains the proxies. proxies shall not contain a relay. No UDP support.
+Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; ss1 &amp;lt;-&amp;gt; ss2 &amp;lt;-&amp;gt; Internet&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="配置文件"&gt;配置文件
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;span class="lnt"&gt;20
+&lt;/span&gt;&lt;span class="lnt"&gt;21
+&lt;/span&gt;&lt;span class="lnt"&gt;22
+&lt;/span&gt;&lt;span class="lnt"&gt;23
+&lt;/span&gt;&lt;span class="lnt"&gt;24
+&lt;/span&gt;&lt;span class="lnt"&gt;25
+&lt;/span&gt;&lt;span class="lnt"&gt;26
+&lt;/span&gt;&lt;span class="lnt"&gt;27
+&lt;/span&gt;&lt;span class="lnt"&gt;28
+&lt;/span&gt;&lt;span class="lnt"&gt;29
+&lt;/span&gt;&lt;span class="lnt"&gt;30
+&lt;/span&gt;&lt;span class="lnt"&gt;31
+&lt;/span&gt;&lt;span class="lnt"&gt;32
+&lt;/span&gt;&lt;span class="lnt"&gt;33
+&lt;/span&gt;&lt;span class="lnt"&gt;34
+&lt;/span&gt;&lt;span class="lnt"&gt;35
+&lt;/span&gt;&lt;span class="lnt"&gt;36
+&lt;/span&gt;&lt;span class="lnt"&gt;37
+&lt;/span&gt;&lt;span class="lnt"&gt;38
+&lt;/span&gt;&lt;span class="lnt"&gt;39
+&lt;/span&gt;&lt;span class="lnt"&gt;40
+&lt;/span&gt;&lt;span class="lnt"&gt;41
+&lt;/span&gt;&lt;span class="lnt"&gt;42
+&lt;/span&gt;&lt;span class="lnt"&gt;43
+&lt;/span&gt;&lt;span class="lnt"&gt;44
+&lt;/span&gt;&lt;span class="lnt"&gt;45
+&lt;/span&gt;&lt;span class="lnt"&gt;46
+&lt;/span&gt;&lt;span class="lnt"&gt;47
+&lt;/span&gt;&lt;span class="lnt"&gt;48
+&lt;/span&gt;&lt;span class="lnt"&gt;49
+&lt;/span&gt;&lt;span class="lnt"&gt;50
+&lt;/span&gt;&lt;span class="lnt"&gt;51
+&lt;/span&gt;&lt;span class="lnt"&gt;52
+&lt;/span&gt;&lt;span class="lnt"&gt;53
+&lt;/span&gt;&lt;span class="lnt"&gt;54
+&lt;/span&gt;&lt;span class="lnt"&gt;55
+&lt;/span&gt;&lt;span class="lnt"&gt;56
+&lt;/span&gt;&lt;span class="lnt"&gt;57
+&lt;/span&gt;&lt;span class="lnt"&gt;58
+&lt;/span&gt;&lt;span class="lnt"&gt;59
+&lt;/span&gt;&lt;span class="lnt"&gt;60
+&lt;/span&gt;&lt;span class="lnt"&gt;61
+&lt;/span&gt;&lt;span class="lnt"&gt;62
+&lt;/span&gt;&lt;span class="lnt"&gt;63
+&lt;/span&gt;&lt;span class="lnt"&gt;64
+&lt;/span&gt;&lt;span class="lnt"&gt;65
+&lt;/span&gt;&lt;span class="lnt"&gt;66
+&lt;/span&gt;&lt;span class="lnt"&gt;67
+&lt;/span&gt;&lt;span class="lnt"&gt;68
+&lt;/span&gt;&lt;span class="lnt"&gt;69
+&lt;/span&gt;&lt;span class="lnt"&gt;70
+&lt;/span&gt;&lt;span class="lnt"&gt;71
+&lt;/span&gt;&lt;span class="lnt"&gt;72
+&lt;/span&gt;&lt;span class="lnt"&gt;73
+&lt;/span&gt;&lt;span class="lnt"&gt;74
+&lt;/span&gt;&lt;span class="lnt"&gt;75
+&lt;/span&gt;&lt;span class="lnt"&gt;76
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;mixed-port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;7890&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;&lt;/span&gt;&lt;span class="nt"&gt;mode&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;rule&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;&lt;/span&gt;&lt;span class="nt"&gt;proxies&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 自建 ss&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;my-vps-ss&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;type&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;ss&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;server&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;mydomain.xx.cc&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 这里也可以是 Cloudflare 的 IP&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;443&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;cipher&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;chacha20-ietf-poly1305&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;password&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;password&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;plugin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;v2ray-plugin&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;plugin-opts&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;mode&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;websocket&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;tls&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;skip-cert-verify&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;host&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;mydomain.xx.cc&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 机场 ss1&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;jichang-ss-hk&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;type&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;ss&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;server&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;jichang.abc.com&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;12345&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;cipher&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;chacha20-ietf-poly1305&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;password&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;password&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;plugin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;obfs&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;plugin-opts&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;mode&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;http&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;host&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;bing.com&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 机场 ss2&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;jichang-ss-tw&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;type&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;ss&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;server&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;jichang.abc.com&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;12346&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;cipher&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;chacha20-ietf-poly1305&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;password&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;password&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;plugin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;obfs&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;plugin-opts&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;mode&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;http&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;host&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;bing.com&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 机场 v2ray&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;jichang-v2ray-hk&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;type&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;vmess&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;server&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;jichang.abc.com&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;12347&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;cipher&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;auto&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;uuid&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;xxxx-xxxx-xxxx-xxxx&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;alterId&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;64&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;&lt;/span&gt;&lt;span class="nt"&gt;proxy-groups&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 先把所有机场结点放在一个组&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;机场&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 自动选择延时最小的结点&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;type&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;url-test&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;proxies&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;jichang-ss-hk&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;jichang-ss-tw&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;jichang-v2ray-hk&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;url&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://www.gstatic.com/generate_204&amp;#39;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;interval&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;300&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 创建一个 type 是 relay 的组，流量按 proxies 里的顺序，从上往下走&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;myproxy&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 自动选择延时最小的结点&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;type&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;url-test&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;proxies&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;机场&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;my-vps-ss&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;&lt;/span&gt;&lt;span class="nt"&gt;rules&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;IP-CIDR,127.0.0.0/8,DIRECT&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;IP-CIDR,192.168.0.0/16,DIRECT&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;GEOIP,CN,DIRECT&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;MATCH,myproxy&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;至此，配置完成，7980 端口同时提供 http 和 socks4、socks5 代理。&lt;/p&gt;
+&lt;p&gt;分流策略是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;国内 IP 直连&lt;/li&gt;
+&lt;li&gt;国外 IP 走代理&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="数据流"&gt;数据流：
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;本机请求 -&amp;gt; clash，clash 按 relay 组的 proxies 顺序，从下往上加密，本配置中，先用自建的加密方式加密请求，再用机场的加密方式加密第二次&lt;/li&gt;
+&lt;li&gt;clash -&amp;gt; 机场，机场解开自己的加密，看到目标是一个 Cloudflare 上的网站&lt;/li&gt;
+&lt;li&gt;机场 -&amp;gt; Cloudflare, 用标准的 https 方式转发收到的数据包&lt;/li&gt;
+&lt;li&gt;Cloudflare -&amp;gt; vps，vps 收到 https 包后，先用域名的私钥解密数据，得到加密的 ss 数据，再用 ss 解密得到真正的目标。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="更古老的套娃方案"&gt;更古老的套娃方案
+&lt;/h2&gt;&lt;p&gt;在遇到 clash 之前，一直在 openwrt 上套娃，使用的是 shadowsocks + iptables-mod-tproxy&lt;/p&gt;
+&lt;h3 id="环境准备"&gt;环境准备
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;opkg install shadowsocks-libev
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="操作方法"&gt;操作方法
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;openwrt 上正常配置自建梯子，能正常使用后进入第2步&lt;/li&gt;
+&lt;li&gt;用 ss-redir 启动机场的 ss&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;ss-redir -c jichang.json -l &lt;span class="m"&gt;12346&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ol start="3"&gt;
+&lt;li&gt;iptables 把自建的流量重定向到机场。假设自建的 IP 是 1.1.1.1&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;iptables -t nat -I OUTPUT -p tcp -d 1.1.1.1 -j REDIRECT --to-ports &lt;span class="m"&gt;12346&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;等效 nftables 指令&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;nft add chain inet fw4 jichang_rules_out &lt;span class="s1"&gt;&amp;#39;{type nat hook output priority filter -2;}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;nft add rule inet fw4 jichang_rules_out ip protocol tcp ip &lt;span class="nv"&gt;daddr&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; 172.67.134.143 redirect to :12346
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;机场的 ss-redir 需要后启动，shadowsocks 默认策略是插入 OUTPUT 链首位，后启动的在首位&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="参考链接"&gt;参考链接
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://wanchuan.top/e9430b8345c049f8afce602db5f5f773" target="_blank" rel="noopener"
+&gt;使用Clash工具科学上网&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
+&gt;clash 官方配置文档&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://guide.v2fly.org/app/tproxy.html#%E9%85%8D%E7%BD%AE%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E8%A7%84%E5%88%99" target="_blank" rel="noopener"
+&gt;v2ay 配置透明代理规则&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="http://openwrt-dist.sourceforge.net/" target="_blank" rel="noopener"
+&gt;aa65535 维护的 shadowsocks for openwrt&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>SSH 跳板机与代理</title><link>https://4ft35t.github.io/post/ssh-porxy/</link><pubDate>Wed, 03 Jun 2020 16:55:35 +0800</pubDate><guid>https://4ft35t.github.io/post/ssh-porxy/</guid><description>&lt;img src="https://www.openssh.com/images/openssh.gif" alt="Featured image of post SSH 跳板机与代理" /&gt;&lt;p&gt;基于各种复杂环境，ssh 无法直接连接目标主机，需要借助中间的跳板机或者代理来连接。通常使用 ssh-agent 来通过跳板机连接目标主机，使用 ProxyCommand 或者 ProxyJump 连接更方便。&lt;/p&gt;
+&lt;h3 id="跳板机"&gt;跳板机
+&lt;/h3&gt;&lt;p&gt;在　&lt;code&gt;~/.ssh/config&lt;/code&gt; 中给跳板机一个方便记忆的别名，比如　jumpserver&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Host jumpserver
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; User root
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; HostName 1.2.3.4
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; Port 2222
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; IdentityFile ~/.ssh/jump.pem
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;之后就可以通过　&lt;code&gt;ssh jumpserver&lt;/code&gt; 登录到跳板机。&lt;/p&gt;
+&lt;p&gt;通过跳板机连接目标主机：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ssh -o ProxyCommand=&amp;quot;ssh -W %h:%p jumpserver&amp;quot; usr@10.0.0.1&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;或者写入 config 文件，使用 &lt;code&gt;ssh dst&lt;/code&gt; 直接登录目标主机&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Host dst
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; User usr
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; HostName 10.0.0.1
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; Port 22
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ProxyCommand ssh -W %h:%p jumpserver
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;较新版本的 ssh 客户端可以使用 ProxyJump&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ssh -J jumpserver usr@10.0.0.1&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;或者写入 config 文件&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Host dst
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; User usr
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; HostName 10.0.0.1
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; Port 22
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ProxyJump jumpserver
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;不同版本 ssh 客户端的差异如下&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ProxyCommand 与 ProxyJump&lt;/strong&gt;
+所有命令向后兼容，新版本可以使用老版本命令&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;远古 SSH 客户端，OpenSSH &amp;lt; 5.4&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ProxyCommand ssh jumpserver nc %h %p&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;或者
+&lt;code&gt;ssh -tt usr1@Jumphost ssh -tt usr2@FooServer&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;中古 SSH 客户端，5.4 &amp;lt;= OpenSSH &amp;lt;= 7.2&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ProxyCommand ssh jumpserver -W %h:%p&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;现代 SSH 客户端，OpenSSH &amp;gt;= 7.3&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ProxyJump jumpserver&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;命令行使用
+&lt;code&gt;ssh -J jumpserver user@dst-host&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="代理"&gt;代理
+&lt;/h3&gt;&lt;h4 id="socks-代理"&gt;socks 代理
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;nc &lt;code&gt;ProxyCommand nc -x 127.0.0.1:1080 %h %p&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a class="link" href="https://github.com/larryhou/connect-proxy" target="_blank" rel="noopener"
+&gt;https://github.com/larryhou/connect-proxy&lt;/a&gt; &lt;code&gt;ProxyCommand connect-proxy -S 127.0.0.1:1080 %h %p&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="httphttps-代理"&gt;HTTP/HTTPS 代理
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;nc &lt;code&gt;ProxyCommand nc -X connect -x 1.2.3.4:3128 %h %p&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a class="link" href="https://github.com/bryanpkc/corkscrew" target="_blank" rel="noopener"
+&gt;https://github.com/bryanpkc/corkscrew&lt;/a&gt; &lt;code&gt;ProxyCommand /usr/local/bin/corkscrew 1.2.3.4 3128 %h %p&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;corkscrew 在代理不稳定时比 nc 可靠&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id="特别注意"&gt;特别注意
+&lt;/h3&gt;&lt;p&gt;本文提到的 nc 是 &lt;strong&gt;BSD 版本的 netcat&lt;/strong&gt;， GNU 版本的 natcat 没有代理功能。&lt;/p&gt;
+&lt;p&gt;更多 netcat 版本见 &lt;a class="link" href="https://wiki.archlinux.org/title/Network_tools#Netcat" target="_blank" rel="noopener"
+&gt;https://wiki.archlinux.org/title/Network_tools#Netcat&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="使用-socat-突破某些堡垒机"&gt;使用 socat 突破某些堡垒机
+&lt;/h3&gt;&lt;p&gt;某堡垒机的OpenSSH版本是&lt;code&gt;OpenSSH_7.8p1&lt;/code&gt;, 使用&lt;code&gt;ssh -J jumpserver user@dst-host&lt;/code&gt;无法连接，从报错信息来看，堡垒机禁止了 SSH 转发功能&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;debug1: Local version string SSH-2.0-OpenSSH_8.1
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Stdio forwarding request failed: Session open refused by peer
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;kex_exchange_identification: Connection closed by remote host
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;ssh -tt&lt;/code&gt; 和 &lt;code&gt;ssh -W&lt;/code&gt; 也是同样错误，SSH 自身转发走不通，需要借助第三方软件。&lt;/p&gt;
+&lt;h4 id="尝试1---使用-nc-转发"&gt;尝试1 - 使用 nc 转发
+&lt;/h4&gt;&lt;p&gt;使用 &lt;code&gt;ProxyCommand ssh jumpserver nc %h %p&lt;/code&gt; 连接失败，报错, 跳板机上没有 nc&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;debug1: Local version string SSH-2.0-OpenSSH_8.1
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;bash: nc: &lt;span class="nb"&gt;command&lt;/span&gt; not found
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;用包管理器安装 netcat, 提供的只有 nmap 版本，没有代理功能。&lt;/p&gt;
+&lt;h4 id="尝试2---使用-socat-转发"&gt;尝试2 - 使用 socat 转发
+&lt;/h4&gt;&lt;p&gt;Socat 是 Linux 下的一个多功能的网络工具，名字来由是 「Socket CAT」。其功能与有瑞士军刀之称的 Netcat 类似，可以看做是 Netcat 的加强版。Socat 的主要特点就是在两个数据流之间建立通道，支持众多协议和链接方式，如 IP、TCP、 UDP、IPv6、PIPE、EXEC、System、Open、Proxy、Openssl、Socket等。&lt;/p&gt;
+&lt;p&gt;使用 &lt;code&gt;ProxyCommand ssh jumpserver socat - tcp:%h:%p&lt;/code&gt; 成功通过堡垒机连接目标机器。&lt;/p&gt;
+&lt;h3 id="socat-在proxycommand-中与-netcat-等效用法"&gt;socat 在ProxyCommand 中与 netcat 等效用法
+&lt;/h3&gt;&lt;p&gt;socat 稳定版 1.7，beta 版 2 的代理功能更丰富。&lt;/p&gt;
+&lt;h4 id="跳板机堡垒机"&gt;跳板机/堡垒机
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;ProxyCommand ssh jumpserver nc %h %p&lt;/code&gt; -&amp;gt; &lt;code&gt;ProxyCommand ssh jumpserver socat - tcp:%h:%p&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id="socks-代理-1"&gt;socks 代理
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;ProxyCommand nc -x 127.0.0.1:1080 %h %p&lt;/code&gt; -&amp;gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;socat1 &lt;code&gt;ProxyCommand socat - &amp;quot;SOCKS4:127.0.0.1:%h:%p,socksport=1080&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;socat2 &lt;code&gt;ProxyCommand socat - &amp;quot;SOCKS5:%h:%p|tcp:127.0.0.1:1080&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="httphttps-代理-1"&gt;HTTP/HTTPS 代理
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;ProxyCommand nc -X connect -x 1.2.3.4:3128 %h %p&lt;/code&gt; -&amp;gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;socat1 &lt;code&gt;ProxyCommand socat - &amp;quot;PROXY:1.2.3.4:%h:%p,proxyport=3128&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;socat2 &lt;code&gt;ProxyCommand socat - &amp;quot;PROXY:%h:%p|tcp:1.2.3.4:3128&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="参考链接"&gt;参考链接
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts" target="_blank" rel="noopener"
+&gt;https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/" target="_blank" rel="noopener"
+&gt;https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.endpointdev.com/blog/2013/04/socat-and-netcat-proxycommand-ssh/" target="_blank" rel="noopener"
+&gt;https://www.endpointdev.com/blog/2013/04/socat-and-netcat-proxycommand-ssh/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://unix.stackexchange.com/questions/68826/connecting-to-host-by-ssh-client-in-linux-by-proxy" target="_blank" rel="noopener"
+&gt;https://unix.stackexchange.com/questions/68826/connecting-to-host-by-ssh-client-in-linux-by-proxy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://gitolite.com/git-over-proxy.html" target="_blank" rel="noopener"
+&gt;https://gitolite.com/git-over-proxy.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://linux.die.net/man/1/socat" target="_blank" rel="noopener"
+&gt;https://linux.die.net/man/1/socat&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

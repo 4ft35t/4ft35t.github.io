@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Airprint on 4ft35t blog</title><link>https://4ft35t.github.io/tags/airprint/</link><description>Recent content in Airprint on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 23 Oct 2025 17:29:21 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/airprint/index.xml" rel="self" type="application/rss+xml"/><item><title>群晖 DSM7 上使用古董打印机 HP CP1025</title><link>https://4ft35t.github.io/post/hp-cp1025-set-airprint-on-dsm7-via-docker-cups/</link><pubDate>Thu, 23 Oct 2025 17:29:21 +0800</pubDate><guid>https://4ft35t.github.io/post/hp-cp1025-set-airprint-on-dsm7-via-docker-cups/</guid><description>&lt;img src="https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c02768865.png" alt="Featured image of post 群晖 DSM7 上使用古董打印机 HP CP1025" /&gt;&lt;p&gt;想在群晖 DSM7.2 上使用 老古董 HP CP1025 打印机, 但群晖自带的打印服务器不支持该打印机驱动, 只能通过 Docker 安装 CUPS 来实现.&lt;/p&gt;
+&lt;p&gt;搜索多篇文章，找到几个 docker 镜像，大部分无法识别 HP CP1025 打印机, 只有 chuckcharlie/cups-avahi-airprint 能找到打印机。&lt;/p&gt;
+&lt;p&gt;文章中提到的几个 docker 镜像:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;olbat/cupsd 找不到打印机&lt;/li&gt;
+&lt;li&gt;ydkn/cups 找不到打印机&lt;/li&gt;
+&lt;li&gt;chuckcharlie/cups-avahi-airprint 能找到打印机&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;chuckcharlie/cups-avahi-airprint 能找到打印机, 但无法打印，提示 &amp;ldquo;Filter failed&amp;rdquo;。&lt;/p&gt;
+&lt;p&gt;一番搜索后，在&lt;a class="link" href="https://forums.raspberrypi.com/viewtopic.php?t=118732" target="_blank" rel="noopener"
+&gt;树莓派论坛&lt;/a&gt;找到了原因， hplip 驱动有问题，需要安装 foo2zjs 开源驱动。&lt;/p&gt;
+&lt;h3 id="玩客云测试"&gt;玩客云测试
+&lt;/h3&gt;&lt;p&gt;为了测试 foo2zjs 驱动是否有效， 打开了另一件吃灰的老古董玩客云, 系统是 armbian, 安装了 openmediavault 4。
+从 omv-extras 里安装 openmediavault-cups, 然后在 cups web 界面添加打印机, 选择 &amp;ldquo;HP LaserJet Pro CP1025nw Foomatic/foo2zjs-z3 (en)&amp;rdquo; 驱动，成功打印测试页。&lt;/p&gt;
+&lt;p&gt;如果选择 &amp;ldquo;HP LaserJet Cp1025, hpcups 3.23.12 (en)&amp;rdquo; 驱动，打印测试页失败，提示 &amp;ldquo;Filter failed&amp;rdquo;。&lt;/p&gt;
+&lt;p&gt;确认 foo2zjs 驱动可以正常使用。&lt;/p&gt;
+&lt;h3 id="在群晖-dsm7-上安装-cups"&gt;在群晖 DSM7 上安装 CUPS
+&lt;/h3&gt;&lt;h4 id="关闭自带-cups-服务"&gt;关闭自带 cups 服务
+&lt;/h4&gt;&lt;p&gt;在群晖 DSM7 上, 需要先关闭自带的打印服务器服务, 否则会占用 631 端口.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo synosystemctl stop cupsd
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo synosystemctl disable cupsd
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;systemctl mask cupsd
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo synosystemctl stop cups-service-handler
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo synosystemctl disable cups-service-handler
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id="运行-docker-容器"&gt;运行 docker 容器
+&lt;/h4&gt;&lt;p&gt;创建配置目录 &lt;code&gt;mkdir -p /volume1/docker/airprint/config /volume1/docker/airprint/services&lt;/code&gt;
+创建 &lt;code&gt;/volume1/docker/airprint/docker-compose.yml&lt;/code&gt; 文件:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;version&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;3&amp;#39;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;&lt;/span&gt;&lt;span class="nt"&gt;services&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;airprint&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;image&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;chuckcharlie/cups-avahi-airprint&amp;#39;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;privileged&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;restart&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;unless-stopped&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;environment&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;TZ=Asia/Shanghai&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;CUPSADMIN=admin&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;CUPSPASSWORD=pass&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;devices&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;/dev/bus&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;/dev/usb&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;volumes&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;/var/run/dbus:/var/run/dbus&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;./config/:/config&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;./services/:/services&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;ports&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="s1"&gt;&amp;#39;631:631&amp;#39;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;启动容器: &lt;code&gt;cd /volume1/docker/airprint &amp;amp;&amp;amp; sudo docker-compose up -d&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id="安装-foo2zjs-驱动"&gt;安装 foo2zjs 驱动
+&lt;/h4&gt;&lt;p&gt;foo2zjs 官网 &lt;a class="link" href="http://foo2zjs.rkkda.com" target="_blank" rel="noopener"
+&gt;http://foo2zjs.rkkda.com&lt;/a&gt; 已经无法访问，幸好 webarchive.org 上有存档可以下载。
+进入容器: &lt;code&gt; cd /volume1/docker/airprint &amp;amp;&amp;amp; sudo docker-compose exec airprint sh&lt;/code&gt;
+在容器内下载并安装 foo2zjs 驱动。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;span class="lnt"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;cd /tmp
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;wget https://web.archive.org/web/20210224094943if_/http://foo2zjs.rkkda.com/foo2zjs.tar.gz
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;tar zxf foo2zjs.tar.gz
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;cd foo2zjs
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;make
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;make install
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;安装完成后，运行 &lt;code&gt;make cups&lt;/code&gt; 进行配置修改, 会修改 &lt;code&gt;/etc/cups/cups-files.conf&lt;/code&gt; 文件, 允许使用 file 设备。
+但是这里会依赖 &lt;code&gt;vim&lt;/code&gt;，镜像里没有；对比修改前后的文件，发现只需要添加两行配置, 直接用 &lt;code&gt;echo&lt;/code&gt; 命令添加即可。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;echo -e 'FileDevice Yes\nSandboxing Relaxed' &amp;gt;&amp;gt; /etc/cups/cups-files.conf&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;修改完成后，重启容器。&lt;/p&gt;
+&lt;h3 id="添加打印机"&gt;添加打印机
+&lt;/h3&gt;&lt;p&gt;打开浏览器访问 &lt;code&gt;http://群晖IP:631&lt;/code&gt;, 进入 CUPS web 界面, 添加打印机。&lt;/p&gt;
+&lt;p&gt;Administration - Add Printer - 选择 HP CP1025 打印机 - 下一步勾选 &amp;ldquo;Share This Printer&amp;rdquo; - 选择驱动 &amp;ldquo;HP LaserJet Pro CP1025nw Foomatic/foo2zjs-z3 (en)&amp;rdquo; - 完成添加。
+下一步修改打印机默认选项:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Color Mode: Color&lt;/li&gt;
+&lt;li&gt;Resolution: 600x600dpi&lt;/li&gt;
+&lt;li&gt;Paper Size: A4&lt;/li&gt;
+&lt;li&gt;Media Source: Auto Source&lt;/li&gt;
+&lt;li&gt;Media Type: Standard Paper&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;点击 &amp;ldquo;Set Default Options&amp;rdquo; 保存。&lt;/p&gt;
+&lt;p&gt;打印测试页，成功打印。&lt;/p&gt;
+&lt;h3 id="设置自动启动"&gt;设置自动启动
+&lt;/h3&gt;&lt;p&gt;打印从休眠中恢复，需要重启 docker 容器才能使用。
+在群晖里创建&lt;code&gt;udev&lt;/code&gt; 规则，检测到打印机连接时，自动重启 docker 容器。&lt;/p&gt;
+&lt;h4 id="获取打印机属性"&gt;获取打印机属性
+&lt;/h4&gt;&lt;p&gt;ssh 到群晖，运行 &lt;code&gt;sudo udevadm monitor --kernel --property --subsystem-match=usb&lt;/code&gt;，然后插入打印机 USB 线，记录打印机的属性:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;KERNEL[69024.879332] add /devices/pci0000:00/0000:00:13.1/0000:02:00.0/usb3/3-1/3-1:1.0 (usb)
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;ACTION=add
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;DEVNAME=/dev/3-1:1.0
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;DEVPATH=/devices/pci0000:00/0000:00:13.1/0000:02:00.0/usb3/3-1/3-1:1.0
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;DEVTYPE=usb_interface
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;INTERFACE=7/1/2
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;MODALIAS=usb:v03F0p112Ad0001dc00dsc00dp00ic07isc01ip02in00
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;PHYSDEVBUS=usb
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;PRODUCT=3f0/112a/1
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;SEQNUM=2984
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;SUBSYSTEM=usb
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;TYPE=0/0/0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;记录 &lt;code&gt;PRODUCT=3f0/112a/1&lt;/code&gt;。&lt;/p&gt;
+&lt;h4 id="创建-udev-规则"&gt;创建 udev 规则
+&lt;/h4&gt;&lt;p&gt;创建文件 &lt;code&gt;/lib/udev/rules.d/50-hp-cp1025.rules&lt;/code&gt;，内容如下:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;ACTION==&amp;#34;add&amp;#34;, SUBSYSTEM==&amp;#34;usb&amp;#34;, ENV{DEVTYPE}==&amp;#34;usb_device&amp;#34;, ENV{PRODUCT}==&amp;#34;3f0/112a/1&amp;#34;, RUN+=&amp;#34;/volume1/docker/airprint/restart-cups.sh&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;上面的规则在检测到 HP CP1025 打印机连接时，运行 &lt;code&gt;/volume1/docker/airprint/restart-cups.sh&lt;/code&gt; 脚本。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;/volume1/docker/airprint/restart-cups.sh&lt;/code&gt; 脚本内容如下:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;#!/bin/sh
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;&lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; /volume1/docker/airprint
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;docker-compose restart
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;这里已经完成了全部配置，局域网内的 Mac 和 iOS 设备都可以通过 AirPrint 使用 HP CP1025 打印机了，windows 设备也可以通过添加网络打印机使用。&lt;/p&gt;
+&lt;h3 id="无线打印使用"&gt;无线打印使用
+&lt;/h3&gt;&lt;h3 id="ios-设备"&gt;iOS 设备
+&lt;/h3&gt;&lt;p&gt;iOS 设备可以直接通过 AirPrint 使用打印机，连接 wifi 后自动搜索网络打印机，无需额外配置。需要打印的文件，点击分享按钮，选择打印机即可。&lt;/p&gt;
+&lt;h3 id="mac-设备"&gt;Mac 设备
+&lt;/h3&gt;&lt;p&gt;同样无需设置，自动出现在打印机列表中，直接选择打印机打印即可。&lt;/p&gt;
+&lt;h3 id="windows-设备"&gt;Windows 设备
+&lt;/h3&gt;&lt;p&gt;Windows 设备需要去惠普网站下载安装 HP CP1025 驱动，然后添加网络打印机。
+控制面版 - 设备和打印机 - 添加打印机 - 选择 &amp;ldquo;我需要的打印机不在列表中&amp;rdquo; - 选择 &amp;ldquo;使用 TCP/IP 地址或主机名添加打印机&amp;rdquo; - 设备类型选择 &amp;ldquo;TCP/IP 设备&amp;rdquo; - 主机名或 IP 地址填写群晖 IP 地址&lt;/p&gt;
+&lt;h3 id="参考链接"&gt;参考链接
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;[记一次群辉dsm6.2.3使用cups实现老款打印机cp1025](airprint &lt;a class="link" href="https://www.bilibili.com/opus/774732308492058647" target="_blank" rel="noopener"
+&gt;https://www.bilibili.com/opus/774732308492058647&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://post.smzdm.com/p/ag4p7k7m/" target="_blank" rel="noopener"
+&gt;群晖、威联通NAS实现共享打印机+Airprint隔空打印教程，Docker版CUPS，让NAS变身打印服务器！&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://post.smzdm.com/p/a5xwr0x7/" target="_blank" rel="noopener"
+&gt;通过Docker的cups实现定期打印，防止爱普生墨仓式打印机堵墨&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.bilibili.com/opus/720655857020305463" target="_blank" rel="noopener"
+&gt;群晖dsm7.1 实现老款打印机AirPrint&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://forums.raspberrypi.com/viewtopic.php?t=118732" target="_blank" rel="noopener"
+&gt;CP1025 printer&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://blog.zhoujie218.top/archives/2540.html" target="_blank" rel="noopener"
+&gt;DOCKER安装CUPS容器实现无线打印（支持大部分ARM设备&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

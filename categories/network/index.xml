@@ -1,1145 +1,1145 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Network on 4ft35t blog</title><link>https://4ft35t.github.io/categories/network/</link><description>Recent content in Network on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 19 Mar 2024 11:22:46 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/categories/network/index.xml" rel="self" type="application/rss+xml"/><item><title>群晖使用 A1 订阅版 Onedrive</title><link>https://4ft35t.github.io/post/use-office365-a1-onedrive-in-synology/</link><pubDate>Tue, 19 Mar 2024 11:22:46 +0800</pubDate><guid>https://4ft35t.github.io/post/use-office365-a1-onedrive-in-synology/</guid><description>&lt;p>教育版 A1 订阅的 Onedrive 可以用 rclone 以 webdav 方式挂载。 但这不是标准的 webdav 协议，无法在群晖中使用。&lt;/p>
-&lt;p>群晖的 Cloud Sync 支持同步 Microsoft OneDrive for Business 和 Microsoft SharePoint，但是这个帐号使用 edu 邮箱自己注册的，没有管理员，登陆后报错&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-json" data-lang="json">&lt;span class="line">&lt;span class="cl">&lt;span class="p">{&lt;/span>&lt;span class="nt">&amp;#34;error&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="s2">&amp;#34;invalid_client&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nt">&amp;#34;error_description&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="s2">&amp;#34;AADSTS650051: Using application &amp;#39;Cloud Sync&amp;#39; is currently not supported for your organization xxx.edu.cn because it is in an unmanaged state. An administrator needs to claim ownership of the company by DNS validation of xxx.edu.cn before the application Cloud Sync can be provisioned. Trace ID: a4ec2174-8d9f-4281-9f5b-7d782c060601 Correlation ID: c6bdc0ff-5a6c-4597-9060-af9c981610e2 Timestamp: 2024-03-15 02:00:57Z&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="实现方案">实现方案
-&lt;/h2>&lt;h3 id="skleeschultebasic-to-sharepoint-auth-http-proxy-方案">skleeschulte/basic-to-sharepoint-auth-http-proxy 方案
-&lt;/h3>&lt;p>使用 &lt;a class="link" href="https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy" target="_blank" rel="noopener"
->https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy&lt;/a> 中转请求，最终以 webdav 协议使用。&lt;/p>
-&lt;h3 id="rclone-方案">rclone 方案
-&lt;/h3>&lt;p>rclone 也是转为 webdav 服务&lt;/p>
-&lt;p>&lt;code>rclone serve webdav remote:path [flags]&lt;/code>&lt;/p>
-&lt;h3 id="方案效果对比">方案效果对比
-&lt;/h3>&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>应用程序&lt;/th>
-&lt;th>basic-to-sharepoint-auth-http-proxy&lt;/th>
-&lt;th>rclone&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>File Station&lt;/td>
-&lt;td>N&lt;/td>
-&lt;td>Y&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>Cloud Sync&lt;/td>
-&lt;td>Y&lt;/td>
-&lt;td>Y&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>Hyper Backup&lt;/td>
-&lt;td>Y&lt;/td>
-&lt;td>Y&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;p>对比后 rclone 方案有明显优势:&lt;/p>
-&lt;ol>
-&lt;li>支持在 File Station 挂载&lt;/li>
-&lt;li>rclone 是是个活跃项目，basic-to-sharepoint-auth-http-proxy 已经 2 年无更新&lt;/li>
-&lt;/ol>
-&lt;h2 id="操作方法">操作方法
-&lt;/h2>&lt;h3 id="basic-to-sharepoint-auth-http-proxy-方案">basic-to-sharepoint-auth-http-proxy 方案
-&lt;/h3>&lt;p>&lt;code>sudo docker run --name sharepoint-proxy -d -p 13000:3000 -e PROXY_TARGET=https://xxx-my.sharepoint.com/ --restart always skleeschulte/basic-to-passport-auth-http-proxy:v0.1.4&lt;/code>&lt;/p>
-&lt;p>之后 webdav url 是 http://127.0.0.1:13000/personal/[YOUR-EMAIL]/Documents, 用户名和密码是 onedrive 的信息。&lt;/p>
-&lt;h3 id="rclone-方案-1">rclone 方案
-&lt;/h3>&lt;p>rclone 我本地也在用，没用 docker。&lt;/p>
-&lt;h4 id="1-配置-rclone-访问-onedrive">1. 配置 rclone 访问 onedrive
-&lt;/h4>&lt;p>教育版 Onedrive 登陆后的地址是 &lt;code>https://[YOUR-DOMAIN]-my.sharepoint.com/personal/[YOUR-EMAIL]/_layouts/15/onedrive.aspx&lt;/code>, 只需要把 &lt;code>_layouts/15/onedrive.aspx&lt;/code> 换成 &lt;code>Documents&lt;/code> 就是 webdav 地址。&lt;/p>
-&lt;p>&lt;code>rclone confige - n) New remote - 随便起个名字 - 51 / WebDAV - https://[YOUR-DOMAIN]-my.sharepoint.com/personal/[YOUR-EMAIL]/Documents - 4 / Sharepoint Online, authenticated by Microsoft account - 用户名 - y) Yes, type in my own password - 密码 - 确认密码 - 回车跳过 - y) Yes this is OK (default)&lt;/code>&lt;/p>
-&lt;h4 id="2-rclone-开启-webadv-服务">2. rclone 开启 webadv 服务
-&lt;/h4>&lt;p>以上一步起的名字 1dr-sharepoint 为例, 执行下面命令即可开启 webdav 服务。
-&lt;code>rclone rclone serve webdav 1dr-sharepoint:/ --user user --pass password --addr 192.168.1.101:8080&lt;/code>&lt;/p>
-&lt;p>webdav url http://192.168.1.101:8080/&lt;/p>
-&lt;p>rclone 支持开启的服务列表如下:&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;span class="lnt">6
-&lt;/span>&lt;span class="lnt">7
-&lt;/span>&lt;span class="lnt">8
-&lt;/span>&lt;span class="lnt">9
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl"> dlna Serve remote:path over DLNA
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> docker Serve any remote on docker&lt;span class="s1">&amp;#39;s volume plugin API.
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s1"> ftp Serve remote:path over FTP.
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s1"> http Serve the remote over HTTP.
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s1"> nfs Serve the remote as an NFS mount
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s1"> restic Serve the remote for restic&amp;#39;&lt;/span>s REST API.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> s3 Serve remote:path over s3.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> sftp Serve the remote over SFTP.
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> webdav Serve remote:path over WebDAV.
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h4 id="3-群晖-file-station-挂载">3. 群晖 File Station 挂载
-&lt;/h4>&lt;p>File Station - Tools - Remote Connection - Connection Setup - WebDAV&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">ip: 192.168.1.101
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">port: 8080
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">path: /
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">account name: user
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">passowrd: pssword
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="参考链接">参考链接
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://blog.edmond.work/2023/02/19/dsm-hyper-backup-onedrive-%E5%82%99%E4%BB%BD%E6%95%99%E5%AD%B8/" target="_blank" rel="noopener"
->DSM Hyper Backup OneDrive 備份教學&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://hostloc.com/thread-785905-1-1.html" target="_blank" rel="noopener"
->使群晖 CloudSync 支持同步世纪互联 OneDrive&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://tongjunsz.gitee.io/2020/10/29/%E9%80%9A%E8%BF%87Synology%E7%9A%84Hyper-Backup%E5%A4%87%E4%BB%BD%E5%88%B0Microsoft-OneDrive-for-Business-SharePoint/" target="_blank" rel="noopener"
->通过synology的hyper backup备份到microsoft onedrive for business（sharepoint)&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://blog.ty-wu.com/posts/synohyperbksharepoint/" target="_blank" rel="noopener"
->Synology Hyper Backup 備份到 OneDrive&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://rclone.org/webdav/" target="_blank" rel="noopener"
-> WebDAV&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://rclone.org/commands/rclone_serve_webdav/" target="_blank" rel="noopener"
->rclone serve webdav&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Ubuntu 20.04 server iptables 持久化</title><link>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</link><pubDate>Fri, 17 Feb 2023 10:36:40 +0800</pubDate><guid>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</guid><description>&lt;img src="https://i.stack.imgur.com/gZm6i.png" alt="Featured image of post Ubuntu 20.04 server iptables 持久化" />&lt;p>有一批服务器需要做 iptables 持久化，开机自动加载。&lt;/p>
-&lt;p>在 Ubuntu 12.04 时代, 可以把加载脚本写到 &lt;code>/etc/rc.local&lt;/code> 开机自动加载，Ubuntu 20.04 要启用 rc.local 太麻烦，用 &lt;code>netfilter-persistent&lt;/code> 来实现自动加载。&lt;/p>
-&lt;p>&lt;code>netfilter-persistent&lt;/code> 加载 &lt;code>ipset-persistent&lt;/code> 和 &lt;code>iptables-persistent&lt;/code> 保存的规则。&lt;/p>
-&lt;h2 id="tldr">TLDR
-&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># noninteractive install&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo debconf-set-selections &lt;span class="s">&amp;lt;&amp;lt;EOF
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">iptables-persistent iptables-persistent/autosave_v4 boolean true
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">iptables-persistent iptables-persistent/autosave_v6 boolean true
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">ipset-persistent ipset-persistent/autosave boolean true
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">EOF&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt update &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> sudo apt install netfilter-persistent ipset-persistent iptables-persistent -y
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo netfilter-persistent save
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl &lt;span class="nb">enable&lt;/span> netfilter-persistent
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl start netfilter-persistent
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="静默安装">静默安装
-&lt;/h2>&lt;p>ipset-persistent 和 iptables-persistent 安装过程中会弹出交互窗，选择是否自动保存规则。&lt;/p>
-&lt;p>交互会打断服务器上脚本安装，需要无交互静默安装。&lt;/p>
-&lt;p>Ubuntu 上软件包安装配置项归 &lt;code>debconf&lt;/code> 管理，在一台机器上交互安装完成后，用 &lt;code>debconf-show&lt;/code> 查看软件包的配置项。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;span class="lnt">6
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo debconf-show ipset-persistent
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* ipset-persistent/autosave: &lt;span class="nb">true&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo debconf-show iptables-persistent
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* iptables-persistent/autosave_v4: &lt;span class="nb">true&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* iptables-persistent/autosave_v6: &lt;span class="nb">true&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>在安装前，用 &lt;code>debconf-set-selections&lt;/code> 在 debconf 数据库中插入对应的内容，即可实现无交互静默安装。&lt;/p>
-&lt;p>debconf-set-selections 配置语法&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">{包名} {配置项key} {配置项类型} {配置项value}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>生成的配置如下&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo debconf-set-selections &lt;span class="s">&amp;lt;&amp;lt;EOF
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">ipset-persistent ipset-persistent/autosave boolean true
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">iptables-persistent iptables-persistent/autosave_v4 boolean true
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">iptables-persistent iptables-persistent/autosave_v6 boolean true
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">EOF&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>执行 &lt;code> sudo apt install netfilter-persistent ipset-persistent iptables-persistent -y&lt;/code> 即可静默安装。&lt;/p>
-&lt;h3 id="持久化">持久化
-&lt;/h3>&lt;h4 id="保存规则">保存规则
-&lt;/h4>&lt;p>&lt;code>sudo netfilter-persistent save&lt;/code>&lt;/p>
-&lt;h4 id="自动加载">自动加载
-&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo systemctl &lt;span class="nb">enable&lt;/span> netfilter-persistent
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl start netfilter-persistent
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="参考链接">参考链接
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://dhtar.com/make-ipset-and-iptables-configurations-persistent-in-debianubuntu.html" target="_blank" rel="noopener"
->Make ipset and iptables configurations persistent in Debian/Ubuntu&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://gist.github.com/alonisser/a2c19f5362c2091ac1e7" target="_blank" rel="noopener"
->Installing iptables-persistent on ubuntu without manual input&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://blog.51cto.com/u_13791715/2308514" target="_blank" rel="noopener"
->Linux下实现软件的静默安装&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://sleeplessbeastie.eu/2018/09/17/how-to-read-and-insert-new-values-into-the-debconf-database/" target="_blank" rel="noopener"
->How to read and insert new values into the debconf database&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>低成本 mesh 组网</title><link>https://4ft35t.github.io/post/lowcast-mesh/</link><pubDate>Sun, 04 Dec 2022 17:57:03 +0800</pubDate><guid>https://4ft35t.github.io/post/lowcast-mesh/</guid><description>&lt;img src="https://cdn.unwire.hk/wp-content/uploads/2018/03/999-1.png" alt="Featured image of post 低成本 mesh 组网" />&lt;p>上一次主动看 mesh 路由，单台成本 2000 左右，最近在什么值得买上看到用网件 6300V2 刷机后组 mesh 的，原理是网件6300V2 和华硕 AC68U 使用相同的硬件，修改 CEF 中相关配置，即可伪装成华硕 AC68U，使用华硕固件和功能。&lt;/p>
-&lt;p>6300V2 二手价格单台不到80，立马买两台来组网。&lt;/p>
-&lt;h2 id="硬件成本">硬件成本
-&lt;/h2>&lt;p>自有一台服役多年的 6300V2，淘宝新买2台二手，75.99 一台包邮。&lt;/p>
-&lt;p>不想折腾的可以买刷好梅林386版本的机器，跳过刷机部分，直达 mesh 组网部分。&lt;/p>
-&lt;ul>
-&lt;li>75.99 包邮，原厂固件 &lt;a class="link" href="https://item.taobao.com/item.htm?id=654468086454" target="_blank" rel="noopener"
->https://item.taobao.com/item.htm?id=654468086454&lt;/a>&lt;/li>
-&lt;li>138 包邮，梅林386固件 &lt;a class="link" href="https://item.taobao.com/item.htm?id=690054031769" target="_blank" rel="noopener"
->https://item.taobao.com/item.htm?id=690054031769&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="刷机">刷机
-&lt;/h2>&lt;p>电脑和路由器用网线连接，推荐使用路由器的 LAN1-LAN3，不要用 LAN4，具体原因下文会提到。&lt;/p>
-&lt;h3 id="1-从官方固件刷梅林">1. 从官方固件刷梅林
-&lt;/h3>&lt;p>下载 380 版本梅林固件，https://fw.koolcenter.com/KoolCenter_Merlin_Legacy_380/Netgear/R6300V2/X7.9.1/R6300V2_380.70_0-X7.9.1-koolshare.chk&lt;/p>
-&lt;p>路由器恢复出厂设置:&lt;/p>
-&lt;p>路由器关机，按住reset开机，15秒后松开&lt;/p>
-&lt;p>浏览器打开 192.168.1.1，admin/password 登录，固件升级选择 R6300V2_380.70_0-X7.9.1-koolshare.chk&lt;/p>
-&lt;h3 id="2-备份-cfe-和-board_data">2. 备份 CFE 和 board_data
-&lt;/h3>&lt;p>刷梅林 380 版本后，路由器地址变成 192.168.50.1。登录路由器，帐号密码沿用 admin/password，打开 SSH 服务&lt;/p>
-&lt;p>系统管理 - 系统设置 - 启用 SSH- LAN only - 应用本页面设置&lt;/p>
-&lt;p>使用 ssh 登录路由器，Windows 可以用 putty 或者 wsl。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">dd &lt;span class="k">if&lt;/span>&lt;span class="o">=&lt;/span>/dev/mtd0 &lt;span class="nv">of&lt;/span>&lt;span class="o">=&lt;/span>/tmp/backup_cfe.bin
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">dd &lt;span class="k">if&lt;/span>&lt;span class="o">=&lt;/span>/dev/mtd4 &lt;span class="nv">of&lt;/span>&lt;span class="o">=&lt;/span>/tmp/backup_board_data.bin
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>使用 scp 把 上面两个文件拖回本地，如果需要就砖会用到。&lt;/p>
-&lt;p>如果遇到 &lt;code>/usr/libexec/sftp-server: not found&lt;/code> 错误，是因为本地的 scp 版本太新，加 &lt;code>-O&lt;/code> 参数即可&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">scp -O admin@192.168.50.1:/tmp/backup_cfe.bin .
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="3-刷-cfe">3. 刷 CFE
-&lt;/h3>&lt;p>下载 CEF &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/cfe_2.4Gfix.bin" target="_blank" rel="noopener"
->https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/cfe_2.4Gfix.bin&lt;/a>&lt;/p>
-&lt;p>下载 CEF 修改器 &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/CFEEdit.exe" target="_blank" rel="noopener"
->https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/CFEEdit.exe&lt;/a>&lt;/p>
-&lt;p>打开 CFEEdit.exe，把 MAC 地址修改成华硕的地址段&lt;/p>
-&lt;p>需要修改五个位置&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">et0macaddr=00:90:4C:0F:F1:A7
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">0:macaddr=00:90:4C:0F:F1:A7
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">1:macaddr=00:90:4C:0F:F1:AB
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">secret_code=73210917
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">odmpid=RT-AC68U
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>另存为 cfe-1.bin&lt;/p>
-&lt;p>继续修改，把上面内容 MAC 地址中倒数第二段的 &lt;code>F1&lt;/code> 分别修改成 &lt;code>F2&lt;/code> 和 &lt;code>F3&lt;/code>，同时 &lt;code>secret_code&lt;/code> 最后的 &lt;code>17&lt;/code> 改成 &lt;code>27&lt;/code> 和 &lt;code>37&lt;/code>，另存为 cfe-2.bin 和 cfe-3.bin，分别对应三台机器。&lt;/p>
-&lt;p>scp 把 CFE 传送到路由器&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">scp -O cfe-1.bin admin@192.168.50.1:/tmp
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>ssh 登陆路由器，开始刷 CFE&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">dd if=/tmp/cfe-1.bin of=/dev/mtd0
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">nvram erase
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">reboot
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>重启后路由器会进入 tftp 刷机状态，ip 为 192.168.1.1&lt;/p>
-&lt;h3 id="4-tftp-刷入梅林-386-版本">4. tftp 刷入梅林 386 版本
-&lt;/h3>&lt;p>下载 386 版本固件 &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_386/Netgear/R6300v2/RT-AC6300v2_386.2_4-20210628-91625500b.trx" target="_blank" rel="noopener"
->https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_386/Netgear/R6300v2/RT-AC6300v2_386.2_4-20210628-91625500b.trx&lt;/a>&lt;/p>
-&lt;p>Windows 电脑安装自带的 tftp 客户端&lt;/p>
-&lt;p>Win+r - 输入 appwiz.cpl - 打开或关闭Windows功能 - 勾选TFTP客户端 - 重启&lt;/p>
-&lt;p>&lt;strong>手动设置电到有线网卡的 IP，此时的路由器没有 DHCP 功能。&lt;/strong>&lt;/p>
-&lt;p>IP 192.168.1.2, 子网掩码会自动生成，网关不用填。&lt;/p>
-&lt;p>打开一个 cmd 窗口，执行 &lt;code>ping -t 192.168.1.1&lt;/code> 观察 TTL，TTL 值为 100 即表示路由器处于 tftp 刷机状态，如果不是 100，重启路由器。&lt;/p>
-&lt;p>打开第二个 cmd 窗口，执行 &lt;code>tftp -i 192.168.1.1 put RT-AC6300v2_386.2_4-20210628-91625500b.trx&lt;/code>&lt;/p>
-&lt;p>等 tftp 传输完成后，路由器会在3分钟内重启多次，最后完成刷机。&lt;/p>
-&lt;p>当 ping 的 TTL 变成 64，即表示路由器正常启动。如果 tftp 传输完成后5分钟，TTL 还没变成 64，重启路由器。&lt;/p>
-&lt;p>如果重启后 ping TTL 值一直保持 100，浏览器访问 192.168.1.1，进入 CFE miniWeb，点击 &amp;ldquo;Restore default NVRAM values&amp;rdquo;，然后重启。&lt;/p>
-&lt;h3 id="4-刷机后存在问题">4. 刷机后存在问题
-&lt;/h3>&lt;p>刷机后，WAN 口的位置会发生变化&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">刷机前
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------+------+------+------+ +------+
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| LAN4 |LAN3 | LAN2 | LAN1 | | WAN |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| | | | | | |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------+------+------+------+ +------+
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">刷机后
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------+------+------+------+ +------+
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| WAN |LAN1 |LAN2 |LAN3 | |LAN4 |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| | | | | | |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------+------+------+------+ +------+
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="mesh-组网">mesh 组网
-&lt;/h2>&lt;p>路由1 做为 mesh 路由，访问 192.168.1.1，按向导完成 pppoe 拨号设置，选路由器模式。&lt;/p>
-&lt;p>路由器2，作为 AiMesh 节点，按向导完成动态动态 IP 设置；然后&lt;/p>
-&lt;p>系统管理 - 操作模式 - AiMesh 节点 - 保存&lt;/p>
-&lt;p>等界面显示重置完成，路由器2的设置完成。&lt;/p>
-&lt;p>现在电脑网线连接路由器1；路由器2保持开机，不插网线，放在路由器1旁边。&lt;/p>
-&lt;p>登录路由器1网页 - AiMesh - 添加 AiMesh 节点 - 选择路由器2（RT-AC86U） - 建立连接&lt;/p>
-&lt;p>等待完成后对路由器3重复执行上述操作。&lt;/p>
-&lt;p>所有操作完成后，路由器2和3的用户名密码会变成和路由器1一样。&lt;/p>
-&lt;p>现在可以享受 mesh 组网的无缝切换了，不用再像用扩展器一样手动切换。&lt;/p>
-&lt;h3 id="有线回程">有线回程
-&lt;/h3>&lt;p>路由器1 LAN 连接路由器2 WAN，即可让路由器2 变成有线回程。路由器3 同理。&lt;/p>
-&lt;h2 id="加散热风扇">加散热风扇
-&lt;/h2>&lt;p>使用 3007 风扇，可以藏在机器内，用杜邦接口插在 ttl 针上，VCC 接红线，GND 接黑线。&lt;/p>
-&lt;h2 id="参考链接">参考链接
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://post.smzdm.com/p/a4dk3zgk/" target="_blank" rel="noopener"
->最便宜的组Aimesh的方案——R6300V2最后的荣光&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.right.com.cn/forum/thread-7613019-1-1.html" target="_blank" rel="noopener"
->网件NETGEAR R6300V2(国行版本) 原厂固件直刷380_X7.9.1梅林成功 附升级梅林386教程 &lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://wkings.blog/archives/875" target="_blank" rel="noopener"
->网件路由器 R6300v2 刷机教程和固件大全&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://zhuanlan.zhihu.com/p/386867842" target="_blank" rel="noopener"
->无线路由器Mesh组网教程：华硕Aimesh组网篇&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.right.com.cn/forum/forum.php?mod=redirect&amp;amp;goto=findpost&amp;amp;ptid=1686743&amp;amp;pid=5735198" target="_blank" rel="noopener"
->6300v2主动散热加usb风扇问题&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>修复 Chromecast YouTube 投屏失败问题</title><link>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</link><pubDate>Fri, 29 Jul 2022 01:38:00 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</guid><description>&lt;img src="https://www.right.com.cn/forum/data/attachment/forum/201803/08/102522uwh6r70ssbuh01r5.jpg" alt="Featured image of post 修复 Chromecast YouTube 投屏失败问题" />&lt;h2 id="问题分析">问题分析
-&lt;/h2>&lt;p>软路由 OpenWrt 做网关，同时用 SS 透明代理所有国外 IP 的 TCP 连接，手机、电脑都无感翻墙。&lt;/p>
-&lt;p>Chromecast 在多个境外网站上投屏正常工作，Google Photos 投屏也正常，唯独 YouTube 无法投屏。&lt;/p>
-&lt;p>使用关键词 &amp;ldquo;chromecast youtube something went wrong&amp;rdquo; 没找到有用信息，把 ChromeCast 的语言改成中文后，用中文的报错信息一下就找到了，果然是天朝特有问题。Google 搜 &lt;code>chromecast youtube &amp;quot;出问题了&amp;quot;&lt;/code>。&lt;/p>
-&lt;p>问题原因在于 Chromecast 不使用 DHCP 分配的 DNS 服务器，用 8.8.8.8 解析，会拿到污染的结果，导致失败。&lt;/p>
-&lt;h2 id="解决方案">解决方案
-&lt;/h2>&lt;p>解决方法很简单，在网关上劫持 8.8.8.8 的 53 端口 UDP 包，重定向到网关的无污染 DNS。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">iptables -t nat -I PREROUTING -p udp -d 8.8.8.8 --dport &lt;span class="m">53&lt;/span> -j REDIRECT --to-ports &lt;span class="m">53&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>OpenWrt 网页 - NetWork - Firewall - Custom Rules, 把上述命令贴进去，保存即可。&lt;/p>
-&lt;p>也可直接修改 &lt;code>/etc/firewall.user&lt;/code> 然后 &lt;code>/etc/init.d/firewall restart&lt;/code> 生效。&lt;/p>
-&lt;h2 id="参考链接">参考链接
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://v2ex.com/t/436014" target="_blank" rel="noopener"
->Chromecast 如何配搭路由的 SS 看 youtube？&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://iso1.wordpress.com/2017/07/06/install-shadowsocks-on-geek-router-and-fix-chromecast-casting-youtube-issue/" target="_blank" rel="noopener"
->极路由开发(Root)模式安装Shadowsocks, 以及Chromecast因DNS污染无法投射YouTube的解决方案&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>使用机场加速自建代理</title><link>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</link><pubDate>Sat, 25 Jun 2022 11:14:47 +0800</pubDate><guid>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</guid><description>&lt;img src="https://raw.githubusercontent.com/Dreamacro/clash/master/docs/logo.png" alt="Featured image of post 使用机场加速自建代理" />&lt;p>自建代理与机场比较&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>&lt;/th>
-&lt;th>自建代理&lt;/th>
-&lt;th>机场&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>速度&lt;/td>
-&lt;td>慢&lt;/td>
-&lt;td>快&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>安全性&lt;/td>
-&lt;td>高&lt;/td>
-&lt;td>无&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;p>有没有兼顾安全性和速度的方案？&lt;/p>
-&lt;h2 id="最终方案">最终方案
-&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">+-----------+ +---------------+
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| | | |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| 墙内机器 +--①---&amp;gt; 机场国内中转 |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| | | |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+-----------+ +-------+-------+
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |②
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------------+ +-------v-------+
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| | | |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| Cloudflare &amp;lt;--③--+ 机场国外节点 |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| | | |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------+-----+ +---------------+
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> |④
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------v-----+ +---------------+
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| | | |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| 自建梯子 +--⑤--&amp;gt; 目标网站 |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">| | | |
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">+------------+ +---------------+
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="部署要点">部署要点
-&lt;/h3>&lt;ol>
-&lt;li>自建梯子用 tsl+websocket 协议，各种工具都可以，ss+v2ray-plugin、v2ray、gost 等都可以。这一步目的是为了能用 Cloudflare 的 CDN。&lt;/li>
-&lt;li>需要有自己的域名，把域名接入 Cloudflare。&lt;/li>
-&lt;li>在本地用 clash 控制流量走向&lt;/li>
-&lt;/ol>
-&lt;h2 id="方案优势">方案优势
-&lt;/h2>&lt;ol>
-&lt;li>国内运营商在链路①的位置只能看到你访问了机场的国内 IP&lt;/li>
-&lt;li>机场在链路②③只能看到你在用 tls 流量访问 Cloudflare 节点，目标网站就是你接入 Cloudflare 的域名。&lt;/li>
-&lt;li>&lt;strong>只要你不用代理访问国内网站，运营商和机场都不知道你的自建梯子的出口 IP&lt;/strong>&lt;/li>
-&lt;li>和直连自建梯子比，大幅提升速度和稳定性；和单独使用机场相比，机场无法知道你的访问信息，安全性很大提升&lt;/li>
-&lt;/ol>
-&lt;h2 id="方案实施">方案实施
-&lt;/h2>&lt;ol>
-&lt;li>各代理软件都有详细文档，如何开启tsl+websocket 协议，此处略&lt;/li>
-&lt;li>域名接入 cloudflare， 略&lt;/li>
-&lt;li>购买机场，略&lt;/li>
-&lt;li>clash 配置&lt;/li>
-&lt;/ol>
-&lt;h3 id="clash-简介">Clash 简介
-&lt;/h3>&lt;p>&lt;a class="link" href="https://github.com/Dreamacro/clash" target="_blank" rel="noopener"
->Clash&lt;/a>是一款用 Go 开发的多平台的代理工具，使用强大的策略组来管理节点;可以自动选择节点，不同的网站，在同一时间，可以使用不同的节点去访问。&lt;/p>
-&lt;p>我们用 Clash 强大的策略组功能来套娃。&lt;/p>
-&lt;p>官方文档有示例 &lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
->https://github.com/Dreamacro/clash/wiki/configuration&lt;/a>&lt;/p>
-&lt;blockquote>
-&lt;p>relay chains the proxies. proxies shall not contain a relay. No UDP support.
-Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; ss1 &amp;lt;-&amp;gt; ss2 &amp;lt;-&amp;gt; Internet&lt;/p>
-&lt;/blockquote>
-&lt;h3 id="配置文件">配置文件
-&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;span class="lnt">27
-&lt;/span>&lt;span class="lnt">28
-&lt;/span>&lt;span class="lnt">29
-&lt;/span>&lt;span class="lnt">30
-&lt;/span>&lt;span class="lnt">31
-&lt;/span>&lt;span class="lnt">32
-&lt;/span>&lt;span class="lnt">33
-&lt;/span>&lt;span class="lnt">34
-&lt;/span>&lt;span class="lnt">35
-&lt;/span>&lt;span class="lnt">36
-&lt;/span>&lt;span class="lnt">37
-&lt;/span>&lt;span class="lnt">38
-&lt;/span>&lt;span class="lnt">39
-&lt;/span>&lt;span class="lnt">40
-&lt;/span>&lt;span class="lnt">41
-&lt;/span>&lt;span class="lnt">42
-&lt;/span>&lt;span class="lnt">43
-&lt;/span>&lt;span class="lnt">44
-&lt;/span>&lt;span class="lnt">45
-&lt;/span>&lt;span class="lnt">46
-&lt;/span>&lt;span class="lnt">47
-&lt;/span>&lt;span class="lnt">48
-&lt;/span>&lt;span class="lnt">49
-&lt;/span>&lt;span class="lnt">50
-&lt;/span>&lt;span class="lnt">51
-&lt;/span>&lt;span class="lnt">52
-&lt;/span>&lt;span class="lnt">53
-&lt;/span>&lt;span class="lnt">54
-&lt;/span>&lt;span class="lnt">55
-&lt;/span>&lt;span class="lnt">56
-&lt;/span>&lt;span class="lnt">57
-&lt;/span>&lt;span class="lnt">58
-&lt;/span>&lt;span class="lnt">59
-&lt;/span>&lt;span class="lnt">60
-&lt;/span>&lt;span class="lnt">61
-&lt;/span>&lt;span class="lnt">62
-&lt;/span>&lt;span class="lnt">63
-&lt;/span>&lt;span class="lnt">64
-&lt;/span>&lt;span class="lnt">65
-&lt;/span>&lt;span class="lnt">66
-&lt;/span>&lt;span class="lnt">67
-&lt;/span>&lt;span class="lnt">68
-&lt;/span>&lt;span class="lnt">69
-&lt;/span>&lt;span class="lnt">70
-&lt;/span>&lt;span class="lnt">71
-&lt;/span>&lt;span class="lnt">72
-&lt;/span>&lt;span class="lnt">73
-&lt;/span>&lt;span class="lnt">74
-&lt;/span>&lt;span class="lnt">75
-&lt;/span>&lt;span class="lnt">76
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">mixed-port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">7890&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">mode&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">rule&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">proxies&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 自建 ss&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;my-vps-ss&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ss&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">server&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">mydomain.xx.cc&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="c"># 这里也可以是 Cloudflare 的 IP&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">443&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">cipher&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">chacha20-ietf-poly1305&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">password&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;password&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">plugin&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">v2ray-plugin&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">plugin-opts&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">mode&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">websocket&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">tls&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">skip-cert-verify&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="kc">true&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">host&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">mydomain.xx.cc&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 机场 ss1&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;jichang-ss-hk&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ss&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">server&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">jichang.abc.com&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">12345&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">cipher&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">chacha20-ietf-poly1305&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">password&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;password&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">plugin&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">obfs&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">plugin-opts&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">mode&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">http&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">host&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">bing.com&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 机场 ss2&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;jichang-ss-tw&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ss&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">server&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">jichang.abc.com&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">12346&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">cipher&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">chacha20-ietf-poly1305&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">password&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;password&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">plugin&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">obfs&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">plugin-opts&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">mode&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">http&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">host&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">bing.com&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 机场 v2ray&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;jichang-v2ray-hk&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">vmess&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">server&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">jichang.abc.com&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">port&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">12347&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">cipher&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">auto&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">uuid&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">xxxx-xxxx-xxxx-xxxx&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">alterId&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">64&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">proxy-groups&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 先把所有机场结点放在一个组&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;机场&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 自动选择延时最小的结点&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">url-test&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">proxies&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">jichang-ss-hk&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">jichang-ss-tw&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">jichang-v2ray-hk&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">url&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;http://www.gstatic.com/generate_204&amp;#39;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">interval&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="m">300&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 创建一个 type 是 relay 的组，流量按 proxies 里的顺序，从上往下走&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;myproxy&amp;#34;&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="c"># 自动选择延时最小的结点&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">type&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">url-test&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">proxies&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">机场&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">my-vps-ss&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="nt">rules&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">IP-CIDR,127.0.0.0/8,DIRECT&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">IP-CIDR,192.168.0.0/16,DIRECT&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">GEOIP,CN,DIRECT&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="l">MATCH,myproxy&lt;/span>&lt;span class="w">
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>至此，配置完成，7980 端口同时提供 http 和 socks4、socks5 代理。&lt;/p>
-&lt;p>分流策略是：&lt;/p>
-&lt;ul>
-&lt;li>国内 IP 直连&lt;/li>
-&lt;li>国外 IP 走代理&lt;/li>
-&lt;/ul>
-&lt;h3 id="数据流">数据流：
-&lt;/h3>&lt;ol>
-&lt;li>本机请求 -&amp;gt; clash，clash 按 relay 组的 proxies 顺序，从下往上加密，本配置中，先用自建的加密方式加密请求，再用机场的加密方式加密第二次&lt;/li>
-&lt;li>clash -&amp;gt; 机场，机场解开自己的加密，看到目标是一个 Cloudflare 上的网站&lt;/li>
-&lt;li>机场 -&amp;gt; Cloudflare, 用标准的 https 方式转发收到的数据包&lt;/li>
-&lt;li>Cloudflare -&amp;gt; vps，vps 收到 https 包后，先用域名的私钥解密数据，得到加密的 ss 数据，再用 ss 解密得到真正的目标。&lt;/li>
-&lt;/ol>
-&lt;h2 id="更古老的套娃方案">更古老的套娃方案
-&lt;/h2>&lt;p>在遇到 clash 之前，一直在 openwrt 上套娃，使用的是 shadowsocks + iptables-mod-tproxy&lt;/p>
-&lt;h3 id="环境准备">环境准备
-&lt;/h3>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">opkg install shadowsocks-libev
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="操作方法">操作方法
-&lt;/h3>&lt;ol>
-&lt;li>openwrt 上正常配置自建梯子，能正常使用后进入第2步&lt;/li>
-&lt;li>用 ss-redir 启动机场的 ss&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">ss-redir -c jichang.json -l &lt;span class="m">12346&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;ol start="3">
-&lt;li>iptables 把自建的流量重定向到机场。假设自建的 IP 是 1.1.1.1&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">iptables -t nat -I OUTPUT -p tcp -d 1.1.1.1 -j REDIRECT --to-ports &lt;span class="m">12346&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>等效 nftables 指令&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">nft add chain inet fw4 jichang_rules_out &lt;span class="s1">&amp;#39;{type nat hook output priority filter -2;}&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">nft add rule inet fw4 jichang_rules_out ip protocol tcp ip &lt;span class="nv">daddr&lt;/span> &lt;span class="o">==&lt;/span> 172.67.134.143 redirect to :12346
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>&lt;strong>机场的 ss-redir 需要后启动，shadowsocks 默认策略是插入 OUTPUT 链首位，后启动的在首位&lt;/strong>&lt;/p>
-&lt;h2 id="参考链接">参考链接
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://wanchuan.top/e9430b8345c049f8afce602db5f5f773" target="_blank" rel="noopener"
->使用Clash工具科学上网&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
->clash 官方配置文档&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://guide.v2fly.org/app/tproxy.html#%E9%85%8D%E7%BD%AE%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E8%A7%84%E5%88%99" target="_blank" rel="noopener"
->v2ay 配置透明代理规则&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="http://openwrt-dist.sourceforge.net/" target="_blank" rel="noopener"
->aa65535 维护的 shadowsocks for openwrt&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Android 远程截图</title><link>https://4ft35t.github.io/post/android-screenshoot-remote/</link><pubDate>Fri, 06 Aug 2021 16:51:31 +0800</pubDate><guid>https://4ft35t.github.io/post/android-screenshoot-remote/</guid><description>&lt;img src="https://img1.mydrivers.com/img/20210226/s_ff489bbf9a884b83a72837c099f23e97.jpg" alt="Featured image of post Android 远程截图" />&lt;p>某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。&lt;/p>
-&lt;h2 id="背景">背景
-&lt;/h2>&lt;p>云闪付公交乘车码，每周使用三次可以获得一张 6-5 消费券，但那一个帐号一周只能领一次，需要多个帐号。&lt;/p>
-&lt;p>家里有个老华为手机，上面登录的有老人的云闪付帐号，但是注册帐号的手机号失效，无法更换新手机号，新设备登录需要短信验证码，只有拿这个手机去刷。&lt;/p>
-&lt;p>不想带多个手机出门，开启折腾之路。&lt;/p>
-&lt;h2 id="截屏">截屏
-&lt;/h2>&lt;p>系统自带 &lt;code>screencap&lt;/code> 命令，桌面和别的 app 可以截屏，云闪付不行，应该是云闪付设置了&lt;code>FLAG_SECURE&lt;/code>。&lt;/p>
-&lt;p>&lt;a class="link" href="https://github.com/Genymobile/scrcpy" target="_blank" rel="noopener"
->scrcpy&lt;/a> 可以显示云闪付内容，猜测 &lt;a class="link" href="https://github.com/Ericwyn/Auto.js" target="_blank" rel="noopener"
->autojs&lt;/a> 使用 cast 模式也可以截屏，实测确实可以。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-js" data-lang="js">&lt;span class="line">&lt;span class="cl">&lt;span class="nx">auto&lt;/span>&lt;span class="p">();&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">app&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">launch&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;com.unionpay&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">waitForPackage&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;com.unionpay&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 首页点击乘车码
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">sleep&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1500&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;充值中心&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nx">exists&lt;/span>&lt;span class="p">()){&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;找到 乘车码 关键字&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">target&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;乘车码&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nx">findOne&lt;/span>&lt;span class="p">();&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">while&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="nx">target&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">clickable&lt;/span>&lt;span class="p">()){&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">target&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nx">target&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">parent&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">target&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">click&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">waitForActivity&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;com.unionpay.activity.react.UPActivityReactNative&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">sleep&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">2000&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 2、请求截图
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">if&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">!&lt;/span>&lt;span class="nx">requestScreenCapture&lt;/span>&lt;span class="p">()){&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;请求截图失败&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nx">exit&lt;/span>&lt;span class="p">();&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// 3、进行截图
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="nx">captureScreen&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;/sdcard/img.png&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nx">toastLog&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;截图完成&amp;#34;&lt;/span>&lt;span class="p">);&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="触发">触发
-&lt;/h2>&lt;p>一开始设想的是 autojs 监听通知，使用 &lt;a class="link" href="https://github.com/Finb/Bark" target="_blank" rel="noopener"
->Bark&lt;/a> 的安卓客户端 &lt;a class="link" href="https://github.com/xlvecle/PushLite" target="_blank" rel="noopener"
->PushLite&lt;/a> 来接收通知触发截图，然而 PushLite 需要 Google FCM，安装太折腾，放弃，寻求电脑端触发的方案。&lt;/p>
-&lt;p>一番搜索，决定用 cgi 来接收外部请求并触发截图，各种依赖最少。&lt;/p>
-&lt;p>电脑上连接多个安卓手机，执行 adb 命令需要指定设备 id，设备 id 用 &lt;code>adb devices&lt;/code> 获取&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">adb devices
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">List of devices attached
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">NXTDU1xxxxxxxxx device
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>NXTDU1xxxxxxxxx 就是设备 id&lt;/p>
-&lt;p>yunshanfu.sh&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;span class="lnt">27
-&lt;/span>&lt;span class="lnt">28
-&lt;/span>&lt;span class="lnt">29
-&lt;/span>&lt;span class="lnt">30
-&lt;/span>&lt;span class="lnt">31
-&lt;/span>&lt;span class="lnt">32
-&lt;/span>&lt;span class="lnt">33
-&lt;/span>&lt;span class="lnt">34
-&lt;/span>&lt;span class="lnt">35
-&lt;/span>&lt;span class="lnt">36
-&lt;/span>&lt;span class="lnt">37
-&lt;/span>&lt;span class="lnt">38
-&lt;/span>&lt;span class="lnt">39
-&lt;/span>&lt;span class="lnt">40
-&lt;/span>&lt;span class="lnt">41
-&lt;/span>&lt;span class="lnt">42
-&lt;/span>&lt;span class="lnt">43
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#!/bin/bash
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&lt;/span>&lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;Content-Type:text/html&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">echo&lt;/span> &lt;span class="s1">&amp;#39;&amp;lt;html&amp;gt;&amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt;&amp;lt;body&amp;gt;&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">dev&lt;/span>&lt;span class="o">=&lt;/span>NXTDU1xxxxxxxxx
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">img&lt;/span>&lt;span class="o">=&lt;/span>/sdcard/img.png
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">adb&lt;span class="o">(){&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> /usr/bin/adb -s &lt;span class="nv">$dev&lt;/span> &lt;span class="nv">$@&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cleanup&lt;span class="o">(){&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> adb shell rm &lt;span class="nv">$img&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> rm /tmp/ysf.png
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">unlock&lt;span class="o">(){&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> adb shell input keyevent &lt;span class="m">224&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> adb shell input swipe &lt;span class="m">300&lt;/span> &lt;span class="m">500&lt;/span> &lt;span class="m">300&lt;/span> &lt;span class="m">1500&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> adb shell input text &lt;span class="m">12345678&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">screenshoot&lt;span class="o">(){&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> adb shell am start -n org.autojs.autojs/.external.open.RunIntentActivity -d /sdcard/Scripts/ysf.js
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> sleep &lt;span class="m">3&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">while&lt;/span> &lt;span class="nb">true&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">do&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 校验文件大小，避免 pull 回来未写完图片&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> adb pull &lt;span class="nv">$img&lt;/span> /tmp/ysf.png &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="o">[&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="k">$(&lt;/span>stat -c %s /tmp/ysf.png&lt;span class="k">)&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span> -ge &lt;span class="m">300000&lt;/span> &lt;span class="o">]&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nb">break&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> sleep &lt;span class="m">1&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># press power button&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> adb shell input keyevent &lt;span class="m">26&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cleanup
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">unlock
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">screenshoot
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;&amp;lt;img src=&amp;#39;data:image/png;base64,&lt;/span>&lt;span class="k">$(&lt;/span>cat /tmp/ysf.png &lt;span class="p">|&lt;/span> base64 -w 0&lt;span class="k">)&lt;/span>&lt;span class="s2">&amp;#39;&amp;gt;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">echo&lt;/span> &lt;span class="s2">&amp;#34;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>python http.server 的 cgi 脚本需要放在 &lt;code>cgi-bin&lt;/code> 目录&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">chmod +x yunshanfu.sh
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mkdir cgi-bin
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mv yunshanfu.sh cgi-bin
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">python3 -m http.server --cgi
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>浏览器访问 &lt;code>http://127.0.0.1:8000/cgi-bin/yunshanfu.sh&lt;/code>, 即可触发截图，并在当前页面展示截图。&lt;/p>
-&lt;p>设置端口转发，公网访问效果如图
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Network on 4ft35t blog</title><link>https://4ft35t.github.io/categories/network/</link><description>Recent content in Network on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 19 Mar 2024 11:22:46 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/categories/network/index.xml" rel="self" type="application/rss+xml"/><item><title>群晖使用 A1 订阅版 Onedrive</title><link>https://4ft35t.github.io/post/use-office365-a1-onedrive-in-synology/</link><pubDate>Tue, 19 Mar 2024 11:22:46 +0800</pubDate><guid>https://4ft35t.github.io/post/use-office365-a1-onedrive-in-synology/</guid><description>&lt;p&gt;教育版 A1 订阅的 Onedrive 可以用 rclone 以 webdav 方式挂载。 但这不是标准的 webdav 协议，无法在群晖中使用。&lt;/p&gt;
+&lt;p&gt;群晖的 Cloud Sync 支持同步 Microsoft OneDrive for Business 和 Microsoft SharePoint，但是这个帐号使用 edu 邮箱自己注册的，没有管理员，登陆后报错&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nt"&gt;&amp;#34;error&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;invalid_client&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nt"&gt;&amp;#34;error_description&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;AADSTS650051: Using application &amp;#39;Cloud Sync&amp;#39; is currently not supported for your organization xxx.edu.cn because it is in an unmanaged state. An administrator needs to claim ownership of the company by DNS validation of xxx.edu.cn before the application Cloud Sync can be provisioned. Trace ID: a4ec2174-8d9f-4281-9f5b-7d782c060601 Correlation ID: c6bdc0ff-5a6c-4597-9060-af9c981610e2 Timestamp: 2024-03-15 02:00:57Z&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="实现方案"&gt;实现方案
+&lt;/h2&gt;&lt;h3 id="skleeschultebasic-to-sharepoint-auth-http-proxy-方案"&gt;skleeschulte/basic-to-sharepoint-auth-http-proxy 方案
+&lt;/h3&gt;&lt;p&gt;使用 &lt;a class="link" href="https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy" target="_blank" rel="noopener"
+&gt;https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy&lt;/a&gt; 中转请求，最终以 webdav 协议使用。&lt;/p&gt;
+&lt;h3 id="rclone-方案"&gt;rclone 方案
+&lt;/h3&gt;&lt;p&gt;rclone 也是转为 webdav 服务&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;rclone serve webdav remote:path [flags]&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id="方案效果对比"&gt;方案效果对比
+&lt;/h3&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;应用程序&lt;/th&gt;
+&lt;th&gt;basic-to-sharepoint-auth-http-proxy&lt;/th&gt;
+&lt;th&gt;rclone&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;File Station&lt;/td&gt;
+&lt;td&gt;N&lt;/td&gt;
+&lt;td&gt;Y&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Cloud Sync&lt;/td&gt;
+&lt;td&gt;Y&lt;/td&gt;
+&lt;td&gt;Y&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Hyper Backup&lt;/td&gt;
+&lt;td&gt;Y&lt;/td&gt;
+&lt;td&gt;Y&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;对比后 rclone 方案有明显优势:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;支持在 File Station 挂载&lt;/li&gt;
+&lt;li&gt;rclone 是是个活跃项目，basic-to-sharepoint-auth-http-proxy 已经 2 年无更新&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="操作方法"&gt;操作方法
+&lt;/h2&gt;&lt;h3 id="basic-to-sharepoint-auth-http-proxy-方案"&gt;basic-to-sharepoint-auth-http-proxy 方案
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;sudo docker run --name sharepoint-proxy -d -p 13000:3000 -e PROXY_TARGET=https://xxx-my.sharepoint.com/ --restart always skleeschulte/basic-to-passport-auth-http-proxy:v0.1.4&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;之后 webdav url 是 http://127.0.0.1:13000/personal/[YOUR-EMAIL]/Documents, 用户名和密码是 onedrive 的信息。&lt;/p&gt;
+&lt;h3 id="rclone-方案-1"&gt;rclone 方案
+&lt;/h3&gt;&lt;p&gt;rclone 我本地也在用，没用 docker。&lt;/p&gt;
+&lt;h4 id="1-配置-rclone-访问-onedrive"&gt;1. 配置 rclone 访问 onedrive
+&lt;/h4&gt;&lt;p&gt;教育版 Onedrive 登陆后的地址是 &lt;code&gt;https://[YOUR-DOMAIN]-my.sharepoint.com/personal/[YOUR-EMAIL]/_layouts/15/onedrive.aspx&lt;/code&gt;, 只需要把 &lt;code&gt;_layouts/15/onedrive.aspx&lt;/code&gt; 换成 &lt;code&gt;Documents&lt;/code&gt; 就是 webdav 地址。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;rclone confige - n) New remote - 随便起个名字 - 51 / WebDAV - https://[YOUR-DOMAIN]-my.sharepoint.com/personal/[YOUR-EMAIL]/Documents - 4 / Sharepoint Online, authenticated by Microsoft account - 用户名 - y) Yes, type in my own password - 密码 - 确认密码 - 回车跳过 - y) Yes this is OK (default)&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id="2-rclone-开启-webadv-服务"&gt;2. rclone 开启 webadv 服务
+&lt;/h4&gt;&lt;p&gt;以上一步起的名字 1dr-sharepoint 为例, 执行下面命令即可开启 webdav 服务。
+&lt;code&gt;rclone rclone serve webdav 1dr-sharepoint:/ --user user --pass password --addr 192.168.1.101:8080&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;webdav url http://192.168.1.101:8080/&lt;/p&gt;
+&lt;p&gt;rclone 支持开启的服务列表如下:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;span class="lnt"&gt;6
+&lt;/span&gt;&lt;span class="lnt"&gt;7
+&lt;/span&gt;&lt;span class="lnt"&gt;8
+&lt;/span&gt;&lt;span class="lnt"&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; dlna Serve remote:path over DLNA
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; docker Serve any remote on docker&lt;span class="s1"&gt;&amp;#39;s volume plugin API.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s1"&gt; ftp Serve remote:path over FTP.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s1"&gt; http Serve the remote over HTTP.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s1"&gt; nfs Serve the remote as an NFS mount
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s1"&gt; restic Serve the remote for restic&amp;#39;&lt;/span&gt;s REST API.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; s3 Serve remote:path over s3.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; sftp Serve the remote over SFTP.
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; webdav Serve remote:path over WebDAV.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id="3-群晖-file-station-挂载"&gt;3. 群晖 File Station 挂载
+&lt;/h4&gt;&lt;p&gt;File Station - Tools - Remote Connection - Connection Setup - WebDAV&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;ip: 192.168.1.101
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;port: 8080
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;path: /
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;account name: user
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;passowrd: pssword
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="参考链接"&gt;参考链接
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://blog.edmond.work/2023/02/19/dsm-hyper-backup-onedrive-%E5%82%99%E4%BB%BD%E6%95%99%E5%AD%B8/" target="_blank" rel="noopener"
+&gt;DSM Hyper Backup OneDrive 備份教學&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://hostloc.com/thread-785905-1-1.html" target="_blank" rel="noopener"
+&gt;使群晖 CloudSync 支持同步世纪互联 OneDrive&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://tongjunsz.gitee.io/2020/10/29/%E9%80%9A%E8%BF%87Synology%E7%9A%84Hyper-Backup%E5%A4%87%E4%BB%BD%E5%88%B0Microsoft-OneDrive-for-Business-SharePoint/" target="_blank" rel="noopener"
+&gt;通过synology的hyper backup备份到microsoft onedrive for business（sharepoint)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://blog.ty-wu.com/posts/synohyperbksharepoint/" target="_blank" rel="noopener"
+&gt;Synology Hyper Backup 備份到 OneDrive&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://rclone.org/webdav/" target="_blank" rel="noopener"
+&gt; WebDAV&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://rclone.org/commands/rclone_serve_webdav/" target="_blank" rel="noopener"
+&gt;rclone serve webdav&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Ubuntu 20.04 server iptables 持久化</title><link>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</link><pubDate>Fri, 17 Feb 2023 10:36:40 +0800</pubDate><guid>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</guid><description>&lt;img src="https://i.stack.imgur.com/gZm6i.png" alt="Featured image of post Ubuntu 20.04 server iptables 持久化" /&gt;&lt;p&gt;有一批服务器需要做 iptables 持久化，开机自动加载。&lt;/p&gt;
+&lt;p&gt;在 Ubuntu 12.04 时代, 可以把加载脚本写到 &lt;code&gt;/etc/rc.local&lt;/code&gt; 开机自动加载，Ubuntu 20.04 要启用 rc.local 太麻烦，用 &lt;code&gt;netfilter-persistent&lt;/code&gt; 来实现自动加载。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;netfilter-persistent&lt;/code&gt; 加载 &lt;code&gt;ipset-persistent&lt;/code&gt; 和 &lt;code&gt;iptables-persistent&lt;/code&gt; 保存的规则。&lt;/p&gt;
+&lt;h2 id="tldr"&gt;TLDR
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# noninteractive install&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo debconf-set-selections &lt;span class="s"&gt;&amp;lt;&amp;lt;EOF
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;iptables-persistent iptables-persistent/autosave_v4 boolean true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;iptables-persistent iptables-persistent/autosave_v6 boolean true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;ipset-persistent ipset-persistent/autosave boolean true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;EOF&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo apt update &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; sudo apt install netfilter-persistent ipset-persistent iptables-persistent -y
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo netfilter-persistent save
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; netfilter-persistent
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo systemctl start netfilter-persistent
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="静默安装"&gt;静默安装
+&lt;/h2&gt;&lt;p&gt;ipset-persistent 和 iptables-persistent 安装过程中会弹出交互窗，选择是否自动保存规则。&lt;/p&gt;
+&lt;p&gt;交互会打断服务器上脚本安装，需要无交互静默安装。&lt;/p&gt;
+&lt;p&gt;Ubuntu 上软件包安装配置项归 &lt;code&gt;debconf&lt;/code&gt; 管理，在一台机器上交互安装完成后，用 &lt;code&gt;debconf-show&lt;/code&gt; 查看软件包的配置项。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;span class="lnt"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo debconf-show ipset-persistent
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;* ipset-persistent/autosave: &lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo debconf-show iptables-persistent
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;* iptables-persistent/autosave_v4: &lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;* iptables-persistent/autosave_v6: &lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;在安装前，用 &lt;code&gt;debconf-set-selections&lt;/code&gt; 在 debconf 数据库中插入对应的内容，即可实现无交互静默安装。&lt;/p&gt;
+&lt;p&gt;debconf-set-selections 配置语法&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;{包名} {配置项key} {配置项类型} {配置项value}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;生成的配置如下&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo debconf-set-selections &lt;span class="s"&gt;&amp;lt;&amp;lt;EOF
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;ipset-persistent ipset-persistent/autosave boolean true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;iptables-persistent iptables-persistent/autosave_v4 boolean true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;iptables-persistent iptables-persistent/autosave_v6 boolean true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;EOF&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;执行 &lt;code&gt; sudo apt install netfilter-persistent ipset-persistent iptables-persistent -y&lt;/code&gt; 即可静默安装。&lt;/p&gt;
+&lt;h3 id="持久化"&gt;持久化
+&lt;/h3&gt;&lt;h4 id="保存规则"&gt;保存规则
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;sudo netfilter-persistent save&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id="自动加载"&gt;自动加载
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; netfilter-persistent
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo systemctl start netfilter-persistent
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="参考链接"&gt;参考链接
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://dhtar.com/make-ipset-and-iptables-configurations-persistent-in-debianubuntu.html" target="_blank" rel="noopener"
+&gt;Make ipset and iptables configurations persistent in Debian/Ubuntu&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://gist.github.com/alonisser/a2c19f5362c2091ac1e7" target="_blank" rel="noopener"
+&gt;Installing iptables-persistent on ubuntu without manual input&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://blog.51cto.com/u_13791715/2308514" target="_blank" rel="noopener"
+&gt;Linux下实现软件的静默安装&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://sleeplessbeastie.eu/2018/09/17/how-to-read-and-insert-new-values-into-the-debconf-database/" target="_blank" rel="noopener"
+&gt;How to read and insert new values into the debconf database&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>低成本 mesh 组网</title><link>https://4ft35t.github.io/post/lowcast-mesh/</link><pubDate>Sun, 04 Dec 2022 17:57:03 +0800</pubDate><guid>https://4ft35t.github.io/post/lowcast-mesh/</guid><description>&lt;img src="https://cdn.unwire.hk/wp-content/uploads/2018/03/999-1.png" alt="Featured image of post 低成本 mesh 组网" /&gt;&lt;p&gt;上一次主动看 mesh 路由，单台成本 2000 左右，最近在什么值得买上看到用网件 6300V2 刷机后组 mesh 的，原理是网件6300V2 和华硕 AC68U 使用相同的硬件，修改 CEF 中相关配置，即可伪装成华硕 AC68U，使用华硕固件和功能。&lt;/p&gt;
+&lt;p&gt;6300V2 二手价格单台不到80，立马买两台来组网。&lt;/p&gt;
+&lt;h2 id="硬件成本"&gt;硬件成本
+&lt;/h2&gt;&lt;p&gt;自有一台服役多年的 6300V2，淘宝新买2台二手，75.99 一台包邮。&lt;/p&gt;
+&lt;p&gt;不想折腾的可以买刷好梅林386版本的机器，跳过刷机部分，直达 mesh 组网部分。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;75.99 包邮，原厂固件 &lt;a class="link" href="https://item.taobao.com/item.htm?id=654468086454" target="_blank" rel="noopener"
+&gt;https://item.taobao.com/item.htm?id=654468086454&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;138 包邮，梅林386固件 &lt;a class="link" href="https://item.taobao.com/item.htm?id=690054031769" target="_blank" rel="noopener"
+&gt;https://item.taobao.com/item.htm?id=690054031769&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="刷机"&gt;刷机
+&lt;/h2&gt;&lt;p&gt;电脑和路由器用网线连接，推荐使用路由器的 LAN1-LAN3，不要用 LAN4，具体原因下文会提到。&lt;/p&gt;
+&lt;h3 id="1-从官方固件刷梅林"&gt;1. 从官方固件刷梅林
+&lt;/h3&gt;&lt;p&gt;下载 380 版本梅林固件，https://fw.koolcenter.com/KoolCenter_Merlin_Legacy_380/Netgear/R6300V2/X7.9.1/R6300V2_380.70_0-X7.9.1-koolshare.chk&lt;/p&gt;
+&lt;p&gt;路由器恢复出厂设置:&lt;/p&gt;
+&lt;p&gt;路由器关机，按住reset开机，15秒后松开&lt;/p&gt;
+&lt;p&gt;浏览器打开 192.168.1.1，admin/password 登录，固件升级选择 R6300V2_380.70_0-X7.9.1-koolshare.chk&lt;/p&gt;
+&lt;h3 id="2-备份-cfe-和-board_data"&gt;2. 备份 CFE 和 board_data
+&lt;/h3&gt;&lt;p&gt;刷梅林 380 版本后，路由器地址变成 192.168.50.1。登录路由器，帐号密码沿用 admin/password，打开 SSH 服务&lt;/p&gt;
+&lt;p&gt;系统管理 - 系统设置 - 启用 SSH- LAN only - 应用本页面设置&lt;/p&gt;
+&lt;p&gt;使用 ssh 登录路由器，Windows 可以用 putty 或者 wsl。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;dd &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/dev/mtd0 &lt;span class="nv"&gt;of&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/tmp/backup_cfe.bin
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;dd &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/dev/mtd4 &lt;span class="nv"&gt;of&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/tmp/backup_board_data.bin
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;使用 scp 把 上面两个文件拖回本地，如果需要就砖会用到。&lt;/p&gt;
+&lt;p&gt;如果遇到 &lt;code&gt;/usr/libexec/sftp-server: not found&lt;/code&gt; 错误，是因为本地的 scp 版本太新，加 &lt;code&gt;-O&lt;/code&gt; 参数即可&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;scp -O admin@192.168.50.1:/tmp/backup_cfe.bin .
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="3-刷-cfe"&gt;3. 刷 CFE
+&lt;/h3&gt;&lt;p&gt;下载 CEF &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/cfe_2.4Gfix.bin" target="_blank" rel="noopener"
+&gt;https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/cfe_2.4Gfix.bin&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;下载 CEF 修改器 &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/CFEEdit.exe" target="_blank" rel="noopener"
+&gt;https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_384/NETGEAR/R6300v2/tools/CFEEdit.exe&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;打开 CFEEdit.exe，把 MAC 地址修改成华硕的地址段&lt;/p&gt;
+&lt;p&gt;需要修改五个位置&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;et0macaddr=00:90:4C:0F:F1:A7
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;0:macaddr=00:90:4C:0F:F1:A7
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;1:macaddr=00:90:4C:0F:F1:AB
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;secret_code=73210917
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;odmpid=RT-AC68U
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;另存为 cfe-1.bin&lt;/p&gt;
+&lt;p&gt;继续修改，把上面内容 MAC 地址中倒数第二段的 &lt;code&gt;F1&lt;/code&gt; 分别修改成 &lt;code&gt;F2&lt;/code&gt; 和 &lt;code&gt;F3&lt;/code&gt;，同时 &lt;code&gt;secret_code&lt;/code&gt; 最后的 &lt;code&gt;17&lt;/code&gt; 改成 &lt;code&gt;27&lt;/code&gt; 和 &lt;code&gt;37&lt;/code&gt;，另存为 cfe-2.bin 和 cfe-3.bin，分别对应三台机器。&lt;/p&gt;
+&lt;p&gt;scp 把 CFE 传送到路由器&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;scp -O cfe-1.bin admin@192.168.50.1:/tmp
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;ssh 登陆路由器，开始刷 CFE&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;dd if=/tmp/cfe-1.bin of=/dev/mtd0
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;nvram erase
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;reboot
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;重启后路由器会进入 tftp 刷机状态，ip 为 192.168.1.1&lt;/p&gt;
+&lt;h3 id="4-tftp-刷入梅林-386-版本"&gt;4. tftp 刷入梅林 386 版本
+&lt;/h3&gt;&lt;p&gt;下载 386 版本固件 &lt;a class="link" href="https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_386/Netgear/R6300v2/RT-AC6300v2_386.2_4-20210628-91625500b.trx" target="_blank" rel="noopener"
+&gt;https://fw.koolcenter.com/KoolCenter_Merlin_New_Gen_386/Netgear/R6300v2/RT-AC6300v2_386.2_4-20210628-91625500b.trx&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Windows 电脑安装自带的 tftp 客户端&lt;/p&gt;
+&lt;p&gt;Win+r - 输入 appwiz.cpl - 打开或关闭Windows功能 - 勾选TFTP客户端 - 重启&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;手动设置电到有线网卡的 IP，此时的路由器没有 DHCP 功能。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;IP 192.168.1.2, 子网掩码会自动生成，网关不用填。&lt;/p&gt;
+&lt;p&gt;打开一个 cmd 窗口，执行 &lt;code&gt;ping -t 192.168.1.1&lt;/code&gt; 观察 TTL，TTL 值为 100 即表示路由器处于 tftp 刷机状态，如果不是 100，重启路由器。&lt;/p&gt;
+&lt;p&gt;打开第二个 cmd 窗口，执行 &lt;code&gt;tftp -i 192.168.1.1 put RT-AC6300v2_386.2_4-20210628-91625500b.trx&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;等 tftp 传输完成后，路由器会在3分钟内重启多次，最后完成刷机。&lt;/p&gt;
+&lt;p&gt;当 ping 的 TTL 变成 64，即表示路由器正常启动。如果 tftp 传输完成后5分钟，TTL 还没变成 64，重启路由器。&lt;/p&gt;
+&lt;p&gt;如果重启后 ping TTL 值一直保持 100，浏览器访问 192.168.1.1，进入 CFE miniWeb，点击 &amp;ldquo;Restore default NVRAM values&amp;rdquo;，然后重启。&lt;/p&gt;
+&lt;h3 id="4-刷机后存在问题"&gt;4. 刷机后存在问题
+&lt;/h3&gt;&lt;p&gt;刷机后，WAN 口的位置会发生变化&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;刷机前
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+------+------+------+------+ +------+
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| LAN4 |LAN3 | LAN2 | LAN1 | | WAN |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| | | | | | |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+------+------+------+------+ +------+
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;刷机后
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+------+------+------+------+ +------+
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| WAN |LAN1 |LAN2 |LAN3 | |LAN4 |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| | | | | | |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+------+------+------+------+ +------+
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="mesh-组网"&gt;mesh 组网
+&lt;/h2&gt;&lt;p&gt;路由1 做为 mesh 路由，访问 192.168.1.1，按向导完成 pppoe 拨号设置，选路由器模式。&lt;/p&gt;
+&lt;p&gt;路由器2，作为 AiMesh 节点，按向导完成动态动态 IP 设置；然后&lt;/p&gt;
+&lt;p&gt;系统管理 - 操作模式 - AiMesh 节点 - 保存&lt;/p&gt;
+&lt;p&gt;等界面显示重置完成，路由器2的设置完成。&lt;/p&gt;
+&lt;p&gt;现在电脑网线连接路由器1；路由器2保持开机，不插网线，放在路由器1旁边。&lt;/p&gt;
+&lt;p&gt;登录路由器1网页 - AiMesh - 添加 AiMesh 节点 - 选择路由器2（RT-AC86U） - 建立连接&lt;/p&gt;
+&lt;p&gt;等待完成后对路由器3重复执行上述操作。&lt;/p&gt;
+&lt;p&gt;所有操作完成后，路由器2和3的用户名密码会变成和路由器1一样。&lt;/p&gt;
+&lt;p&gt;现在可以享受 mesh 组网的无缝切换了，不用再像用扩展器一样手动切换。&lt;/p&gt;
+&lt;h3 id="有线回程"&gt;有线回程
+&lt;/h3&gt;&lt;p&gt;路由器1 LAN 连接路由器2 WAN，即可让路由器2 变成有线回程。路由器3 同理。&lt;/p&gt;
+&lt;h2 id="加散热风扇"&gt;加散热风扇
+&lt;/h2&gt;&lt;p&gt;使用 3007 风扇，可以藏在机器内，用杜邦接口插在 ttl 针上，VCC 接红线，GND 接黑线。&lt;/p&gt;
+&lt;h2 id="参考链接"&gt;参考链接
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://post.smzdm.com/p/a4dk3zgk/" target="_blank" rel="noopener"
+&gt;最便宜的组Aimesh的方案——R6300V2最后的荣光&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.right.com.cn/forum/thread-7613019-1-1.html" target="_blank" rel="noopener"
+&gt;网件NETGEAR R6300V2(国行版本) 原厂固件直刷380_X7.9.1梅林成功 附升级梅林386教程 &lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://wkings.blog/archives/875" target="_blank" rel="noopener"
+&gt;网件路由器 R6300v2 刷机教程和固件大全&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://zhuanlan.zhihu.com/p/386867842" target="_blank" rel="noopener"
+&gt;无线路由器Mesh组网教程：华硕Aimesh组网篇&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.right.com.cn/forum/forum.php?mod=redirect&amp;amp;goto=findpost&amp;amp;ptid=1686743&amp;amp;pid=5735198" target="_blank" rel="noopener"
+&gt;6300v2主动散热加usb风扇问题&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>修复 Chromecast YouTube 投屏失败问题</title><link>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</link><pubDate>Fri, 29 Jul 2022 01:38:00 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</guid><description>&lt;img src="https://www.right.com.cn/forum/data/attachment/forum/201803/08/102522uwh6r70ssbuh01r5.jpg" alt="Featured image of post 修复 Chromecast YouTube 投屏失败问题" /&gt;&lt;h2 id="问题分析"&gt;问题分析
+&lt;/h2&gt;&lt;p&gt;软路由 OpenWrt 做网关，同时用 SS 透明代理所有国外 IP 的 TCP 连接，手机、电脑都无感翻墙。&lt;/p&gt;
+&lt;p&gt;Chromecast 在多个境外网站上投屏正常工作，Google Photos 投屏也正常，唯独 YouTube 无法投屏。&lt;/p&gt;
+&lt;p&gt;使用关键词 &amp;ldquo;chromecast youtube something went wrong&amp;rdquo; 没找到有用信息，把 ChromeCast 的语言改成中文后，用中文的报错信息一下就找到了，果然是天朝特有问题。Google 搜 &lt;code&gt;chromecast youtube &amp;quot;出问题了&amp;quot;&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;问题原因在于 Chromecast 不使用 DHCP 分配的 DNS 服务器，用 8.8.8.8 解析，会拿到污染的结果，导致失败。&lt;/p&gt;
+&lt;h2 id="解决方案"&gt;解决方案
+&lt;/h2&gt;&lt;p&gt;解决方法很简单，在网关上劫持 8.8.8.8 的 53 端口 UDP 包，重定向到网关的无污染 DNS。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;iptables -t nat -I PREROUTING -p udp -d 8.8.8.8 --dport &lt;span class="m"&gt;53&lt;/span&gt; -j REDIRECT --to-ports &lt;span class="m"&gt;53&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;OpenWrt 网页 - NetWork - Firewall - Custom Rules, 把上述命令贴进去，保存即可。&lt;/p&gt;
+&lt;p&gt;也可直接修改 &lt;code&gt;/etc/firewall.user&lt;/code&gt; 然后 &lt;code&gt;/etc/init.d/firewall restart&lt;/code&gt; 生效。&lt;/p&gt;
+&lt;h2 id="参考链接"&gt;参考链接
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://v2ex.com/t/436014" target="_blank" rel="noopener"
+&gt;Chromecast 如何配搭路由的 SS 看 youtube？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://iso1.wordpress.com/2017/07/06/install-shadowsocks-on-geek-router-and-fix-chromecast-casting-youtube-issue/" target="_blank" rel="noopener"
+&gt;极路由开发(Root)模式安装Shadowsocks, 以及Chromecast因DNS污染无法投射YouTube的解决方案&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>使用机场加速自建代理</title><link>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</link><pubDate>Sat, 25 Jun 2022 11:14:47 +0800</pubDate><guid>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</guid><description>&lt;img src="https://raw.githubusercontent.com/Dreamacro/clash/master/docs/logo.png" alt="Featured image of post 使用机场加速自建代理" /&gt;&lt;p&gt;自建代理与机场比较&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th&gt;自建代理&lt;/th&gt;
+&lt;th&gt;机场&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;速度&lt;/td&gt;
+&lt;td&gt;慢&lt;/td&gt;
+&lt;td&gt;快&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;安全性&lt;/td&gt;
+&lt;td&gt;高&lt;/td&gt;
+&lt;td&gt;无&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;有没有兼顾安全性和速度的方案？&lt;/p&gt;
+&lt;h2 id="最终方案"&gt;最终方案
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+-----------+ +---------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| | | |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| 墙内机器 +--①---&amp;gt; 机场国内中转 |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| | | |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+-----------+ +-------+-------+
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; |②
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+------------+ +-------v-------+
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| | | |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| Cloudflare &amp;lt;--③--+ 机场国外节点 |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| | | |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+------+-----+ +---------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; |④
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+------v-----+ +---------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| | | |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| 自建梯子 +--⑤--&amp;gt; 目标网站 |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;| | | |
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;+------------+ +---------------+
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="部署要点"&gt;部署要点
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;自建梯子用 tsl+websocket 协议，各种工具都可以，ss+v2ray-plugin、v2ray、gost 等都可以。这一步目的是为了能用 Cloudflare 的 CDN。&lt;/li&gt;
+&lt;li&gt;需要有自己的域名，把域名接入 Cloudflare。&lt;/li&gt;
+&lt;li&gt;在本地用 clash 控制流量走向&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="方案优势"&gt;方案优势
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;国内运营商在链路①的位置只能看到你访问了机场的国内 IP&lt;/li&gt;
+&lt;li&gt;机场在链路②③只能看到你在用 tls 流量访问 Cloudflare 节点，目标网站就是你接入 Cloudflare 的域名。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;只要你不用代理访问国内网站，运营商和机场都不知道你的自建梯子的出口 IP&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;和直连自建梯子比，大幅提升速度和稳定性；和单独使用机场相比，机场无法知道你的访问信息，安全性很大提升&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="方案实施"&gt;方案实施
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;各代理软件都有详细文档，如何开启tsl+websocket 协议，此处略&lt;/li&gt;
+&lt;li&gt;域名接入 cloudflare， 略&lt;/li&gt;
+&lt;li&gt;购买机场，略&lt;/li&gt;
+&lt;li&gt;clash 配置&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="clash-简介"&gt;Clash 简介
+&lt;/h3&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/Dreamacro/clash" target="_blank" rel="noopener"
+&gt;Clash&lt;/a&gt;是一款用 Go 开发的多平台的代理工具，使用强大的策略组来管理节点;可以自动选择节点，不同的网站，在同一时间，可以使用不同的节点去访问。&lt;/p&gt;
+&lt;p&gt;我们用 Clash 强大的策略组功能来套娃。&lt;/p&gt;
+&lt;p&gt;官方文档有示例 &lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
+&gt;https://github.com/Dreamacro/clash/wiki/configuration&lt;/a&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;relay chains the proxies. proxies shall not contain a relay. No UDP support.
+Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; ss1 &amp;lt;-&amp;gt; ss2 &amp;lt;-&amp;gt; Internet&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="配置文件"&gt;配置文件
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;span class="lnt"&gt;20
+&lt;/span&gt;&lt;span class="lnt"&gt;21
+&lt;/span&gt;&lt;span class="lnt"&gt;22
+&lt;/span&gt;&lt;span class="lnt"&gt;23
+&lt;/span&gt;&lt;span class="lnt"&gt;24
+&lt;/span&gt;&lt;span class="lnt"&gt;25
+&lt;/span&gt;&lt;span class="lnt"&gt;26
+&lt;/span&gt;&lt;span class="lnt"&gt;27
+&lt;/span&gt;&lt;span class="lnt"&gt;28
+&lt;/span&gt;&lt;span class="lnt"&gt;29
+&lt;/span&gt;&lt;span class="lnt"&gt;30
+&lt;/span&gt;&lt;span class="lnt"&gt;31
+&lt;/span&gt;&lt;span class="lnt"&gt;32
+&lt;/span&gt;&lt;span class="lnt"&gt;33
+&lt;/span&gt;&lt;span class="lnt"&gt;34
+&lt;/span&gt;&lt;span class="lnt"&gt;35
+&lt;/span&gt;&lt;span class="lnt"&gt;36
+&lt;/span&gt;&lt;span class="lnt"&gt;37
+&lt;/span&gt;&lt;span class="lnt"&gt;38
+&lt;/span&gt;&lt;span class="lnt"&gt;39
+&lt;/span&gt;&lt;span class="lnt"&gt;40
+&lt;/span&gt;&lt;span class="lnt"&gt;41
+&lt;/span&gt;&lt;span class="lnt"&gt;42
+&lt;/span&gt;&lt;span class="lnt"&gt;43
+&lt;/span&gt;&lt;span class="lnt"&gt;44
+&lt;/span&gt;&lt;span class="lnt"&gt;45
+&lt;/span&gt;&lt;span class="lnt"&gt;46
+&lt;/span&gt;&lt;span class="lnt"&gt;47
+&lt;/span&gt;&lt;span class="lnt"&gt;48
+&lt;/span&gt;&lt;span class="lnt"&gt;49
+&lt;/span&gt;&lt;span class="lnt"&gt;50
+&lt;/span&gt;&lt;span class="lnt"&gt;51
+&lt;/span&gt;&lt;span class="lnt"&gt;52
+&lt;/span&gt;&lt;span class="lnt"&gt;53
+&lt;/span&gt;&lt;span class="lnt"&gt;54
+&lt;/span&gt;&lt;span class="lnt"&gt;55
+&lt;/span&gt;&lt;span class="lnt"&gt;56
+&lt;/span&gt;&lt;span class="lnt"&gt;57
+&lt;/span&gt;&lt;span class="lnt"&gt;58
+&lt;/span&gt;&lt;span class="lnt"&gt;59
+&lt;/span&gt;&lt;span class="lnt"&gt;60
+&lt;/span&gt;&lt;span class="lnt"&gt;61
+&lt;/span&gt;&lt;span class="lnt"&gt;62
+&lt;/span&gt;&lt;span class="lnt"&gt;63
+&lt;/span&gt;&lt;span class="lnt"&gt;64
+&lt;/span&gt;&lt;span class="lnt"&gt;65
+&lt;/span&gt;&lt;span class="lnt"&gt;66
+&lt;/span&gt;&lt;span class="lnt"&gt;67
+&lt;/span&gt;&lt;span class="lnt"&gt;68
+&lt;/span&gt;&lt;span class="lnt"&gt;69
+&lt;/span&gt;&lt;span class="lnt"&gt;70
+&lt;/span&gt;&lt;span class="lnt"&gt;71
+&lt;/span&gt;&lt;span class="lnt"&gt;72
+&lt;/span&gt;&lt;span class="lnt"&gt;73
+&lt;/span&gt;&lt;span class="lnt"&gt;74
+&lt;/span&gt;&lt;span class="lnt"&gt;75
+&lt;/span&gt;&lt;span class="lnt"&gt;76
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;mixed-port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;7890&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;&lt;/span&gt;&lt;span class="nt"&gt;mode&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;rule&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;&lt;/span&gt;&lt;span class="nt"&gt;proxies&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 自建 ss&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;my-vps-ss&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;type&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;ss&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;server&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;mydomain.xx.cc&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 这里也可以是 Cloudflare 的 IP&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;443&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;cipher&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;chacha20-ietf-poly1305&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;password&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;password&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;plugin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;v2ray-plugin&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;plugin-opts&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;mode&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;websocket&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;tls&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;skip-cert-verify&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;host&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;mydomain.xx.cc&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 机场 ss1&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;jichang-ss-hk&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;type&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;ss&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;server&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;jichang.abc.com&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;12345&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;cipher&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;chacha20-ietf-poly1305&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;password&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;password&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;plugin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;obfs&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;plugin-opts&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;mode&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;http&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;host&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;bing.com&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 机场 ss2&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;jichang-ss-tw&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;type&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;ss&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;server&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;jichang.abc.com&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;12346&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;cipher&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;chacha20-ietf-poly1305&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;password&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;password&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;plugin&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;obfs&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;plugin-opts&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;mode&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;http&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;host&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;bing.com&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 机场 v2ray&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;jichang-v2ray-hk&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;type&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;vmess&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;server&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;jichang.abc.com&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;12347&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;cipher&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;auto&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;uuid&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;xxxx-xxxx-xxxx-xxxx&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;alterId&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;64&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;&lt;/span&gt;&lt;span class="nt"&gt;proxy-groups&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 先把所有机场结点放在一个组&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;机场&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 自动选择延时最小的结点&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;type&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;url-test&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;proxies&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;jichang-ss-hk&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;jichang-ss-tw&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;jichang-v2ray-hk&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;url&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;http://www.gstatic.com/generate_204&amp;#39;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;interval&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;300&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 创建一个 type 是 relay 的组，流量按 proxies 里的顺序，从上往下走&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;myproxy&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="c"&gt;# 自动选择延时最小的结点&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;type&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;url-test&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nt"&gt;proxies&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;机场&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;my-vps-ss&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;&lt;/span&gt;&lt;span class="nt"&gt;rules&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;IP-CIDR,127.0.0.0/8,DIRECT&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;IP-CIDR,192.168.0.0/16,DIRECT&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;GEOIP,CN,DIRECT&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt; &lt;/span&gt;- &lt;span class="l"&gt;MATCH,myproxy&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;至此，配置完成，7980 端口同时提供 http 和 socks4、socks5 代理。&lt;/p&gt;
+&lt;p&gt;分流策略是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;国内 IP 直连&lt;/li&gt;
+&lt;li&gt;国外 IP 走代理&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="数据流"&gt;数据流：
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;本机请求 -&amp;gt; clash，clash 按 relay 组的 proxies 顺序，从下往上加密，本配置中，先用自建的加密方式加密请求，再用机场的加密方式加密第二次&lt;/li&gt;
+&lt;li&gt;clash -&amp;gt; 机场，机场解开自己的加密，看到目标是一个 Cloudflare 上的网站&lt;/li&gt;
+&lt;li&gt;机场 -&amp;gt; Cloudflare, 用标准的 https 方式转发收到的数据包&lt;/li&gt;
+&lt;li&gt;Cloudflare -&amp;gt; vps，vps 收到 https 包后，先用域名的私钥解密数据，得到加密的 ss 数据，再用 ss 解密得到真正的目标。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="更古老的套娃方案"&gt;更古老的套娃方案
+&lt;/h2&gt;&lt;p&gt;在遇到 clash 之前，一直在 openwrt 上套娃，使用的是 shadowsocks + iptables-mod-tproxy&lt;/p&gt;
+&lt;h3 id="环境准备"&gt;环境准备
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;opkg install shadowsocks-libev
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="操作方法"&gt;操作方法
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;openwrt 上正常配置自建梯子，能正常使用后进入第2步&lt;/li&gt;
+&lt;li&gt;用 ss-redir 启动机场的 ss&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;ss-redir -c jichang.json -l &lt;span class="m"&gt;12346&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ol start="3"&gt;
+&lt;li&gt;iptables 把自建的流量重定向到机场。假设自建的 IP 是 1.1.1.1&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;iptables -t nat -I OUTPUT -p tcp -d 1.1.1.1 -j REDIRECT --to-ports &lt;span class="m"&gt;12346&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;等效 nftables 指令&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;nft add chain inet fw4 jichang_rules_out &lt;span class="s1"&gt;&amp;#39;{type nat hook output priority filter -2;}&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;nft add rule inet fw4 jichang_rules_out ip protocol tcp ip &lt;span class="nv"&gt;daddr&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; 172.67.134.143 redirect to :12346
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;机场的 ss-redir 需要后启动，shadowsocks 默认策略是插入 OUTPUT 链首位，后启动的在首位&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="参考链接"&gt;参考链接
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://wanchuan.top/e9430b8345c049f8afce602db5f5f773" target="_blank" rel="noopener"
+&gt;使用Clash工具科学上网&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
+&gt;clash 官方配置文档&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://guide.v2fly.org/app/tproxy.html#%E9%85%8D%E7%BD%AE%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E8%A7%84%E5%88%99" target="_blank" rel="noopener"
+&gt;v2ay 配置透明代理规则&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="http://openwrt-dist.sourceforge.net/" target="_blank" rel="noopener"
+&gt;aa65535 维护的 shadowsocks for openwrt&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Android 远程截图</title><link>https://4ft35t.github.io/post/android-screenshoot-remote/</link><pubDate>Fri, 06 Aug 2021 16:51:31 +0800</pubDate><guid>https://4ft35t.github.io/post/android-screenshoot-remote/</guid><description>&lt;img src="https://img1.mydrivers.com/img/20210226/s_ff489bbf9a884b83a72837c099f23e97.jpg" alt="Featured image of post Android 远程截图" /&gt;&lt;p&gt;某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。&lt;/p&gt;
+&lt;h2 id="背景"&gt;背景
+&lt;/h2&gt;&lt;p&gt;云闪付公交乘车码，每周使用三次可以获得一张 6-5 消费券，但那一个帐号一周只能领一次，需要多个帐号。&lt;/p&gt;
+&lt;p&gt;家里有个老华为手机，上面登录的有老人的云闪付帐号，但是注册帐号的手机号失效，无法更换新手机号，新设备登录需要短信验证码，只有拿这个手机去刷。&lt;/p&gt;
+&lt;p&gt;不想带多个手机出门，开启折腾之路。&lt;/p&gt;
+&lt;h2 id="截屏"&gt;截屏
+&lt;/h2&gt;&lt;p&gt;系统自带 &lt;code&gt;screencap&lt;/code&gt; 命令，桌面和别的 app 可以截屏，云闪付不行，应该是云闪付设置了&lt;code&gt;FLAG_SECURE&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;a class="link" href="https://github.com/Genymobile/scrcpy" target="_blank" rel="noopener"
+&gt;scrcpy&lt;/a&gt; 可以显示云闪付内容，猜测 &lt;a class="link" href="https://github.com/Ericwyn/Auto.js" target="_blank" rel="noopener"
+&gt;autojs&lt;/a&gt; 使用 cast 模式也可以截屏，实测确实可以。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;span class="lnt"&gt;20
+&lt;/span&gt;&lt;span class="lnt"&gt;21
+&lt;/span&gt;&lt;span class="lnt"&gt;22
+&lt;/span&gt;&lt;span class="lnt"&gt;23
+&lt;/span&gt;&lt;span class="lnt"&gt;24
+&lt;/span&gt;&lt;span class="lnt"&gt;25
+&lt;/span&gt;&lt;span class="lnt"&gt;26
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-js" data-lang="js"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;auto&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;app&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;launch&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;com.unionpay&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;waitForPackage&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;com.unionpay&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;// 首页点击乘车码
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;&lt;/span&gt;&lt;span class="nx"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1500&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;text&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;充值中心&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;exists&lt;/span&gt;&lt;span class="p"&gt;()){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;toastLog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;找到 乘车码 关键字&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;target&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;text&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;乘车码&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nx"&gt;findOne&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="nx"&gt;target&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;clickable&lt;/span&gt;&lt;span class="p"&gt;()){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;target&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;target&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;parent&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;target&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;click&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;waitForActivity&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;com.unionpay.activity.react.UPActivityReactNative&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2000&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;// 2、请求截图
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="nx"&gt;requestScreenCapture&lt;/span&gt;&lt;span class="p"&gt;()){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;toastLog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;请求截图失败&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="nx"&gt;exit&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;// 3、进行截图
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;&lt;/span&gt;&lt;span class="nx"&gt;captureScreen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;/sdcard/img.png&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nx"&gt;toastLog&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;截图完成&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="触发"&gt;触发
+&lt;/h2&gt;&lt;p&gt;一开始设想的是 autojs 监听通知，使用 &lt;a class="link" href="https://github.com/Finb/Bark" target="_blank" rel="noopener"
+&gt;Bark&lt;/a&gt; 的安卓客户端 &lt;a class="link" href="https://github.com/xlvecle/PushLite" target="_blank" rel="noopener"
+&gt;PushLite&lt;/a&gt; 来接收通知触发截图，然而 PushLite 需要 Google FCM，安装太折腾，放弃，寻求电脑端触发的方案。&lt;/p&gt;
+&lt;p&gt;一番搜索，决定用 cgi 来接收外部请求并触发截图，各种依赖最少。&lt;/p&gt;
+&lt;p&gt;电脑上连接多个安卓手机，执行 adb 命令需要指定设备 id，设备 id 用 &lt;code&gt;adb devices&lt;/code&gt; 获取&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;adb devices
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;List of devices attached
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;NXTDU1xxxxxxxxx device
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;NXTDU1xxxxxxxxx 就是设备 id&lt;/p&gt;
+&lt;p&gt;yunshanfu.sh&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;span class="lnt"&gt;20
+&lt;/span&gt;&lt;span class="lnt"&gt;21
+&lt;/span&gt;&lt;span class="lnt"&gt;22
+&lt;/span&gt;&lt;span class="lnt"&gt;23
+&lt;/span&gt;&lt;span class="lnt"&gt;24
+&lt;/span&gt;&lt;span class="lnt"&gt;25
+&lt;/span&gt;&lt;span class="lnt"&gt;26
+&lt;/span&gt;&lt;span class="lnt"&gt;27
+&lt;/span&gt;&lt;span class="lnt"&gt;28
+&lt;/span&gt;&lt;span class="lnt"&gt;29
+&lt;/span&gt;&lt;span class="lnt"&gt;30
+&lt;/span&gt;&lt;span class="lnt"&gt;31
+&lt;/span&gt;&lt;span class="lnt"&gt;32
+&lt;/span&gt;&lt;span class="lnt"&gt;33
+&lt;/span&gt;&lt;span class="lnt"&gt;34
+&lt;/span&gt;&lt;span class="lnt"&gt;35
+&lt;/span&gt;&lt;span class="lnt"&gt;36
+&lt;/span&gt;&lt;span class="lnt"&gt;37
+&lt;/span&gt;&lt;span class="lnt"&gt;38
+&lt;/span&gt;&lt;span class="lnt"&gt;39
+&lt;/span&gt;&lt;span class="lnt"&gt;40
+&lt;/span&gt;&lt;span class="lnt"&gt;41
+&lt;/span&gt;&lt;span class="lnt"&gt;42
+&lt;/span&gt;&lt;span class="lnt"&gt;43
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;&lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;Content-Type:text/html&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;lt;html&amp;gt;&amp;lt;meta charset=&amp;#34;UTF-8&amp;#34;&amp;gt;&amp;lt;body&amp;gt;&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nv"&gt;dev&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;NXTDU1xxxxxxxxx
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nv"&gt;img&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/sdcard/img.png
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;adb&lt;span class="o"&gt;(){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; /usr/bin/adb -s &lt;span class="nv"&gt;$dev&lt;/span&gt; &lt;span class="nv"&gt;$@&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;cleanup&lt;span class="o"&gt;(){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; adb shell rm &lt;span class="nv"&gt;$img&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; rm /tmp/ysf.png
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;unlock&lt;span class="o"&gt;(){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; adb shell input keyevent &lt;span class="m"&gt;224&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; adb shell input swipe &lt;span class="m"&gt;300&lt;/span&gt; &lt;span class="m"&gt;500&lt;/span&gt; &lt;span class="m"&gt;300&lt;/span&gt; &lt;span class="m"&gt;1500&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; adb shell input text &lt;span class="m"&gt;12345678&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;screenshoot&lt;span class="o"&gt;(){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; adb shell am start -n org.autojs.autojs/.external.open.RunIntentActivity -d /sdcard/Scripts/ysf.js
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; sleep &lt;span class="m"&gt;3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="c1"&gt;# 校验文件大小，避免 pull 回来未写完图片&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; adb pull &lt;span class="nv"&gt;$img&lt;/span&gt; /tmp/ysf.png &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;stat -c %s /tmp/ysf.png&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;&lt;/span&gt; -ge &lt;span class="m"&gt;300000&lt;/span&gt; &lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="nb"&gt;break&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; sleep &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="c1"&gt;# press power button&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; adb shell input keyevent &lt;span class="m"&gt;26&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;cleanup
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;unlock
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;screenshoot
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;&amp;lt;img src=&amp;#39;data:image/png;base64,&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;cat /tmp/ysf.png &lt;span class="p"&gt;|&lt;/span&gt; base64 -w 0&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;&amp;#39;&amp;gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;python http.server 的 cgi 脚本需要放在 &lt;code&gt;cgi-bin&lt;/code&gt; 目录&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;chmod +x yunshanfu.sh
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;mkdir cgi-bin
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;mv yunshanfu.sh cgi-bin
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;python3 -m http.server --cgi
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;浏览器访问 &lt;code&gt;http://127.0.0.1:8000/cgi-bin/yunshanfu.sh&lt;/code&gt;, 即可触发截图，并在当前页面展示截图。&lt;/p&gt;
+&lt;p&gt;设置端口转发，公网访问效果如图
 &lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2021/IMG_0317.jpg"
 loading="lazy"
->&lt;/p>
-&lt;p>最后，所有相关代码在 &lt;a class="link" href="https://github.com/4ft35t/Android-Screenshoot-Remote" target="_blank" rel="noopener"
->https://github.com/4ft35t/Android-Screenshoot-Remote&lt;/a>&lt;/p></description></item><item><title>SSH 跳板机与代理</title><link>https://4ft35t.github.io/post/ssh-porxy/</link><pubDate>Wed, 03 Jun 2020 16:55:35 +0800</pubDate><guid>https://4ft35t.github.io/post/ssh-porxy/</guid><description>&lt;img src="https://www.openssh.com/images/openssh.gif" alt="Featured image of post SSH 跳板机与代理" />&lt;p>基于各种复杂环境，ssh 无法直接连接目标主机，需要借助中间的跳板机或者代理来连接。通常使用 ssh-agent 来通过跳板机连接目标主机，使用 ProxyCommand 或者 ProxyJump 连接更方便。&lt;/p>
-&lt;h3 id="跳板机">跳板机
-&lt;/h3>&lt;p>在　&lt;code>~/.ssh/config&lt;/code> 中给跳板机一个方便记忆的别名，比如　jumpserver&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Host jumpserver
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> User root
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> HostName 1.2.3.4
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Port 2222
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> IdentityFile ~/.ssh/jump.pem
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>之后就可以通过　&lt;code>ssh jumpserver&lt;/code> 登录到跳板机。&lt;/p>
-&lt;p>通过跳板机连接目标主机：&lt;/p>
-&lt;p>&lt;code>ssh -o ProxyCommand=&amp;quot;ssh -W %h:%p jumpserver&amp;quot; usr@10.0.0.1&lt;/code>&lt;/p>
-&lt;p>或者写入 config 文件，使用 &lt;code>ssh dst&lt;/code> 直接登录目标主机&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Host dst
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> User usr
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> HostName 10.0.0.1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Port 22
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ProxyCommand ssh -W %h:%p jumpserver
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>较新版本的 ssh 客户端可以使用 ProxyJump&lt;/p>
-&lt;p>&lt;code>ssh -J jumpserver usr@10.0.0.1&lt;/code>&lt;/p>
-&lt;p>或者写入 config 文件&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Host dst
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> User usr
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> HostName 10.0.0.1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Port 22
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ProxyJump jumpserver
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>不同版本 ssh 客户端的差异如下&lt;/p>
-&lt;p>&lt;strong>ProxyCommand 与 ProxyJump&lt;/strong>
-所有命令向后兼容，新版本可以使用老版本命令&lt;/p>
-&lt;ul>
-&lt;li>
-&lt;p>远古 SSH 客户端，OpenSSH &amp;lt; 5.4&lt;/p>
-&lt;p>&lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code>&lt;/p>
-&lt;p>或者
-&lt;code>ssh -tt usr1@Jumphost ssh -tt usr2@FooServer&lt;/code>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>中古 SSH 客户端，5.4 &amp;lt;= OpenSSH &amp;lt;= 7.2&lt;/p>
-&lt;p>&lt;code>ProxyCommand ssh jumpserver -W %h:%p&lt;/code>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>现代 SSH 客户端，OpenSSH &amp;gt;= 7.3&lt;/p>
-&lt;p>&lt;code>ProxyJump jumpserver&lt;/code>&lt;/p>
-&lt;p>命令行使用
-&lt;code>ssh -J jumpserver user@dst-host&lt;/code>&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h3 id="代理">代理
-&lt;/h3>&lt;h4 id="socks-代理">socks 代理
-&lt;/h4>&lt;ul>
-&lt;li>
-&lt;p>nc &lt;code>ProxyCommand nc -x 127.0.0.1:1080 %h %p&lt;/code>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;a class="link" href="https://github.com/larryhou/connect-proxy" target="_blank" rel="noopener"
->https://github.com/larryhou/connect-proxy&lt;/a> &lt;code>ProxyCommand connect-proxy -S 127.0.0.1:1080 %h %p&lt;/code>&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h4 id="httphttps-代理">HTTP/HTTPS 代理
-&lt;/h4>&lt;ul>
-&lt;li>
-&lt;p>nc &lt;code>ProxyCommand nc -X connect -x 1.2.3.4:3128 %h %p&lt;/code>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;a class="link" href="https://github.com/bryanpkc/corkscrew" target="_blank" rel="noopener"
->https://github.com/bryanpkc/corkscrew&lt;/a> &lt;code>ProxyCommand /usr/local/bin/corkscrew 1.2.3.4 3128 %h %p&lt;/code>&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>&lt;strong>corkscrew 在代理不稳定时比 nc 可靠&lt;/strong>&lt;/p>
-&lt;h3 id="特别注意">特别注意
-&lt;/h3>&lt;p>本文提到的 nc 是 &lt;strong>BSD 版本的 netcat&lt;/strong>， GNU 版本的 natcat 没有代理功能。&lt;/p>
-&lt;p>更多 netcat 版本见 &lt;a class="link" href="https://wiki.archlinux.org/title/Network_tools#Netcat" target="_blank" rel="noopener"
->https://wiki.archlinux.org/title/Network_tools#Netcat&lt;/a>&lt;/p>
-&lt;h3 id="使用-socat-突破某些堡垒机">使用 socat 突破某些堡垒机
-&lt;/h3>&lt;p>某堡垒机的OpenSSH版本是&lt;code>OpenSSH_7.8p1&lt;/code>, 使用&lt;code>ssh -J jumpserver user@dst-host&lt;/code>无法连接，从报错信息来看，堡垒机禁止了 SSH 转发功能&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">debug1: Local version string SSH-2.0-OpenSSH_8.1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Stdio forwarding request failed: Session open refused by peer
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">kex_exchange_identification: Connection closed by remote host
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>&lt;code>ssh -tt&lt;/code> 和 &lt;code>ssh -W&lt;/code> 也是同样错误，SSH 自身转发走不通，需要借助第三方软件。&lt;/p>
-&lt;h4 id="尝试1---使用-nc-转发">尝试1 - 使用 nc 转发
-&lt;/h4>&lt;p>使用 &lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code> 连接失败，报错, 跳板机上没有 nc&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">debug1: Local version string SSH-2.0-OpenSSH_8.1
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">bash: nc: &lt;span class="nb">command&lt;/span> not found
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>用包管理器安装 netcat, 提供的只有 nmap 版本，没有代理功能。&lt;/p>
-&lt;h4 id="尝试2---使用-socat-转发">尝试2 - 使用 socat 转发
-&lt;/h4>&lt;p>Socat 是 Linux 下的一个多功能的网络工具，名字来由是 「Socket CAT」。其功能与有瑞士军刀之称的 Netcat 类似，可以看做是 Netcat 的加强版。Socat 的主要特点就是在两个数据流之间建立通道，支持众多协议和链接方式，如 IP、TCP、 UDP、IPv6、PIPE、EXEC、System、Open、Proxy、Openssl、Socket等。&lt;/p>
-&lt;p>使用 &lt;code>ProxyCommand ssh jumpserver socat - tcp:%h:%p&lt;/code> 成功通过堡垒机连接目标机器。&lt;/p>
-&lt;h3 id="socat-在proxycommand-中与-netcat-等效用法">socat 在ProxyCommand 中与 netcat 等效用法
-&lt;/h3>&lt;p>socat 稳定版 1.7，beta 版 2 的代理功能更丰富。&lt;/p>
-&lt;h4 id="跳板机堡垒机">跳板机/堡垒机
-&lt;/h4>&lt;p>&lt;code>ProxyCommand ssh jumpserver nc %h %p&lt;/code> -&amp;gt; &lt;code>ProxyCommand ssh jumpserver socat - tcp:%h:%p&lt;/code>&lt;/p>
-&lt;h4 id="socks-代理-1">socks 代理
-&lt;/h4>&lt;p>&lt;code>ProxyCommand nc -x 127.0.0.1:1080 %h %p&lt;/code> -&amp;gt;&lt;/p>
-&lt;ul>
-&lt;li>socat1 &lt;code>ProxyCommand socat - &amp;quot;SOCKS4:127.0.0.1:%h:%p,socksport=1080&amp;quot;&lt;/code>&lt;/li>
-&lt;li>socat2 &lt;code>ProxyCommand socat - &amp;quot;SOCKS5:%h:%p|tcp:127.0.0.1:1080&amp;quot;&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;h4 id="httphttps-代理-1">HTTP/HTTPS 代理
-&lt;/h4>&lt;p>&lt;code>ProxyCommand nc -X connect -x 1.2.3.4:3128 %h %p&lt;/code> -&amp;gt;&lt;/p>
-&lt;ul>
-&lt;li>socat1 &lt;code>ProxyCommand socat - &amp;quot;PROXY:1.2.3.4:%h:%p,proxyport=3128&amp;quot;&lt;/code>&lt;/li>
-&lt;li>socat2 &lt;code>ProxyCommand socat - &amp;quot;PROXY:%h:%p|tcp:1.2.3.4:3128&amp;quot;&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;h3 id="参考链接">参考链接
-&lt;/h3>&lt;ul>
-&lt;li>&lt;a class="link" href="https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts" target="_blank" rel="noopener"
->https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/" target="_blank" rel="noopener"
->https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.endpointdev.com/blog/2013/04/socat-and-netcat-proxycommand-ssh/" target="_blank" rel="noopener"
->https://www.endpointdev.com/blog/2013/04/socat-and-netcat-proxycommand-ssh/&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://unix.stackexchange.com/questions/68826/connecting-to-host-by-ssh-client-in-linux-by-proxy" target="_blank" rel="noopener"
->https://unix.stackexchange.com/questions/68826/connecting-to-host-by-ssh-client-in-linux-by-proxy&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://gitolite.com/git-over-proxy.html" target="_blank" rel="noopener"
->https://gitolite.com/git-over-proxy.html&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://linux.die.net/man/1/socat" target="_blank" rel="noopener"
->https://linux.die.net/man/1/socat&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>解决无忧行长时间显示“正在连接电话服务器”问题</title><link>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</link><pubDate>Thu, 09 Apr 2020 21:48:15 +0800</pubDate><guid>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</guid><description>&lt;img src="https://www.jegotrip.cn/m/img/favicon.ico" alt="Featured image of post 解决无忧行长时间显示“正在连接电话服务器”问题" />&lt;p>无忧行(JegoTrip)APP是中国移动专门为出境游用户量身打造的APP。在境内也可以使用，移动号码可以在 APP 内接电话和收短信, 轻松实现一机双号。&lt;/p>
-&lt;h2 id="具体症状">具体症状
-&lt;/h2>&lt;p>家里路由器上部署梯子, 国内 IP 直连，其余 IP 走梯子, 国内 IP 库用的 &lt;a class="link" href="https://github.com/17mon/china_ip_list" target="_blank" rel="noopener"
->https://github.com/17mon/china_ip_list&lt;/a>。连接家里 WIFI，无忧行 APP 启动后，显示“正在连接电话服务器”, 持续 30 秒以上才能连接到服务器，之后才能收到短信；用 4G 则没有这个提示，启动 APP 瞬间就能收到短信。猜测是无忧行服务器的香港 IP 走梯子后比直连慢很多所致。&lt;/p>
-&lt;h2 id="排查-ip">排查 IP
-&lt;/h2>&lt;p>从 Pi-hole 导出 jego 相关域名, &lt;code>192.168.1.123&lt;/code> 是手机 IP&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl"> sqlite3 pihole-FTL.db &lt;span class="s2">&amp;#34;select distinct
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> domain from queries where client=&amp;#39;192.168.1.123&amp;#39; and domain like &amp;#39;%jego%&amp;#39;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>得到几个域名&lt;/p>
-&lt;blockquote>
-&lt;p>app1.jegotrip.com.cn&lt;br>
-tms.jegotrip.com.cn&lt;br>
-jegotrip-stage.cn-hongkong.log.aliyuncs.com&lt;br>
-cdn.jegotrip.com.cn&lt;br>
-oss.jegotrip.com.cn&lt;br>
-cp.jegotrip.com.cn&lt;/p>
-&lt;/blockquote>
-&lt;p>逐一排查后，&lt;strong>tms.jegotrip.com.cn&lt;/strong> 解析到 223.118.41.228, 是香港 IP。&lt;/p>
-&lt;h2 id="更新-ip-列表">更新 IP 列表
-&lt;/h2>&lt;p>223.118.41.228 属于 AS58453 自治域，把这个自治域中的几个 IP 段全部追加到国内 IP 列表。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">223.118.0.0/15
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">223.119.0.0/16
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">223.120.0.0/16
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">223.121.0.0/16
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>重启梯子服务后问题解决。&lt;/p></description></item></channel></rss>
+&gt;&lt;/p&gt;
+&lt;p&gt;最后，所有相关代码在 &lt;a class="link" href="https://github.com/4ft35t/Android-Screenshoot-Remote" target="_blank" rel="noopener"
+&gt;https://github.com/4ft35t/Android-Screenshoot-Remote&lt;/a&gt;&lt;/p&gt;</description></item><item><title>SSH 跳板机与代理</title><link>https://4ft35t.github.io/post/ssh-porxy/</link><pubDate>Wed, 03 Jun 2020 16:55:35 +0800</pubDate><guid>https://4ft35t.github.io/post/ssh-porxy/</guid><description>&lt;img src="https://www.openssh.com/images/openssh.gif" alt="Featured image of post SSH 跳板机与代理" /&gt;&lt;p&gt;基于各种复杂环境，ssh 无法直接连接目标主机，需要借助中间的跳板机或者代理来连接。通常使用 ssh-agent 来通过跳板机连接目标主机，使用 ProxyCommand 或者 ProxyJump 连接更方便。&lt;/p&gt;
+&lt;h3 id="跳板机"&gt;跳板机
+&lt;/h3&gt;&lt;p&gt;在　&lt;code&gt;~/.ssh/config&lt;/code&gt; 中给跳板机一个方便记忆的别名，比如　jumpserver&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Host jumpserver
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; User root
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; HostName 1.2.3.4
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; Port 2222
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; IdentityFile ~/.ssh/jump.pem
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;之后就可以通过　&lt;code&gt;ssh jumpserver&lt;/code&gt; 登录到跳板机。&lt;/p&gt;
+&lt;p&gt;通过跳板机连接目标主机：&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ssh -o ProxyCommand=&amp;quot;ssh -W %h:%p jumpserver&amp;quot; usr@10.0.0.1&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;或者写入 config 文件，使用 &lt;code&gt;ssh dst&lt;/code&gt; 直接登录目标主机&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Host dst
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; User usr
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; HostName 10.0.0.1
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; Port 22
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ProxyCommand ssh -W %h:%p jumpserver
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;较新版本的 ssh 客户端可以使用 ProxyJump&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ssh -J jumpserver usr@10.0.0.1&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;或者写入 config 文件&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Host dst
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; User usr
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; HostName 10.0.0.1
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; Port 22
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; ProxyJump jumpserver
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;不同版本 ssh 客户端的差异如下&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ProxyCommand 与 ProxyJump&lt;/strong&gt;
+所有命令向后兼容，新版本可以使用老版本命令&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;远古 SSH 客户端，OpenSSH &amp;lt; 5.4&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ProxyCommand ssh jumpserver nc %h %p&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;或者
+&lt;code&gt;ssh -tt usr1@Jumphost ssh -tt usr2@FooServer&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;中古 SSH 客户端，5.4 &amp;lt;= OpenSSH &amp;lt;= 7.2&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ProxyCommand ssh jumpserver -W %h:%p&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;现代 SSH 客户端，OpenSSH &amp;gt;= 7.3&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ProxyJump jumpserver&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;命令行使用
+&lt;code&gt;ssh -J jumpserver user@dst-host&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="代理"&gt;代理
+&lt;/h3&gt;&lt;h4 id="socks-代理"&gt;socks 代理
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;nc &lt;code&gt;ProxyCommand nc -x 127.0.0.1:1080 %h %p&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a class="link" href="https://github.com/larryhou/connect-proxy" target="_blank" rel="noopener"
+&gt;https://github.com/larryhou/connect-proxy&lt;/a&gt; &lt;code&gt;ProxyCommand connect-proxy -S 127.0.0.1:1080 %h %p&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="httphttps-代理"&gt;HTTP/HTTPS 代理
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;nc &lt;code&gt;ProxyCommand nc -X connect -x 1.2.3.4:3128 %h %p&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a class="link" href="https://github.com/bryanpkc/corkscrew" target="_blank" rel="noopener"
+&gt;https://github.com/bryanpkc/corkscrew&lt;/a&gt; &lt;code&gt;ProxyCommand /usr/local/bin/corkscrew 1.2.3.4 3128 %h %p&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;corkscrew 在代理不稳定时比 nc 可靠&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id="特别注意"&gt;特别注意
+&lt;/h3&gt;&lt;p&gt;本文提到的 nc 是 &lt;strong&gt;BSD 版本的 netcat&lt;/strong&gt;， GNU 版本的 natcat 没有代理功能。&lt;/p&gt;
+&lt;p&gt;更多 netcat 版本见 &lt;a class="link" href="https://wiki.archlinux.org/title/Network_tools#Netcat" target="_blank" rel="noopener"
+&gt;https://wiki.archlinux.org/title/Network_tools#Netcat&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="使用-socat-突破某些堡垒机"&gt;使用 socat 突破某些堡垒机
+&lt;/h3&gt;&lt;p&gt;某堡垒机的OpenSSH版本是&lt;code&gt;OpenSSH_7.8p1&lt;/code&gt;, 使用&lt;code&gt;ssh -J jumpserver user@dst-host&lt;/code&gt;无法连接，从报错信息来看，堡垒机禁止了 SSH 转发功能&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;debug1: Local version string SSH-2.0-OpenSSH_8.1
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Stdio forwarding request failed: Session open refused by peer
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;kex_exchange_identification: Connection closed by remote host
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;ssh -tt&lt;/code&gt; 和 &lt;code&gt;ssh -W&lt;/code&gt; 也是同样错误，SSH 自身转发走不通，需要借助第三方软件。&lt;/p&gt;
+&lt;h4 id="尝试1---使用-nc-转发"&gt;尝试1 - 使用 nc 转发
+&lt;/h4&gt;&lt;p&gt;使用 &lt;code&gt;ProxyCommand ssh jumpserver nc %h %p&lt;/code&gt; 连接失败，报错, 跳板机上没有 nc&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;debug1: Local version string SSH-2.0-OpenSSH_8.1
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;bash: nc: &lt;span class="nb"&gt;command&lt;/span&gt; not found
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;用包管理器安装 netcat, 提供的只有 nmap 版本，没有代理功能。&lt;/p&gt;
+&lt;h4 id="尝试2---使用-socat-转发"&gt;尝试2 - 使用 socat 转发
+&lt;/h4&gt;&lt;p&gt;Socat 是 Linux 下的一个多功能的网络工具，名字来由是 「Socket CAT」。其功能与有瑞士军刀之称的 Netcat 类似，可以看做是 Netcat 的加强版。Socat 的主要特点就是在两个数据流之间建立通道，支持众多协议和链接方式，如 IP、TCP、 UDP、IPv6、PIPE、EXEC、System、Open、Proxy、Openssl、Socket等。&lt;/p&gt;
+&lt;p&gt;使用 &lt;code&gt;ProxyCommand ssh jumpserver socat - tcp:%h:%p&lt;/code&gt; 成功通过堡垒机连接目标机器。&lt;/p&gt;
+&lt;h3 id="socat-在proxycommand-中与-netcat-等效用法"&gt;socat 在ProxyCommand 中与 netcat 等效用法
+&lt;/h3&gt;&lt;p&gt;socat 稳定版 1.7，beta 版 2 的代理功能更丰富。&lt;/p&gt;
+&lt;h4 id="跳板机堡垒机"&gt;跳板机/堡垒机
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;ProxyCommand ssh jumpserver nc %h %p&lt;/code&gt; -&amp;gt; &lt;code&gt;ProxyCommand ssh jumpserver socat - tcp:%h:%p&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id="socks-代理-1"&gt;socks 代理
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;ProxyCommand nc -x 127.0.0.1:1080 %h %p&lt;/code&gt; -&amp;gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;socat1 &lt;code&gt;ProxyCommand socat - &amp;quot;SOCKS4:127.0.0.1:%h:%p,socksport=1080&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;socat2 &lt;code&gt;ProxyCommand socat - &amp;quot;SOCKS5:%h:%p|tcp:127.0.0.1:1080&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id="httphttps-代理-1"&gt;HTTP/HTTPS 代理
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;ProxyCommand nc -X connect -x 1.2.3.4:3128 %h %p&lt;/code&gt; -&amp;gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;socat1 &lt;code&gt;ProxyCommand socat - &amp;quot;PROXY:1.2.3.4:%h:%p,proxyport=3128&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;socat2 &lt;code&gt;ProxyCommand socat - &amp;quot;PROXY:%h:%p|tcp:1.2.3.4:3128&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="参考链接"&gt;参考链接
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts" target="_blank" rel="noopener"
+&gt;https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/" target="_blank" rel="noopener"
+&gt;https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.endpointdev.com/blog/2013/04/socat-and-netcat-proxycommand-ssh/" target="_blank" rel="noopener"
+&gt;https://www.endpointdev.com/blog/2013/04/socat-and-netcat-proxycommand-ssh/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://unix.stackexchange.com/questions/68826/connecting-to-host-by-ssh-client-in-linux-by-proxy" target="_blank" rel="noopener"
+&gt;https://unix.stackexchange.com/questions/68826/connecting-to-host-by-ssh-client-in-linux-by-proxy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://gitolite.com/git-over-proxy.html" target="_blank" rel="noopener"
+&gt;https://gitolite.com/git-over-proxy.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://linux.die.net/man/1/socat" target="_blank" rel="noopener"
+&gt;https://linux.die.net/man/1/socat&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>解决无忧行长时间显示“正在连接电话服务器”问题</title><link>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</link><pubDate>Thu, 09 Apr 2020 21:48:15 +0800</pubDate><guid>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</guid><description>&lt;img src="https://www.jegotrip.cn/m/img/favicon.ico" alt="Featured image of post 解决无忧行长时间显示“正在连接电话服务器”问题" /&gt;&lt;p&gt;无忧行(JegoTrip)APP是中国移动专门为出境游用户量身打造的APP。在境内也可以使用，移动号码可以在 APP 内接电话和收短信, 轻松实现一机双号。&lt;/p&gt;
+&lt;h2 id="具体症状"&gt;具体症状
+&lt;/h2&gt;&lt;p&gt;家里路由器上部署梯子, 国内 IP 直连，其余 IP 走梯子, 国内 IP 库用的 &lt;a class="link" href="https://github.com/17mon/china_ip_list" target="_blank" rel="noopener"
+&gt;https://github.com/17mon/china_ip_list&lt;/a&gt;。连接家里 WIFI，无忧行 APP 启动后，显示“正在连接电话服务器”, 持续 30 秒以上才能连接到服务器，之后才能收到短信；用 4G 则没有这个提示，启动 APP 瞬间就能收到短信。猜测是无忧行服务器的香港 IP 走梯子后比直连慢很多所致。&lt;/p&gt;
+&lt;h2 id="排查-ip"&gt;排查 IP
+&lt;/h2&gt;&lt;p&gt;从 Pi-hole 导出 jego 相关域名, &lt;code&gt;192.168.1.123&lt;/code&gt; 是手机 IP&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; sqlite3 pihole-FTL.db &lt;span class="s2"&gt;&amp;#34;select distinct
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s2"&gt; domain from queries where client=&amp;#39;192.168.1.123&amp;#39; and domain like &amp;#39;%jego%&amp;#39;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;得到几个域名&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;app1.jegotrip.com.cn&lt;br&gt;
+tms.jegotrip.com.cn&lt;br&gt;
+jegotrip-stage.cn-hongkong.log.aliyuncs.com&lt;br&gt;
+cdn.jegotrip.com.cn&lt;br&gt;
+oss.jegotrip.com.cn&lt;br&gt;
+cp.jegotrip.com.cn&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;逐一排查后，&lt;strong&gt;tms.jegotrip.com.cn&lt;/strong&gt; 解析到 223.118.41.228, 是香港 IP。&lt;/p&gt;
+&lt;h2 id="更新-ip-列表"&gt;更新 IP 列表
+&lt;/h2&gt;&lt;p&gt;223.118.41.228 属于 AS58453 自治域，把这个自治域中的几个 IP 段全部追加到国内 IP 列表。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;223.118.0.0/15
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;223.119.0.0/16
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;223.120.0.0/16
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;223.121.0.0/16
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;重启梯子服务后问题解决。&lt;/p&gt;</description></item></channel></rss>

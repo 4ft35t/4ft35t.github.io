@@ -1,493 +1,493 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Error on 4ft35t blog</title><link>https://4ft35t.github.io/tags/error/</link><description>Recent content in Error on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 21 Apr 2022 19:22:21 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/error/index.xml" rel="self" type="application/rss+xml"/><item><title>群晖 NAS 上运行 PaddleOCR</title><link>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</link><pubDate>Thu, 21 Apr 2022 19:22:21 +0800</pubDate><guid>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</guid><description>&lt;img src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.6/doc/PaddleOCR_log.png" alt="Featured image of post 群晖 NAS 上运行 PaddleOCR" />&lt;p>本文的起因是 Manjaro 的 python 版本升级到 3.10 后，PaddleOCR 无法运行。尝试用 pyenv 安装 3.9.10 版 python 后，执行命令 &lt;code>paddleocr&lt;/code> 报错&lt;/p>
-&lt;blockquote>
-&lt;p>ImportError: /opt/github/ocr/venv3910/lib/python3.9/site-packages/paddle/fluid/core_avx.so: undefined symbol: _dl_sym, version GLIBC_PRIVATE&lt;/p>
-&lt;/blockquote>
-&lt;p>这个报错，在 PaddleOCR 官方的 github 仓库 issue 有人发过, ubuntu 20.10 上遇到此报错，https://github.com/PaddlePaddle/Paddle/issues/36801 。&lt;/p>
-&lt;p>只能把 PaddleOCR 放在 Docker 运行了。不过官方镜像的体积高达 11G，我只需要 OCR 功能，不做样本训练，应该有很大的精简空间。&lt;/p>
-&lt;p>此前在 VPS 上的 ubuntu 20.04 里用过 PaddleOCR，故选择 ubuntu 20.04 做基础镜像。群晖 NAS 上有多个 Docker 服务，PaddleOCR 同样丢群晖跑。&lt;/p>
-&lt;h2 id="运行-ubuntu-2004">运行 ubuntu 20.04
-&lt;/h2>&lt;p>ssh 登录群晖后，执行 &lt;code>sudo su&lt;/code>，输入当前用户的密码，切换到 &lt;strong>root&lt;/strong>。&lt;/p>
-&lt;p>执行下面命令，进入 ubuntu 的 bash 终端&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">docker pull ubuntu:20.04
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">docker run -it ubuntu:20.04 bash
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="系统的软件源换成阿里云">系统的软件源换成阿里云
-&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">cp /etc/apt/sources.list{,.bak}
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sed -i &amp;#39;s/archive.ubuntu.com/mirrors.aliyun.com/&amp;#39; /etc/apt/sources.list
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">apt-get update
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="安装-python-环境">安装 python 环境
-&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">apt-get install python3 python3-pip wget
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mkdir /root/.pip
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">echo &amp;#39;[global]&amp;#39; &amp;gt; /root/.pip/pip.conf
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">echo &amp;#39;index-url = https://pypi.doubanio.com/simple&amp;#39; &amp;gt;&amp;gt; /root/.pip/pip.conf
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="安装-paddleocr">安装 PaddleOCR
-&lt;/h2>&lt;p>按官方文档操作，https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.4/doc/doc_ch/quickstart.md&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">pip install paddlepaddle -i https://mirror.baidu.com/pypi/simple
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pip install paddleocr
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>一切进展顺利，下面开始踩坑&lt;/p>
-&lt;h2 id="填坑过程">填坑过程
-&lt;/h2>&lt;p>执行 &lt;code>paddleocr -h&lt;/code>, 看是否有报错信息。错误一个接一个的来，下面安出现顺序解决&lt;/p>
-&lt;h3 id="modulenotfounderror-no-module-named-paddlefluidcore_noavx">ModuleNotFoundError: No module named &amp;lsquo;paddle.fluid.core_noavx&amp;rsquo;
-&lt;/h3>&lt;p>群晖的 CPU 太古老了，不支持 AVX(Advanced Vector Extensions) 指令集, 需要 noavx 的预编译包。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Error on 4ft35t blog</title><link>https://4ft35t.github.io/tags/error/</link><description>Recent content in Error on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 21 Apr 2022 19:22:21 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/error/index.xml" rel="self" type="application/rss+xml"/><item><title>群晖 NAS 上运行 PaddleOCR</title><link>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</link><pubDate>Thu, 21 Apr 2022 19:22:21 +0800</pubDate><guid>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</guid><description>&lt;img src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.6/doc/PaddleOCR_log.png" alt="Featured image of post 群晖 NAS 上运行 PaddleOCR" /&gt;&lt;p&gt;本文的起因是 Manjaro 的 python 版本升级到 3.10 后，PaddleOCR 无法运行。尝试用 pyenv 安装 3.9.10 版 python 后，执行命令 &lt;code&gt;paddleocr&lt;/code&gt; 报错&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ImportError: /opt/github/ocr/venv3910/lib/python3.9/site-packages/paddle/fluid/core_avx.so: undefined symbol: _dl_sym, version GLIBC_PRIVATE&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这个报错，在 PaddleOCR 官方的 github 仓库 issue 有人发过, ubuntu 20.10 上遇到此报错，https://github.com/PaddlePaddle/Paddle/issues/36801 。&lt;/p&gt;
+&lt;p&gt;只能把 PaddleOCR 放在 Docker 运行了。不过官方镜像的体积高达 11G，我只需要 OCR 功能，不做样本训练，应该有很大的精简空间。&lt;/p&gt;
+&lt;p&gt;此前在 VPS 上的 ubuntu 20.04 里用过 PaddleOCR，故选择 ubuntu 20.04 做基础镜像。群晖 NAS 上有多个 Docker 服务，PaddleOCR 同样丢群晖跑。&lt;/p&gt;
+&lt;h2 id="运行-ubuntu-2004"&gt;运行 ubuntu 20.04
+&lt;/h2&gt;&lt;p&gt;ssh 登录群晖后，执行 &lt;code&gt;sudo su&lt;/code&gt;，输入当前用户的密码，切换到 &lt;strong&gt;root&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;执行下面命令，进入 ubuntu 的 bash 终端&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;docker pull ubuntu:20.04
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;docker run -it ubuntu:20.04 bash
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="系统的软件源换成阿里云"&gt;系统的软件源换成阿里云
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;cp /etc/apt/sources.list{,.bak}
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sed -i &amp;#39;s/archive.ubuntu.com/mirrors.aliyun.com/&amp;#39; /etc/apt/sources.list
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;apt-get update
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="安装-python-环境"&gt;安装 python 环境
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;apt-get install python3 python3-pip wget
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;mkdir /root/.pip
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;echo &amp;#39;[global]&amp;#39; &amp;gt; /root/.pip/pip.conf
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;echo &amp;#39;index-url = https://pypi.doubanio.com/simple&amp;#39; &amp;gt;&amp;gt; /root/.pip/pip.conf
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="安装-paddleocr"&gt;安装 PaddleOCR
+&lt;/h2&gt;&lt;p&gt;按官方文档操作，https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.4/doc/doc_ch/quickstart.md&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;pip install paddlepaddle -i https://mirror.baidu.com/pypi/simple
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;pip install paddleocr
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;一切进展顺利，下面开始踩坑&lt;/p&gt;
+&lt;h2 id="填坑过程"&gt;填坑过程
+&lt;/h2&gt;&lt;p&gt;执行 &lt;code&gt;paddleocr -h&lt;/code&gt;, 看是否有报错信息。错误一个接一个的来，下面安出现顺序解决&lt;/p&gt;
+&lt;h3 id="modulenotfounderror-no-module-named-paddlefluidcore_noavx"&gt;ModuleNotFoundError: No module named &amp;lsquo;paddle.fluid.core_noavx&amp;rsquo;
+&lt;/h3&gt;&lt;p&gt;群晖的 CPU 太古老了，不支持 AVX(Advanced Vector Extensions) 指令集, 需要 noavx 的预编译包。
 在这个 issue &lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
->https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a> 中找到线索，官方的预先编译 whl 列表 &lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
->https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a>&lt;/p>
-&lt;p>&lt;code>cpu-mkl-noavx&lt;/code> 版本的预编译 whl 只有 python 3.8 的，正好和 ubuntu 20.04 的 python 版本一致。&lt;/p>
-&lt;p>下载地址&lt;/p>
-&lt;blockquote>
-&lt;p>&lt;a class="link" href="https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl" target="_blank" rel="noopener"
->https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl&lt;/a>&lt;/p>
-&lt;/blockquote>
-&lt;p>当前版本已是 2.2.2, 把连接中 2.2.1 全部替换成 2.2.2&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">echo https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl | sed &amp;#39;s/2.2.1/2.2.2/g&amp;#39;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>下载安装, 此问题解决&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">wget https://paddle-wheel.bj.bcebos.com/2.2.2/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.2-cp38-cp38-linux_x86_64.whl
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">pip install --force-reinstal paddlepaddle-2.2.2-cp38-cp38-linux_x86_64.whl
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="importerror-libglso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libGL.so.1: cannot open shared object file: No such file or directory
-&lt;/h3>&lt;p>&lt;code>pip install opencv-python-headless==4.2.0.32&lt;/code>&lt;/p>
-&lt;h3 id="importerror-libgthread-20so0-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgthread-2.0.so.0: cannot open shared object file: No such file or directory
-&lt;/h3>&lt;p>&lt;code>apt-get install libglib2.0-0 libsm6 libxrender1 libxext6&lt;/code>&lt;/p>
-&lt;p>中途会出现选择时区的交互，依次选择 &lt;code>6. Asia&lt;/code> - &lt;code>19. Chongqing&lt;/code>&lt;/p>
-&lt;h3 id="importerror-libgompso1-cannot-open-shared-object-file-no-such-file-or-directory">ImportError: libgomp.so.1: cannot open shared object file: No such file or directory
-&lt;/h3>&lt;p>&lt;code>apt-get install libgomp1&lt;/code>&lt;/p>
-&lt;p>至此，paddleocr 可以正常运行。&lt;/p>
-&lt;h2 id="添加-api">添加 API
-&lt;/h2>&lt;p>使用 flask 提供简单的 ocr 识别 API，可以上传图片或者从 url 下载图片，输出格式可选 text 或者 json，默认 text。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;span class="lnt">27
-&lt;/span>&lt;span class="lnt">28
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="nd">@app.route&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/ocr&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">methods&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;PUT&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;POST&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">ocr_text&lt;/span>&lt;span class="p">():&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">files&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;img&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="ow">not&lt;/span> &lt;span class="n">img&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img_url&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;imgurl&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">requests&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">img_url&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">content&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">BytesIO&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">img&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">file_obj&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">BytesIO&lt;/span>&lt;span class="p">()&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">save&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">file_obj&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">file_obj&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">img&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Image&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">open&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">img&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">convert&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;RGB&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">result&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">ocr&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ocr&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">array&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">img&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">det&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">rec&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">cls&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">text&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="se">\n&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">join&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">result&lt;/span>&lt;span class="p">])&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">output_format&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">request&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">form&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;outtype&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;text&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">output_format&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s1">&amp;#39;text&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">text&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ret&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="s1">&amp;#39;success&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kc">True&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;results&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[]}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">each&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">result&lt;/span>&lt;span class="p">:&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">item&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;confidence&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">each&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">(),&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;text&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">each&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">],&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;text_region&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">each&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ret&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;results&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">append&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">ret&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h3 id="api-使用">API 使用
-&lt;/h3>&lt;ul>
-&lt;li>
-&lt;p>上传文件识别, 输出 text 格式&lt;/p>
-&lt;p>&lt;code> curl 127.0.0.1:5000/ocr -F img=@/tmp/img.png&lt;/code>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>从图片url识别, 并输出 json 格式
-&lt;code>curl 127.0.0.1:5000/ocr -F imgurl=https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/doc/imgs_en/254.jpg -F outtype=json&lt;/code>&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="创建-dockerfile">创建 Dockerfile
-&lt;/h2>&lt;p>上面提到的安装过程中需要交互选择时区，会中断 docker 编译，通过设置 &lt;code>ENV DEBIAN_FRONTEND=noninteractive&lt;/code> 来规避&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">FROM&lt;/span> &lt;span class="n">ubuntu&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">20.04&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">EXPOSE&lt;/span> &lt;span class="mi">5000&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ENV&lt;/span> &lt;span class="n">TZ&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">Asia&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">Shanghai&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ENV&lt;/span> &lt;span class="n">DEBIAN_FRONTEND&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">noninteractive&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ARG&lt;/span> &lt;span class="n">PADDLE_VER&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mf">2.2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">2&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">COPY&lt;/span> &lt;span class="n">app&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">py&lt;/span> &lt;span class="o">/&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">COPY&lt;/span> &lt;span class="n">requirements&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">txt&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">tmp&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">RUN&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="n">update&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="n">install&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">y&lt;/span> &lt;span class="n">python3&lt;/span> &lt;span class="n">python3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">pip&lt;/span> &lt;span class="n">libgomp1&lt;/span> &lt;span class="n">libglib2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">0&lt;/span> &lt;span class="n">libsm6&lt;/span> &lt;span class="n">libxrender1&lt;/span> &lt;span class="n">libxext6&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">pip&lt;/span> &lt;span class="n">install&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">r&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">tmp&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">requirements&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">txt&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">wget&lt;/span> &lt;span class="o">--&lt;/span>&lt;span class="n">directory&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">prefix&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">tmp&lt;/span>&lt;span class="o">/&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="o">//&lt;/span>&lt;span class="n">paddle&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">wheel&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bj&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bcebos&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="o">/$&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">PADDLE_VER&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">linux&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cpu&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">mkl&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">noavx&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">paddlepaddle&lt;/span>&lt;span class="o">-$&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">PADDLE_VER&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cp38&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cp38&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">linux_x86_64&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">whl&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">pip&lt;/span> &lt;span class="n">install&lt;/span> &lt;span class="o">--&lt;/span>&lt;span class="n">force&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">reinstall&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">tmp&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">paddlepaddle&lt;/span>&lt;span class="o">-$&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">PADDLE_VER&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cp38&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">cp38&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">linux_x86_64&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">whl&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">RUN&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">y&lt;/span> &lt;span class="n">remove&lt;/span> &lt;span class="n">python3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">pip&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">y&lt;/span> &lt;span class="n">autoremove&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">apt&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">get&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">y&lt;/span> &lt;span class="n">install&lt;/span> &lt;span class="o">--&lt;/span>&lt;span class="n">no&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">install&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">recommends&lt;/span> &lt;span class="n">python3&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">setuptools&lt;/span> \
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">rm&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="n">rf&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="k">var&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">lib&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">apt&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">dpkg&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">cache&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="nb">log&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="o">/&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">root&lt;/span>&lt;span class="o">/.&lt;/span>&lt;span class="n">cache&lt;/span> &lt;span class="o">/&lt;/span>&lt;span class="n">tmp&lt;/span>&lt;span class="o">/*&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">CMD&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;python3&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;/app.py&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>Dockerfile 及其它文件在 Github Repo &lt;a class="link" href="https://github.com/4ft35t/Paddleocr-docker" target="_blank" rel="noopener"
->https://github.com/4ft35t/Paddleocr-docker&lt;/a>&lt;/p>
-&lt;p>Docker Hub 地址 &lt;a class="link" href="https://hub.docker.com/r/c403/paddleocr" target="_blank" rel="noopener"
->https://hub.docker.com/r/c403/paddleocr&lt;/a>&lt;/p>
-&lt;p>最后吐槽一下，PaddleOCR 的文档太混乱了, 很多内容在 issues 里，不在文档。&lt;/p>
-&lt;h2 id="参考链接">参考链接
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
->https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
->https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://blog.csdn.net/Max_ZhangJF/article/details/108920050" target="_blank" rel="noopener"
->https://blog.csdn.net/Max_ZhangJF/article/details/108920050&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/1735" target="_blank" rel="noopener"
->https://github.com/PaddlePaddle/PaddleOCR/issues/1735&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o" target="_blank" rel="noopener"
->https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://github.com/explosion/spaCy/issues/1110" target="_blank" rel="noopener"
->https://github.com/explosion/spaCy/issues/1110&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai" target="_blank" rel="noopener"
->https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Promark3 使用 冰人（iceman）固件</title><link>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</link><pubDate>Thu, 04 Jun 2020 19:21:59 +0800</pubDate><guid>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</guid><description>&lt;img src="http://img-blog.csdnimg.cn/20200307161927634.jpg" alt="Featured image of post Promark3 使用 冰人（iceman）固件" />&lt;p>淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 &lt;code>Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error&lt;/code>。&lt;/p>
-&lt;p>官方固件编译、烧录、使用都没问题，看到冰人的固件有两条命令很心动，把重复工作自动化，节约时间。&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>auto&lt;/code> 自动识别卡类型&lt;/li>
-&lt;li>&lt;code>hf mf autopwn&lt;/code> 自动破解 IC 卡密码&lt;/li>
-&lt;/ul>
-&lt;h2 id="编译安装">编译安装
-&lt;/h2>&lt;p>win 10 的 WSL 可以直接访问串口，很方便。win 10 上的 COM3， 自动映射到 WSL 的 /dev/ttyS3。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo apt-get install --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git clone https://github.com/RfidResearchGroup/proxmark3.git
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">cd&lt;/span> proxmark3
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">make clean &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> make all
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>修改 /dev/ttyS3 为所有用户可读写，设备拔插后需要再次执行&lt;/p>
-&lt;p>&lt;code>sudo chmod 666 /dev/ttyS3&lt;/code>&lt;/p>
-&lt;p>同时刷 bootimg 和 fullimage&lt;/p>
-&lt;p>&lt;code>./pm3-flash-all&lt;/code>&lt;/p>
-&lt;p>bootimg 刷成功，刷 fullimage 出错&lt;/p>
-&lt;blockquote>
-&lt;p>Error: Unexpected reply 0x00fe NACK (expected ACK)
-Lock Error&lt;/p>
-&lt;/blockquote>
-&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200604192557.png"
+&gt;https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a&gt; 中找到线索，官方的预先编译 whl 列表 &lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
+&gt;https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;cpu-mkl-noavx&lt;/code&gt; 版本的预编译 whl 只有 python 3.8 的，正好和 ubuntu 20.04 的 python 版本一致。&lt;/p&gt;
+&lt;p&gt;下载地址&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a class="link" href="https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl" target="_blank" rel="noopener"
+&gt;https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;当前版本已是 2.2.2, 把连接中 2.2.1 全部替换成 2.2.2&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;echo https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl | sed &amp;#39;s/2.2.1/2.2.2/g&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;下载安装, 此问题解决&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;wget https://paddle-wheel.bj.bcebos.com/2.2.2/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.2-cp38-cp38-linux_x86_64.whl
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;pip install --force-reinstal paddlepaddle-2.2.2-cp38-cp38-linux_x86_64.whl
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="importerror-libglso1-cannot-open-shared-object-file-no-such-file-or-directory"&gt;ImportError: libGL.so.1: cannot open shared object file: No such file or directory
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;pip install opencv-python-headless==4.2.0.32&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id="importerror-libgthread-20so0-cannot-open-shared-object-file-no-such-file-or-directory"&gt;ImportError: libgthread-2.0.so.0: cannot open shared object file: No such file or directory
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;apt-get install libglib2.0-0 libsm6 libxrender1 libxext6&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;中途会出现选择时区的交互，依次选择 &lt;code&gt;6. Asia&lt;/code&gt; - &lt;code&gt;19. Chongqing&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id="importerror-libgompso1-cannot-open-shared-object-file-no-such-file-or-directory"&gt;ImportError: libgomp.so.1: cannot open shared object file: No such file or directory
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;apt-get install libgomp1&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;至此，paddleocr 可以正常运行。&lt;/p&gt;
+&lt;h2 id="添加-api"&gt;添加 API
+&lt;/h2&gt;&lt;p&gt;使用 flask 提供简单的 ocr 识别 API，可以上传图片或者从 url 下载图片，输出格式可选 text 或者 json，默认 text。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;span class="lnt"&gt;20
+&lt;/span&gt;&lt;span class="lnt"&gt;21
+&lt;/span&gt;&lt;span class="lnt"&gt;22
+&lt;/span&gt;&lt;span class="lnt"&gt;23
+&lt;/span&gt;&lt;span class="lnt"&gt;24
+&lt;/span&gt;&lt;span class="lnt"&gt;25
+&lt;/span&gt;&lt;span class="lnt"&gt;26
+&lt;/span&gt;&lt;span class="lnt"&gt;27
+&lt;/span&gt;&lt;span class="lnt"&gt;28
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nd"&gt;@app.route&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/ocr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;methods&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;PUT&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;POST&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;ocr_text&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;img&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;files&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;img&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;img&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;img_url&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;imgurl&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;img&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;requests&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;img_url&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;content&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;img&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BytesIO&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;img&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;file_obj&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;BytesIO&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;img&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;save&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;file_obj&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;img&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;file_obj&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;img&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Image&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;img&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;convert&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;RGB&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ocr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ocr&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;array&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;img&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;det&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;rec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;cls&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;output_format&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;form&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;outtype&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;text&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;output_format&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;text&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;ret&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;success&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;results&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[]}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;each&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;item&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="s1"&gt;&amp;#39;confidence&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;each&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="s1"&gt;&amp;#39;text&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;each&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="s1"&gt;&amp;#39;text_region&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;each&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;ret&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;results&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;ret&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id="api-使用"&gt;API 使用
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;上传文件识别, 输出 text 格式&lt;/p&gt;
+&lt;p&gt;&lt;code&gt; curl 127.0.0.1:5000/ocr -F img=@/tmp/img.png&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;从图片url识别, 并输出 json 格式
+&lt;code&gt;curl 127.0.0.1:5000/ocr -F imgurl=https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.4/doc/imgs_en/254.jpg -F outtype=json&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="创建-dockerfile"&gt;创建 Dockerfile
+&lt;/h2&gt;&lt;p&gt;上面提到的安装过程中需要交互选择时区，会中断 docker 编译，通过设置 &lt;code&gt;ENV DEBIAN_FRONTEND=noninteractive&lt;/code&gt; 来规避&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;span class="lnt"&gt;20
+&lt;/span&gt;&lt;span class="lnt"&gt;21
+&lt;/span&gt;&lt;span class="lnt"&gt;22
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-gdscript3" data-lang="gdscript3"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;FROM&lt;/span&gt; &lt;span class="n"&gt;ubuntu&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="mf"&gt;20.04&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;EXPOSE&lt;/span&gt; &lt;span class="mi"&gt;5000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;ENV&lt;/span&gt; &lt;span class="n"&gt;TZ&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;Asia&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Shanghai&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;ENV&lt;/span&gt; &lt;span class="n"&gt;DEBIAN_FRONTEND&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;noninteractive&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;ARG&lt;/span&gt; &lt;span class="n"&gt;PADDLE_VER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mf"&gt;2.2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;COPY&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;py&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;COPY&lt;/span&gt; &lt;span class="n"&gt;requirements&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;txt&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;tmp&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;RUN&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;update&lt;/span&gt; \
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="n"&gt;python3&lt;/span&gt; &lt;span class="n"&gt;python3&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;libgomp1&lt;/span&gt; &lt;span class="n"&gt;libglib2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="n"&gt;libsm6&lt;/span&gt; &lt;span class="n"&gt;libxrender1&lt;/span&gt; &lt;span class="n"&gt;libxext6&lt;/span&gt; \
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;requirements&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;txt&lt;/span&gt; \
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;wget&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;directory&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;prefix&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="n"&gt;https&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;//&lt;/span&gt;&lt;span class="n"&gt;paddle&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;wheel&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bj&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bcebos&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/$&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;PADDLE_VER&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cpu&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;mkl&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;noavx&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;paddlepaddle&lt;/span&gt;&lt;span class="o"&gt;-$&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;PADDLE_VER&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cp38&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cp38&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;linux_x86_64&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;whl&lt;/span&gt; \
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;pip&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;force&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;reinstall&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;paddlepaddle&lt;/span&gt;&lt;span class="o"&gt;-$&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;PADDLE_VER&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cp38&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;cp38&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;linux_x86_64&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;whl&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;RUN&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="n"&gt;remove&lt;/span&gt; &lt;span class="n"&gt;python3&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;pip&lt;/span&gt; \
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="n"&gt;autoremove&lt;/span&gt; \
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;no&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;install&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;recommends&lt;/span&gt; &lt;span class="n"&gt;python3&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;setuptools&lt;/span&gt; \
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;rm&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rf&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="k"&gt;var&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;lib&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;apt&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;dpkg&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;cache&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nb"&gt;log&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;root&lt;/span&gt;&lt;span class="o"&gt;/.&lt;/span&gt;&lt;span class="n"&gt;cache&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;tmp&lt;/span&gt;&lt;span class="o"&gt;/*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="n"&gt;CMD&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;python3&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;/app.py&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Dockerfile 及其它文件在 Github Repo &lt;a class="link" href="https://github.com/4ft35t/Paddleocr-docker" target="_blank" rel="noopener"
+&gt;https://github.com/4ft35t/Paddleocr-docker&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Docker Hub 地址 &lt;a class="link" href="https://hub.docker.com/r/c403/paddleocr" target="_blank" rel="noopener"
+&gt;https://hub.docker.com/r/c403/paddleocr&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;最后吐槽一下，PaddleOCR 的文档太混乱了, 很多内容在 issues 里，不在文档。&lt;/p&gt;
+&lt;h2 id="参考链接"&gt;参考链接
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
+&gt;https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
+&gt;https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://blog.csdn.net/Max_ZhangJF/article/details/108920050" target="_blank" rel="noopener"
+&gt;https://blog.csdn.net/Max_ZhangJF/article/details/108920050&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/1735" target="_blank" rel="noopener"
+&gt;https://github.com/PaddlePaddle/PaddleOCR/issues/1735&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o" target="_blank" rel="noopener"
+&gt;https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/explosion/spaCy/issues/1110" target="_blank" rel="noopener"
+&gt;https://github.com/explosion/spaCy/issues/1110&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai" target="_blank" rel="noopener"
+&gt;https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>Promark3 使用 冰人（iceman）固件</title><link>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</link><pubDate>Thu, 04 Jun 2020 19:21:59 +0800</pubDate><guid>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</guid><description>&lt;img src="http://img-blog.csdnimg.cn/20200307161927634.jpg" alt="Featured image of post Promark3 使用 冰人（iceman）固件" /&gt;&lt;p&gt;淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 &lt;code&gt;Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;官方固件编译、烧录、使用都没问题，看到冰人的固件有两条命令很心动，把重复工作自动化，节约时间。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;auto&lt;/code&gt; 自动识别卡类型&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hf mf autopwn&lt;/code&gt; 自动破解 IC 卡密码&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="编译安装"&gt;编译安装
+&lt;/h2&gt;&lt;p&gt;win 10 的 WSL 可以直接访问串口，很方便。win 10 上的 COM3， 自动映射到 WSL 的 /dev/ttyS3。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo apt-get install --no-install-recommends git ca-certificates build-essential pkg-config libreadline-dev gcc-arm-none-eabi libnewlib-dev
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;git clone https://github.com/RfidResearchGroup/proxmark3.git
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; proxmark3
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;make clean &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make all
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;修改 /dev/ttyS3 为所有用户可读写，设备拔插后需要再次执行&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sudo chmod 666 /dev/ttyS3&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;同时刷 bootimg 和 fullimage&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;./pm3-flash-all&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;bootimg 刷成功，刷 fullimage 出错&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Error: Unexpected reply 0x00fe NACK (expected ACK)
+Lock Error&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200604192557.png"
 loading="lazy"
 alt="image-20200604192556929"
->&lt;/p>
-&lt;h2 id="刷预编译固件">刷预编译固件
-&lt;/h2>&lt;p>在冰人固件的 wiki 中找到 windows 的预编译非 RDV4 版本下载，Generice Proxmark3 devices (non RDV4) [&lt;a class="link" href="https://drive.google.com/open?id=1PI3Xr1mussPBPnYGu4ZjWzGPARK4N7JR" target="_blank" rel="noopener"
->Precompiled builds for RRG / Iceman repository x64&lt;/a>&lt;/p>
-&lt;p>提取 fullimage.elf 后，顺利刷入。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;span class="lnt">27
-&lt;/span>&lt;span class="lnt">28
-&lt;/span>&lt;span class="lnt">29
-&lt;/span>&lt;span class="lnt">30
-&lt;/span>&lt;span class="lnt">31
-&lt;/span>&lt;span class="lnt">32
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash ./fullimage.elf
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Session log /home/kali/.proxmark3/log_20200604.txt
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Loading Preferences...
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> loaded from JSON file /home/kali/.proxmark3/preferences.json
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> About to use the following file:
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> ./fullimage.elf
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Waiting &lt;span class="k">for&lt;/span> Proxmark3 to appear on /dev/ttyS5
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 🕑 &lt;span class="m">59&lt;/span> found
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Available memory on this board: 512K bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Permitted flash range: 0x00102000-0x00180000
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Loading ELF file ./fullimage.elf
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Loading usable ELF segments:
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> 0: V 0x00102000 P 0x00102000 &lt;span class="o">(&lt;/span>0x0003b4d0-&amp;gt;0x0003b4d0&lt;span class="o">)&lt;/span> &lt;span class="o">[&lt;/span>R X&lt;span class="o">]&lt;/span> @0x94
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> 1: V 0x00200000 P 0x0013d4d0 &lt;span class="o">(&lt;/span>0x00001370-&amp;gt;0x00001370&lt;span class="o">)&lt;/span> &lt;span class="o">[&lt;/span>RW &lt;span class="o">]&lt;/span> @0x3b564
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Note: Extending previous segment from 0x3b4d0 to 0x3c840 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Flashing...
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Writing segments &lt;span class="k">for&lt;/span> file: ./fullimage.elf
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> 0x00102000..0x0013e83f &lt;span class="o">[&lt;/span>0x3c840 / &lt;span class="m">485&lt;/span> blocks&lt;span class="o">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">...................................................................
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @@@ @@@@@@@ @@@@@@@@ @@@@@@@@@@ @@@@@@ @@@ @@@
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @@! !@@ @@! @@! @@! @@! @@! @@@ @@!@!@@@
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> !!@ !@! @!!!:! @!! !!@ @!@ @!@!@!@! @!@@!!@!
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> !!: :!! !!: !!: !!: !!: !!! !!: !!!
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> : :: :: : : :: ::: : : : : : :: :
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> . .. .. . . .. ... . . . . . .. .
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">................................................ OK
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> All &lt;span class="k">done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Have a nice day!
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="解决方案">解决方案
-&lt;/h2>&lt;p>到这一步可以确认是关键编译参数问题，而非硬件缩水问题233。&lt;/p>
-&lt;p>查阅文档后，默认编译的目标平台是 PM3RDV4，非 PM3RDV4 需要设置为 PM3OTHER。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">echo&lt;/span> &lt;span class="s1">&amp;#39;PLATFORM=PM3OTHER&amp;#39;&lt;/span> &amp;gt; Makefile.platform
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">make clean &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> make all
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>再刷固件就一切顺利&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;span class="lnt">13
-&lt;/span>&lt;span class="lnt">14
-&lt;/span>&lt;span class="lnt">15
-&lt;/span>&lt;span class="lnt">16
-&lt;/span>&lt;span class="lnt">17
-&lt;/span>&lt;span class="lnt">18
-&lt;/span>&lt;span class="lnt">19
-&lt;/span>&lt;span class="lnt">20
-&lt;/span>&lt;span class="lnt">21
-&lt;/span>&lt;span class="lnt">22
-&lt;/span>&lt;span class="lnt">23
-&lt;/span>&lt;span class="lnt">24
-&lt;/span>&lt;span class="lnt">25
-&lt;/span>&lt;span class="lnt">26
-&lt;/span>&lt;span class="lnt">27
-&lt;/span>&lt;span class="lnt">28
-&lt;/span>&lt;span class="lnt">29
-&lt;/span>&lt;span class="lnt">30
-&lt;/span>&lt;span class="lnt">31
-&lt;/span>&lt;span class="lnt">32
-&lt;/span>&lt;span class="lnt">33
-&lt;/span>&lt;span class="lnt">34
-&lt;/span>&lt;span class="lnt">35
-&lt;/span>&lt;span class="lnt">36
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash-fullimage
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Session log /home/kali/.proxmark3/logs/log_20200604.txt
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Loading preferences...
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> loaded from JSON file /home/kali/.proxmark3/preferences.json
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> About to use the following file:
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Waiting &lt;span class="k">for&lt;/span> Proxmark3 to appear on /dev/ttyS5
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 🕑 &lt;span class="m">59&lt;/span> found
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Entering bootloader...
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> &lt;span class="o">(&lt;/span>Press and release the button only to abort&lt;span class="o">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Waiting &lt;span class="k">for&lt;/span> Proxmark3 to appear on /dev/ttyS5
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 🕒 &lt;span class="m">48&lt;/span> found
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Available memory on this board: 512K bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Permitted flash range: 0x00102000-0x00180000
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Loading ELF file /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Loading usable ELF segments:
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> 0: V 0x00102000 P 0x00102000 &lt;span class="o">(&lt;/span>0x0003b240-&amp;gt;0x0003b240&lt;span class="o">)&lt;/span> &lt;span class="o">[&lt;/span>R X&lt;span class="o">]&lt;/span> @0x94
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> 1: V 0x00200000 P 0x0013d240 &lt;span class="o">(&lt;/span>0x00001360-&amp;gt;0x00001360&lt;span class="o">)&lt;/span> &lt;span class="o">[&lt;/span>RW &lt;span class="o">]&lt;/span> @0x3b2d4
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[=]&lt;/span> Note: Extending previous segment from 0x3b240 to 0x3c5a0 bytes
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Flashing...
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> Writing segments &lt;span class="k">for&lt;/span> file: /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> 0x00102000..0x0013e59f &lt;span class="o">[&lt;/span>0x3c5a0 / &lt;span class="m">483&lt;/span> blocks&lt;span class="o">]&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">...................................................................
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @@@ @@@@@@@ @@@@@@@@ @@@@@@@@@@ @@@@@@ @@@ @@@
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @@! !@@ @@! @@! @@! @@! @@! @@@ @@!@!@@@
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> !!@ !@! @!!!:! @!! !!@ @!@ @!@!@!@! @!@@!!@!
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> !!: :!! !!: !!: !!: !!: !!! !!: !!!
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> : :: :: : : :: ::: : : : : : :: :
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> . .. .. . . .. ... . . . . . .. .
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">.............................................. OK
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">[&lt;/span>+&lt;span class="o">]&lt;/span> All &lt;span class="k">done&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Have a nice day!
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>刷完固件后的版本信息&lt;/p>
-&lt;blockquote>
-&lt;p>[ ARM ]
+&gt;&lt;/p&gt;
+&lt;h2 id="刷预编译固件"&gt;刷预编译固件
+&lt;/h2&gt;&lt;p&gt;在冰人固件的 wiki 中找到 windows 的预编译非 RDV4 版本下载，Generice Proxmark3 devices (non RDV4) [&lt;a class="link" href="https://drive.google.com/open?id=1PI3Xr1mussPBPnYGu4ZjWzGPARK4N7JR" target="_blank" rel="noopener"
+&gt;Precompiled builds for RRG / Iceman repository x64&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;提取 fullimage.elf 后，顺利刷入。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;span class="lnt"&gt;20
+&lt;/span&gt;&lt;span class="lnt"&gt;21
+&lt;/span&gt;&lt;span class="lnt"&gt;22
+&lt;/span&gt;&lt;span class="lnt"&gt;23
+&lt;/span&gt;&lt;span class="lnt"&gt;24
+&lt;/span&gt;&lt;span class="lnt"&gt;25
+&lt;/span&gt;&lt;span class="lnt"&gt;26
+&lt;/span&gt;&lt;span class="lnt"&gt;27
+&lt;/span&gt;&lt;span class="lnt"&gt;28
+&lt;/span&gt;&lt;span class="lnt"&gt;29
+&lt;/span&gt;&lt;span class="lnt"&gt;30
+&lt;/span&gt;&lt;span class="lnt"&gt;31
+&lt;/span&gt;&lt;span class="lnt"&gt;32
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash ./fullimage.elf
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[=]&lt;/span&gt; Session log /home/kali/.proxmark3/log_20200604.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[=]&lt;/span&gt; Loading Preferences...
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; loaded from JSON file /home/kali/.proxmark3/preferences.json
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; About to use the following file:
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; ./fullimage.elf
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; Waiting &lt;span class="k"&gt;for&lt;/span&gt; Proxmark3 to appear on /dev/ttyS5
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; 🕑 &lt;span class="m"&gt;59&lt;/span&gt; found
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[=]&lt;/span&gt; Available memory on this board: 512K bytes
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[=]&lt;/span&gt; Permitted flash range: 0x00102000-0x00180000
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; Loading ELF file ./fullimage.elf
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; Loading usable ELF segments:
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; 0: V 0x00102000 P 0x00102000 &lt;span class="o"&gt;(&lt;/span&gt;0x0003b4d0-&amp;gt;0x0003b4d0&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;R X&lt;span class="o"&gt;]&lt;/span&gt; @0x94
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; 1: V 0x00200000 P 0x0013d4d0 &lt;span class="o"&gt;(&lt;/span&gt;0x00001370-&amp;gt;0x00001370&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;RW &lt;span class="o"&gt;]&lt;/span&gt; @0x3b564
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[=]&lt;/span&gt; Note: Extending previous segment from 0x3b4d0 to 0x3c840 bytes
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; Flashing...
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; Writing segments &lt;span class="k"&gt;for&lt;/span&gt; file: ./fullimage.elf
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; 0x00102000..0x0013e83f &lt;span class="o"&gt;[&lt;/span&gt;0x3c840 / &lt;span class="m"&gt;485&lt;/span&gt; blocks&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;...................................................................
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; @@@ @@@@@@@ @@@@@@@@ @@@@@@@@@@ @@@@@@ @@@ @@@
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; @@! !@@ @@! @@! @@! @@! @@! @@@ @@!@!@@@
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; !!@ !@! @!!!:! @!! !!@ @!@ @!@!@!@! @!@@!!@!
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; !!: :!! !!: !!: !!: !!: !!! !!: !!!
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; : :: :: : : :: ::: : : : : : :: :
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; . .. .. . . .. ... . . . . . .. .
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;................................................ OK
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; All &lt;span class="k"&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Have a nice day!
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="解决方案"&gt;解决方案
+&lt;/h2&gt;&lt;p&gt;到这一步可以确认是关键编译参数问题，而非硬件缩水问题233。&lt;/p&gt;
+&lt;p&gt;查阅文档后，默认编译的目标平台是 PM3RDV4，非 PM3RDV4 需要设置为 PM3OTHER。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;PLATFORM=PM3OTHER&amp;#39;&lt;/span&gt; &amp;gt; Makefile.platform
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;make clean &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; make all
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;再刷固件就一切顺利&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;span class="lnt"&gt;15
+&lt;/span&gt;&lt;span class="lnt"&gt;16
+&lt;/span&gt;&lt;span class="lnt"&gt;17
+&lt;/span&gt;&lt;span class="lnt"&gt;18
+&lt;/span&gt;&lt;span class="lnt"&gt;19
+&lt;/span&gt;&lt;span class="lnt"&gt;20
+&lt;/span&gt;&lt;span class="lnt"&gt;21
+&lt;/span&gt;&lt;span class="lnt"&gt;22
+&lt;/span&gt;&lt;span class="lnt"&gt;23
+&lt;/span&gt;&lt;span class="lnt"&gt;24
+&lt;/span&gt;&lt;span class="lnt"&gt;25
+&lt;/span&gt;&lt;span class="lnt"&gt;26
+&lt;/span&gt;&lt;span class="lnt"&gt;27
+&lt;/span&gt;&lt;span class="lnt"&gt;28
+&lt;/span&gt;&lt;span class="lnt"&gt;29
+&lt;/span&gt;&lt;span class="lnt"&gt;30
+&lt;/span&gt;&lt;span class="lnt"&gt;31
+&lt;/span&gt;&lt;span class="lnt"&gt;32
+&lt;/span&gt;&lt;span class="lnt"&gt;33
+&lt;/span&gt;&lt;span class="lnt"&gt;34
+&lt;/span&gt;&lt;span class="lnt"&gt;35
+&lt;/span&gt;&lt;span class="lnt"&gt;36
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;kali@DESKTOP-SF5P:~/iceman/proxmark3$ ./pm3-flash-fullimage
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[=]&lt;/span&gt; Session log /home/kali/.proxmark3/logs/log_20200604.txt
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[=]&lt;/span&gt; Loading preferences...
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; loaded from JSON file /home/kali/.proxmark3/preferences.json
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; About to use the following file:
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; Waiting &lt;span class="k"&gt;for&lt;/span&gt; Proxmark3 to appear on /dev/ttyS5
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; 🕑 &lt;span class="m"&gt;59&lt;/span&gt; found
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; Entering bootloader...
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;Press and release the button only to abort&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; Waiting &lt;span class="k"&gt;for&lt;/span&gt; Proxmark3 to appear on /dev/ttyS5
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; 🕒 &lt;span class="m"&gt;48&lt;/span&gt; found
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[=]&lt;/span&gt; Available memory on this board: 512K bytes
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[=]&lt;/span&gt; Permitted flash range: 0x00102000-0x00180000
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; Loading ELF file /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; Loading usable ELF segments:
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; 0: V 0x00102000 P 0x00102000 &lt;span class="o"&gt;(&lt;/span&gt;0x0003b240-&amp;gt;0x0003b240&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;R X&lt;span class="o"&gt;]&lt;/span&gt; @0x94
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; 1: V 0x00200000 P 0x0013d240 &lt;span class="o"&gt;(&lt;/span&gt;0x00001360-&amp;gt;0x00001360&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;RW &lt;span class="o"&gt;]&lt;/span&gt; @0x3b2d4
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[=]&lt;/span&gt; Note: Extending previous segment from 0x3b240 to 0x3c5a0 bytes
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; Flashing...
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; Writing segments &lt;span class="k"&gt;for&lt;/span&gt; file: /home/kali/iceman/proxmark3/client/../armsrc/obj/fullimage.elf
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; 0x00102000..0x0013e59f &lt;span class="o"&gt;[&lt;/span&gt;0x3c5a0 / &lt;span class="m"&gt;483&lt;/span&gt; blocks&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;...................................................................
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; @@@ @@@@@@@ @@@@@@@@ @@@@@@@@@@ @@@@@@ @@@ @@@
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; @@! !@@ @@! @@! @@! @@! @@! @@@ @@!@!@@@
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; !!@ !@! @!!!:! @!! !!@ @!@ @!@!@!@! @!@@!!@!
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; !!: :!! !!: !!: !!: !!: !!! !!: !!!
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; : :: :: : : :: ::: : : : : : :: :
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; . .. .. . . .. ... . . . . . .. .
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;.............................................. OK
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt;+&lt;span class="o"&gt;]&lt;/span&gt; All &lt;span class="k"&gt;done&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;Have a nice day!
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;刷完固件后的版本信息&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;[ ARM ]
 bootrom: RRG/Iceman/master/v4.9237-188-gbd5aa92a 2020-06-04 16:05:12
 os: RRG/Iceman/master/v4.9237-188-gbd5aa92a 2020-06-04 21:01:01
-compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p>
-&lt;/blockquote>
-&lt;h2 id="参考链接">参考链接
-&lt;/h2>&lt;ul>
-&lt;li>
-&lt;p>&lt;a class="link" href="https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1" target="_blank" rel="noopener"
->https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1&lt;/a>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;a class="link" href="https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md" target="_blank" rel="noopener"
->https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md&lt;/a>&lt;/p>
-&lt;/li>
-&lt;/ul></description></item><item><title>解决应用商店 0x80131500 错误</title><link>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</link><pubDate>Wed, 03 Jun 2020 11:48:10 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</guid><description>&lt;img src="https://img-blog.csdnimg.cn/20190629132640532.png" alt="Featured image of post 解决应用商店 0x80131500 错误" />&lt;p>Win 10 应用商店打开就报 0x80131500 错误，尝试各种方法都不行，最终使用 fiddler 曲线解决。&lt;/p>
-&lt;p>尝试过的方法来自 &lt;a class="link" href="https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b" target="_blank" rel="noopener"
->https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b&lt;/a>&lt;/p>
-&lt;ul>
-&lt;li>&lt;del>按 “Windows 徽标键+R”，在运行窗口中，键入“WSReset.exe” 并点击 “运行”&lt;/del>&lt;/li>
-&lt;li>&lt;del>设置→应用→找到microsoft store →高级→重置此应用&lt;/del>&lt;/li>
-&lt;li>&lt;del>打开 IE 浏览器，点击设置，打开 Internet 选项，点击高级，并勾选 “使用SSL 3.0”、”使用 TLS 1.0“、”使用 TLS 1.1“、”使用 TLS 1.2“，应用后重启电脑&lt;/del>&lt;/li>
-&lt;li>&lt;del>卸载并重装应用商店&lt;/del>&lt;/li>
-&lt;/ul>
-&lt;p>最终靠知乎的这条答案曲线解决。&lt;/p>
-&lt;p>&lt;a class="link" href="https://www.zhihu.com/question/310873087/answer/1127300614" target="_blank" rel="noopener"
->https://www.zhihu.com/question/310873087/answer/1127300614&lt;/a>&lt;/p>
-&lt;h3 id="操作步骤">操作步骤
-&lt;/h3>&lt;ol>
-&lt;li>下载安装 fiddler &lt;a class="link" href="https://telerik-fiddler.s3.amazonaws.com/fiddler/FiddlerSetup.exe" target="_blank" rel="noopener"
->https://telerik-fiddler.s3.amazonaws.com/fiddler/FiddlerSetup.exe&lt;/a>&lt;/li>
-&lt;li>打开fiddler&amp;mdash;点击左上角winconfig&amp;mdash;给 Microsoft Store 打勾&amp;mdash;点save changes&lt;/li>
-&lt;/ol>
-&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200603120719.png"
+compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="参考链接"&gt;参考链接
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a class="link" href="https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1" target="_blank" rel="noopener"
+&gt;https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a class="link" href="https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md" target="_blank" rel="noopener"
+&gt;https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>解决应用商店 0x80131500 错误</title><link>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</link><pubDate>Wed, 03 Jun 2020 11:48:10 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</guid><description>&lt;img src="https://img-blog.csdnimg.cn/20190629132640532.png" alt="Featured image of post 解决应用商店 0x80131500 错误" /&gt;&lt;p&gt;Win 10 应用商店打开就报 0x80131500 错误，尝试各种方法都不行，最终使用 fiddler 曲线解决。&lt;/p&gt;
+&lt;p&gt;尝试过的方法来自 &lt;a class="link" href="https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b" target="_blank" rel="noopener"
+&gt;https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b&lt;/a&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;del&gt;按 “Windows 徽标键+R”，在运行窗口中，键入“WSReset.exe” 并点击 “运行”&lt;/del&gt;&lt;/li&gt;
+&lt;li&gt;&lt;del&gt;设置→应用→找到microsoft store →高级→重置此应用&lt;/del&gt;&lt;/li&gt;
+&lt;li&gt;&lt;del&gt;打开 IE 浏览器，点击设置，打开 Internet 选项，点击高级，并勾选 “使用SSL 3.0”、”使用 TLS 1.0“、”使用 TLS 1.1“、”使用 TLS 1.2“，应用后重启电脑&lt;/del&gt;&lt;/li&gt;
+&lt;li&gt;&lt;del&gt;卸载并重装应用商店&lt;/del&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;最终靠知乎的这条答案曲线解决。&lt;/p&gt;
+&lt;p&gt;&lt;a class="link" href="https://www.zhihu.com/question/310873087/answer/1127300614" target="_blank" rel="noopener"
+&gt;https://www.zhihu.com/question/310873087/answer/1127300614&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="操作步骤"&gt;操作步骤
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;下载安装 fiddler &lt;a class="link" href="https://telerik-fiddler.s3.amazonaws.com/fiddler/FiddlerSetup.exe" target="_blank" rel="noopener"
+&gt;https://telerik-fiddler.s3.amazonaws.com/fiddler/FiddlerSetup.exe&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;打开fiddler&amp;mdash;点击左上角winconfig&amp;mdash;给 Microsoft Store 打勾&amp;mdash;点save changes&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200603120719.png"
 loading="lazy"
 alt="image-20200603120155534"
->&lt;/p>
-&lt;p>再次打开应用商店就能正常使用。唯一的缺陷是需要打开 fiddler 才能使用应用商店，不然会报 0x80072EFD 错误。&lt;/p></description></item></channel></rss>
+&gt;&lt;/p&gt;
+&lt;p&gt;再次打开应用商店就能正常使用。唯一的缺陷是需要打开 fiddler 才能使用应用商店，不然会报 0x80072EFD 错误。&lt;/p&gt;</description></item></channel></rss>

@@ -1,109 +1,109 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Persistent on 4ft35t blog</title><link>https://4ft35t.github.io/tags/persistent/</link><description>Recent content in Persistent on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 17 Feb 2023 10:36:40 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/persistent/index.xml" rel="self" type="application/rss+xml"/><item><title>Ubuntu 20.04 server iptables 持久化</title><link>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</link><pubDate>Fri, 17 Feb 2023 10:36:40 +0800</pubDate><guid>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</guid><description>&lt;img src="https://i.stack.imgur.com/gZm6i.png" alt="Featured image of post Ubuntu 20.04 server iptables 持久化" />&lt;p>有一批服务器需要做 iptables 持久化，开机自动加载。&lt;/p>
-&lt;p>在 Ubuntu 12.04 时代, 可以把加载脚本写到 &lt;code>/etc/rc.local&lt;/code> 开机自动加载，Ubuntu 20.04 要启用 rc.local 太麻烦，用 &lt;code>netfilter-persistent&lt;/code> 来实现自动加载。&lt;/p>
-&lt;p>&lt;code>netfilter-persistent&lt;/code> 加载 &lt;code>ipset-persistent&lt;/code> 和 &lt;code>iptables-persistent&lt;/code> 保存的规则。&lt;/p>
-&lt;h2 id="tldr">TLDR
-&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
-&lt;/span>&lt;span class="lnt"> 2
-&lt;/span>&lt;span class="lnt"> 3
-&lt;/span>&lt;span class="lnt"> 4
-&lt;/span>&lt;span class="lnt"> 5
-&lt;/span>&lt;span class="lnt"> 6
-&lt;/span>&lt;span class="lnt"> 7
-&lt;/span>&lt;span class="lnt"> 8
-&lt;/span>&lt;span class="lnt"> 9
-&lt;/span>&lt;span class="lnt">10
-&lt;/span>&lt;span class="lnt">11
-&lt;/span>&lt;span class="lnt">12
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># noninteractive install&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo debconf-set-selections &lt;span class="s">&amp;lt;&amp;lt;EOF
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">iptables-persistent iptables-persistent/autosave_v4 boolean true
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">iptables-persistent iptables-persistent/autosave_v6 boolean true
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">ipset-persistent ipset-persistent/autosave boolean true
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">EOF&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo apt update &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> sudo apt install netfilter-persistent ipset-persistent iptables-persistent -y
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo netfilter-persistent save
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl &lt;span class="nb">enable&lt;/span> netfilter-persistent
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl start netfilter-persistent
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="静默安装">静默安装
-&lt;/h2>&lt;p>ipset-persistent 和 iptables-persistent 安装过程中会弹出交互窗，选择是否自动保存规则。&lt;/p>
-&lt;p>交互会打断服务器上脚本安装，需要无交互静默安装。&lt;/p>
-&lt;p>Ubuntu 上软件包安装配置项归 &lt;code>debconf&lt;/code> 管理，在一台机器上交互安装完成后，用 &lt;code>debconf-show&lt;/code> 查看软件包的配置项。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;span class="lnt">6
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo debconf-show ipset-persistent
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* ipset-persistent/autosave: &lt;span class="nb">true&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo debconf-show iptables-persistent
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* iptables-persistent/autosave_v4: &lt;span class="nb">true&lt;/span>
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">* iptables-persistent/autosave_v6: &lt;span class="nb">true&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>在安装前，用 &lt;code>debconf-set-selections&lt;/code> 在 debconf 数据库中插入对应的内容，即可实现无交互静默安装。&lt;/p>
-&lt;p>debconf-set-selections 配置语法&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">{包名} {配置项key} {配置项类型} {配置项value}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>生成的配置如下&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;span class="lnt">5
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo debconf-set-selections &lt;span class="s">&amp;lt;&amp;lt;EOF
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">ipset-persistent ipset-persistent/autosave boolean true
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">iptables-persistent iptables-persistent/autosave_v4 boolean true
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">iptables-persistent iptables-persistent/autosave_v6 boolean true
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s">EOF&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>执行 &lt;code> sudo apt install netfilter-persistent ipset-persistent iptables-persistent -y&lt;/code> 即可静默安装。&lt;/p>
-&lt;h3 id="持久化">持久化
-&lt;/h3>&lt;h4 id="保存规则">保存规则
-&lt;/h4>&lt;p>&lt;code>sudo netfilter-persistent save&lt;/code>&lt;/p>
-&lt;h4 id="自动加载">自动加载
-&lt;/h4>&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sudo systemctl &lt;span class="nb">enable&lt;/span> netfilter-persistent
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sudo systemctl start netfilter-persistent
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;h2 id="参考链接">参考链接
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://dhtar.com/make-ipset-and-iptables-configurations-persistent-in-debianubuntu.html" target="_blank" rel="noopener"
->Make ipset and iptables configurations persistent in Debian/Ubuntu&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://gist.github.com/alonisser/a2c19f5362c2091ac1e7" target="_blank" rel="noopener"
->Installing iptables-persistent on ubuntu without manual input&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://blog.51cto.com/u_13791715/2308514" target="_blank" rel="noopener"
->Linux下实现软件的静默安装&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://sleeplessbeastie.eu/2018/09/17/how-to-read-and-insert-new-values-into-the-debconf-database/" target="_blank" rel="noopener"
->How to read and insert new values into the debconf database&lt;/a>&lt;/li>
-&lt;/ul></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Persistent on 4ft35t blog</title><link>https://4ft35t.github.io/tags/persistent/</link><description>Recent content in Persistent on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 17 Feb 2023 10:36:40 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/persistent/index.xml" rel="self" type="application/rss+xml"/><item><title>Ubuntu 20.04 server iptables 持久化</title><link>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</link><pubDate>Fri, 17 Feb 2023 10:36:40 +0800</pubDate><guid>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</guid><description>&lt;img src="https://i.stack.imgur.com/gZm6i.png" alt="Featured image of post Ubuntu 20.04 server iptables 持久化" /&gt;&lt;p&gt;有一批服务器需要做 iptables 持久化，开机自动加载。&lt;/p&gt;
+&lt;p&gt;在 Ubuntu 12.04 时代, 可以把加载脚本写到 &lt;code&gt;/etc/rc.local&lt;/code&gt; 开机自动加载，Ubuntu 20.04 要启用 rc.local 太麻烦，用 &lt;code&gt;netfilter-persistent&lt;/code&gt; 来实现自动加载。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;netfilter-persistent&lt;/code&gt; 加载 &lt;code&gt;ipset-persistent&lt;/code&gt; 和 &lt;code&gt;iptables-persistent&lt;/code&gt; 保存的规则。&lt;/p&gt;
+&lt;h2 id="tldr"&gt;TLDR
+&lt;/h2&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# noninteractive install&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo debconf-set-selections &lt;span class="s"&gt;&amp;lt;&amp;lt;EOF
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;iptables-persistent iptables-persistent/autosave_v4 boolean true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;iptables-persistent iptables-persistent/autosave_v6 boolean true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;ipset-persistent ipset-persistent/autosave boolean true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;EOF&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo apt update &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; sudo apt install netfilter-persistent ipset-persistent iptables-persistent -y
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo netfilter-persistent save
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; netfilter-persistent
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo systemctl start netfilter-persistent
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="静默安装"&gt;静默安装
+&lt;/h2&gt;&lt;p&gt;ipset-persistent 和 iptables-persistent 安装过程中会弹出交互窗，选择是否自动保存规则。&lt;/p&gt;
+&lt;p&gt;交互会打断服务器上脚本安装，需要无交互静默安装。&lt;/p&gt;
+&lt;p&gt;Ubuntu 上软件包安装配置项归 &lt;code&gt;debconf&lt;/code&gt; 管理，在一台机器上交互安装完成后，用 &lt;code&gt;debconf-show&lt;/code&gt; 查看软件包的配置项。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;span class="lnt"&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo debconf-show ipset-persistent
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;* ipset-persistent/autosave: &lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo debconf-show iptables-persistent
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;* iptables-persistent/autosave_v4: &lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;* iptables-persistent/autosave_v6: &lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;在安装前，用 &lt;code&gt;debconf-set-selections&lt;/code&gt; 在 debconf 数据库中插入对应的内容，即可实现无交互静默安装。&lt;/p&gt;
+&lt;p&gt;debconf-set-selections 配置语法&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;{包名} {配置项key} {配置项类型} {配置项value}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;生成的配置如下&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo debconf-set-selections &lt;span class="s"&gt;&amp;lt;&amp;lt;EOF
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;ipset-persistent ipset-persistent/autosave boolean true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;iptables-persistent iptables-persistent/autosave_v4 boolean true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;iptables-persistent iptables-persistent/autosave_v6 boolean true
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;EOF&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;执行 &lt;code&gt; sudo apt install netfilter-persistent ipset-persistent iptables-persistent -y&lt;/code&gt; 即可静默安装。&lt;/p&gt;
+&lt;h3 id="持久化"&gt;持久化
+&lt;/h3&gt;&lt;h4 id="保存规则"&gt;保存规则
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;sudo netfilter-persistent save&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id="自动加载"&gt;自动加载
+&lt;/h4&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo systemctl &lt;span class="nb"&gt;enable&lt;/span&gt; netfilter-persistent
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;sudo systemctl start netfilter-persistent
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id="参考链接"&gt;参考链接
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://dhtar.com/make-ipset-and-iptables-configurations-persistent-in-debianubuntu.html" target="_blank" rel="noopener"
+&gt;Make ipset and iptables configurations persistent in Debian/Ubuntu&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://gist.github.com/alonisser/a2c19f5362c2091ac1e7" target="_blank" rel="noopener"
+&gt;Installing iptables-persistent on ubuntu without manual input&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://blog.51cto.com/u_13791715/2308514" target="_blank" rel="noopener"
+&gt;Linux下实现软件的静默安装&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://sleeplessbeastie.eu/2018/09/17/how-to-read-and-insert-new-values-into-the-debconf-database/" target="_blank" rel="noopener"
+&gt;How to read and insert new values into the debconf database&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>

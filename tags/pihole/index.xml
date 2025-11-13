@@ -1,43 +1,43 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pihole on 4ft35t blog</title><link>https://4ft35t.github.io/tags/pihole/</link><description>Recent content in Pihole on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 09 Apr 2020 21:48:15 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/pihole/index.xml" rel="self" type="application/rss+xml"/><item><title>解决无忧行长时间显示“正在连接电话服务器”问题</title><link>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</link><pubDate>Thu, 09 Apr 2020 21:48:15 +0800</pubDate><guid>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</guid><description>&lt;img src="https://www.jegotrip.cn/m/img/favicon.ico" alt="Featured image of post 解决无忧行长时间显示“正在连接电话服务器”问题" />&lt;p>无忧行(JegoTrip)APP是中国移动专门为出境游用户量身打造的APP。在境内也可以使用，移动号码可以在 APP 内接电话和收短信, 轻松实现一机双号。&lt;/p>
-&lt;h2 id="具体症状">具体症状
-&lt;/h2>&lt;p>家里路由器上部署梯子, 国内 IP 直连，其余 IP 走梯子, 国内 IP 库用的 &lt;a class="link" href="https://github.com/17mon/china_ip_list" target="_blank" rel="noopener"
->https://github.com/17mon/china_ip_list&lt;/a>。连接家里 WIFI，无忧行 APP 启动后，显示“正在连接电话服务器”, 持续 30 秒以上才能连接到服务器，之后才能收到短信；用 4G 则没有这个提示，启动 APP 瞬间就能收到短信。猜测是无忧行服务器的香港 IP 走梯子后比直连慢很多所致。&lt;/p>
-&lt;h2 id="排查-ip">排查 IP
-&lt;/h2>&lt;p>从 Pi-hole 导出 jego 相关域名, &lt;code>192.168.1.123&lt;/code> 是手机 IP&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl"> sqlite3 pihole-FTL.db &lt;span class="s2">&amp;#34;select distinct
-&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> domain from queries where client=&amp;#39;192.168.1.123&amp;#39; and domain like &amp;#39;%jego%&amp;#39;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>得到几个域名&lt;/p>
-&lt;blockquote>
-&lt;p>app1.jegotrip.com.cn&lt;br>
-tms.jegotrip.com.cn&lt;br>
-jegotrip-stage.cn-hongkong.log.aliyuncs.com&lt;br>
-cdn.jegotrip.com.cn&lt;br>
-oss.jegotrip.com.cn&lt;br>
-cp.jegotrip.com.cn&lt;/p>
-&lt;/blockquote>
-&lt;p>逐一排查后，&lt;strong>tms.jegotrip.com.cn&lt;/strong> 解析到 223.118.41.228, 是香港 IP。&lt;/p>
-&lt;h2 id="更新-ip-列表">更新 IP 列表
-&lt;/h2>&lt;p>223.118.41.228 属于 AS58453 自治域，把这个自治域中的几个 IP 段全部追加到国内 IP 列表。&lt;/p>
-&lt;div class="highlight">&lt;div class="chroma">
-&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
-&lt;/span>&lt;span class="lnt">2
-&lt;/span>&lt;span class="lnt">3
-&lt;/span>&lt;span class="lnt">4
-&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
-&lt;td class="lntd">
-&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">223.118.0.0/15
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">223.119.0.0/16
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">223.120.0.0/16
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">223.121.0.0/16
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
-&lt;/div>
-&lt;/div>&lt;p>重启梯子服务后问题解决。&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pihole on 4ft35t blog</title><link>https://4ft35t.github.io/tags/pihole/</link><description>Recent content in Pihole on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 09 Apr 2020 21:48:15 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/pihole/index.xml" rel="self" type="application/rss+xml"/><item><title>解决无忧行长时间显示“正在连接电话服务器”问题</title><link>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</link><pubDate>Thu, 09 Apr 2020 21:48:15 +0800</pubDate><guid>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</guid><description>&lt;img src="https://www.jegotrip.cn/m/img/favicon.ico" alt="Featured image of post 解决无忧行长时间显示“正在连接电话服务器”问题" /&gt;&lt;p&gt;无忧行(JegoTrip)APP是中国移动专门为出境游用户量身打造的APP。在境内也可以使用，移动号码可以在 APP 内接电话和收短信, 轻松实现一机双号。&lt;/p&gt;
+&lt;h2 id="具体症状"&gt;具体症状
+&lt;/h2&gt;&lt;p&gt;家里路由器上部署梯子, 国内 IP 直连，其余 IP 走梯子, 国内 IP 库用的 &lt;a class="link" href="https://github.com/17mon/china_ip_list" target="_blank" rel="noopener"
+&gt;https://github.com/17mon/china_ip_list&lt;/a&gt;。连接家里 WIFI，无忧行 APP 启动后，显示“正在连接电话服务器”, 持续 30 秒以上才能连接到服务器，之后才能收到短信；用 4G 则没有这个提示，启动 APP 瞬间就能收到短信。猜测是无忧行服务器的香港 IP 走梯子后比直连慢很多所致。&lt;/p&gt;
+&lt;h2 id="排查-ip"&gt;排查 IP
+&lt;/h2&gt;&lt;p&gt;从 Pi-hole 导出 jego 相关域名, &lt;code&gt;192.168.1.123&lt;/code&gt; 是手机 IP&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; sqlite3 pihole-FTL.db &lt;span class="s2"&gt;&amp;#34;select distinct
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s2"&gt; domain from queries where client=&amp;#39;192.168.1.123&amp;#39; and domain like &amp;#39;%jego%&amp;#39;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;得到几个域名&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;app1.jegotrip.com.cn&lt;br&gt;
+tms.jegotrip.com.cn&lt;br&gt;
+jegotrip-stage.cn-hongkong.log.aliyuncs.com&lt;br&gt;
+cdn.jegotrip.com.cn&lt;br&gt;
+oss.jegotrip.com.cn&lt;br&gt;
+cp.jegotrip.com.cn&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;逐一排查后，&lt;strong&gt;tms.jegotrip.com.cn&lt;/strong&gt; 解析到 223.118.41.228, 是香港 IP。&lt;/p&gt;
+&lt;h2 id="更新-ip-列表"&gt;更新 IP 列表
+&lt;/h2&gt;&lt;p&gt;223.118.41.228 属于 AS58453 自治域，把这个自治域中的几个 IP 段全部追加到国内 IP 列表。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-fallback" data-lang="fallback"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;223.118.0.0/15
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;223.119.0.0/16
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;223.120.0.0/16
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;223.121.0.0/16
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;重启梯子服务后问题解决。&lt;/p&gt;</description></item></channel></rss>

@@ -1,94 +1,94 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Office on 4ft35t blog</title><link>https://4ft35t.github.io/categories/office/</link><description>Recent content in Office on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 15 Mar 2023 13:44:24 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/categories/office/index.xml" rel="self" type="application/rss+xml"/><item><title>excel 折线图添加竖线</title><link>https://4ft35t.github.io/post/add-vertical-line-excel-chart/</link><pubDate>Wed, 15 Mar 2023 13:44:24 +0800</pubDate><guid>https://4ft35t.github.io/post/add-vertical-line-excel-chart/</guid><description>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862174.jpg" alt="Featured image of post excel 折线图添加竖线" />&lt;h2 id="背景">背景
-&lt;/h2>&lt;p>一般用折线图来表示发展趋势，需要在折线图的某个位置添加竖线，用来强调在这里发生了重要的区分性事件。需要的效果如下图。&lt;/p>
-&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862174.jpg"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Office on 4ft35t blog</title><link>https://4ft35t.github.io/categories/office/</link><description>Recent content in Office on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 15 Mar 2023 13:44:24 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/categories/office/index.xml" rel="self" type="application/rss+xml"/><item><title>excel 折线图添加竖线</title><link>https://4ft35t.github.io/post/add-vertical-line-excel-chart/</link><pubDate>Wed, 15 Mar 2023 13:44:24 +0800</pubDate><guid>https://4ft35t.github.io/post/add-vertical-line-excel-chart/</guid><description>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862174.jpg" alt="Featured image of post excel 折线图添加竖线" /&gt;&lt;h2 id="背景"&gt;背景
+&lt;/h2&gt;&lt;p&gt;一般用折线图来表示发展趋势，需要在折线图的某个位置添加竖线，用来强调在这里发生了重要的区分性事件。需要的效果如下图。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862174.jpg"
 loading="lazy"
 alt="chart-vertical-line-ok"
->&lt;/p>
-&lt;h2 id="实现方法">实现方法
-&lt;/h2>&lt;p>本文是在 MAC 版 Microsoft Office 上的操作，Windows 版操作见下方的参考链接。&lt;/p>
-&lt;h3 id="带直线的散点图">带直线的散点图
-&lt;/h3>&lt;p>如果已有折线图&lt;/p>
-&lt;p>折线图上右键 - 更改图标类型 - XY（散点图）- 带直线的散点图&lt;/p>
-&lt;p>如果当前没有折线图&lt;/p>
-&lt;p>菜单栏，插入 - XY（散点图）- 带直线的散点图&lt;/p>
-&lt;h3 id="新增分割线数据">新增分割线数据
-&lt;/h3>&lt;p>画一条分割线需要占用4个单元格。在表格的任意空白位置，用左右两列来填写。&lt;/p>
-&lt;p>用上图的2月14号举例，需要在2月14号位置画一条竖线&lt;/p>
-&lt;ul>
-&lt;li>左侧两格都是需要划线的 X 值&lt;/li>
-&lt;li>右侧两格分别是0和折线图的最大值，表示竖线的高度范围，无先后顺序&lt;/li>
-&lt;/ul>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>X&lt;/th>
-&lt;th>Y&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>2023/2/14&lt;/td>
-&lt;td>0&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>2023/2/14&lt;/td>
-&lt;td>70&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h3 id="画分割线">画分割线
-&lt;/h3>&lt;p>散点图上右键 - 选择数据 - 点“+”&lt;/p>
-&lt;ul>
-&lt;li>X 值 选 X 列&lt;/li>
-&lt;li>Y 值 选 Y 列&lt;/li>
-&lt;/ul>
-&lt;p>大功告成。&lt;/p>
-&lt;h3 id="画多条分割线">画多条分割线
-&lt;/h3>&lt;p>画多条分割线，直接在 X和Y列填写内容即可。但是要注意，&lt;strong>不同分割线的数据之间要空一行，不然分割线会连起来&lt;/strong>，变成下图的样子。&lt;/p>
-&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862263.jpg"
+&gt;&lt;/p&gt;
+&lt;h2 id="实现方法"&gt;实现方法
+&lt;/h2&gt;&lt;p&gt;本文是在 MAC 版 Microsoft Office 上的操作，Windows 版操作见下方的参考链接。&lt;/p&gt;
+&lt;h3 id="带直线的散点图"&gt;带直线的散点图
+&lt;/h3&gt;&lt;p&gt;如果已有折线图&lt;/p&gt;
+&lt;p&gt;折线图上右键 - 更改图标类型 - XY（散点图）- 带直线的散点图&lt;/p&gt;
+&lt;p&gt;如果当前没有折线图&lt;/p&gt;
+&lt;p&gt;菜单栏，插入 - XY（散点图）- 带直线的散点图&lt;/p&gt;
+&lt;h3 id="新增分割线数据"&gt;新增分割线数据
+&lt;/h3&gt;&lt;p&gt;画一条分割线需要占用4个单元格。在表格的任意空白位置，用左右两列来填写。&lt;/p&gt;
+&lt;p&gt;用上图的2月14号举例，需要在2月14号位置画一条竖线&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;左侧两格都是需要划线的 X 值&lt;/li&gt;
+&lt;li&gt;右侧两格分别是0和折线图的最大值，表示竖线的高度范围，无先后顺序&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;X&lt;/th&gt;
+&lt;th&gt;Y&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;2023/2/14&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2023/2/14&lt;/td&gt;
+&lt;td&gt;70&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="画分割线"&gt;画分割线
+&lt;/h3&gt;&lt;p&gt;散点图上右键 - 选择数据 - 点“+”&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;X 值 选 X 列&lt;/li&gt;
+&lt;li&gt;Y 值 选 Y 列&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;大功告成。&lt;/p&gt;
+&lt;h3 id="画多条分割线"&gt;画多条分割线
+&lt;/h3&gt;&lt;p&gt;画多条分割线，直接在 X和Y列填写内容即可。但是要注意，&lt;strong&gt;不同分割线的数据之间要空一行，不然分割线会连起来&lt;/strong&gt;，变成下图的样子。&lt;/p&gt;
+&lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862263.jpg"
 loading="lazy"
 alt="chart-vertical-line-bad"
->&lt;/p>
-&lt;p>正确的数据格式&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>X&lt;/th>
-&lt;th>Y&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>2023/2/14&lt;/td>
-&lt;td>0&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>2023/2/14&lt;/td>
-&lt;td>70&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td> &lt;/td>
-&lt;td> &lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>2023/2/17&lt;/td>
-&lt;td>0&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>2023/2/17&lt;/td>
-&lt;td>70&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h3 id="分割线上加文字">分割线上加文字
-&lt;/h3>&lt;p>任意空白单元格写好文字 - 复制 - 任意空白单元格 - 右键 - 选择性粘贴- 粘贴图片链接 - 把图片拖到分割线合适位置。&lt;/p>
-&lt;p>修改原始单元格的内容、改文字颜色等，图片上内容也会随之变动。&lt;/p>
-&lt;h2 id="参考链接">参考链接
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="https://www.bilibili.com/video/BV1ex411J7Q1" target="_blank" rel="noopener"
->Excel折线图美化技巧 在折线图中添加贯通竖线分隔季度数据&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.bilibili.com/video/BV1p44y1j7oq" target="_blank" rel="noopener"
->Excel绘制可以随日期移动垂直于X轴的直线，竖线&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.ablebits.com/office-addins-blog/add-vertical-line-excel-chart/" target="_blank" rel="noopener"
->How to add vertical line to Excel chart: scatter plot, bar chart and line graph&lt;/a>&lt;/li>
-&lt;/ul></description></item></channel></rss>
+&gt;&lt;/p&gt;
+&lt;p&gt;正确的数据格式&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;X&lt;/th&gt;
+&lt;th&gt;Y&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;2023/2/14&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2023/2/14&lt;/td&gt;
+&lt;td&gt;70&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt; &lt;/td&gt;
+&lt;td&gt; &lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2023/2/17&lt;/td&gt;
+&lt;td&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2023/2/17&lt;/td&gt;
+&lt;td&gt;70&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="分割线上加文字"&gt;分割线上加文字
+&lt;/h3&gt;&lt;p&gt;任意空白单元格写好文字 - 复制 - 任意空白单元格 - 右键 - 选择性粘贴- 粘贴图片链接 - 把图片拖到分割线合适位置。&lt;/p&gt;
+&lt;p&gt;修改原始单元格的内容、改文字颜色等，图片上内容也会随之变动。&lt;/p&gt;
+&lt;h2 id="参考链接"&gt;参考链接
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.bilibili.com/video/BV1ex411J7Q1" target="_blank" rel="noopener"
+&gt;Excel折线图美化技巧 在折线图中添加贯通竖线分隔季度数据&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.bilibili.com/video/BV1p44y1j7oq" target="_blank" rel="noopener"
+&gt;Excel绘制可以随日期移动垂直于X轴的直线，竖线&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.ablebits.com/office-addins-blog/add-vertical-line-excel-chart/" target="_blank" rel="noopener"
+&gt;How to add vertical line to Excel chart: scatter plot, bar chart and line graph&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item></channel></rss>
