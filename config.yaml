@@ -11,7 +11,7 @@ languages:
         title: "4ft35t blog"
         weight: 2
 
-googleAnalytics: "UA-163577388-1"
+googleAnalytics: "G-FGN7EMZLZ5"
 enableRobotsTXT: true
 
 # Available values: ar, ca, de, el, en, es, fr, id, it, ja, ko, nl, pt-br, th, uk, zh-cn, zh-hk, zh-tw
