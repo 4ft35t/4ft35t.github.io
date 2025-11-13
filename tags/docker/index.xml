@@ -10,8 +10,8 @@
 &lt;p&gt;一番搜索后，在&lt;a class="link" href="https://forums.raspberrypi.com/viewtopic.php?t=118732" target="_blank" rel="noopener"
 &gt;树莓派论坛&lt;/a&gt;找到了原因， hplip 驱动有问题，需要安装 foo2zjs 开源驱动。&lt;/p&gt;
 &lt;h3 id="玩客云测试"&gt;玩客云测试
-&lt;/h3&gt;&lt;p&gt;为了测试 foo2zjs 驱动是否有效， 打开了另一件吃灰的老古董玩客云, 系统是 armbian, 安装了 openmediavault 4。
-从 omv-extras 里安装 openmediavault-cups, 然后在 cups web 界面添加打印机, 选择 &amp;ldquo;HP LaserJet Pro CP1025nw Foomatic/foo2zjs-z3 (en)&amp;rdquo; 驱动，成功打印测试页。&lt;/p&gt;
+&lt;/h3&gt;&lt;p&gt;为了测试 foo2zjs 驱动是否有效， 打开了另一件吃灰的老古董玩客云, 系统是 armbian, 安装了 openmediavault 4。&lt;/p&gt;
+&lt;p&gt;从 omv-extras 里安装 openmediavault-cups, 然后在 cups web 界面添加打印机, 选择 &amp;ldquo;HP LaserJet Pro CP1025nw Foomatic/foo2zjs-z3 (en)&amp;rdquo; 驱动，成功打印测试页。&lt;/p&gt;
 &lt;p&gt;如果选择 &amp;ldquo;HP LaserJet Cp1025, hpcups 3.23.12 (en)&amp;rdquo; 驱动，打印测试页失败，提示 &amp;ldquo;Filter failed&amp;rdquo;。&lt;/p&gt;
 &lt;p&gt;确认 foo2zjs 驱动可以正常使用。&lt;/p&gt;
 &lt;h3 id="在群晖-dsm7-上安装-cups"&gt;在群晖 DSM7 上安装 CUPS
@@ -34,8 +34,8 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;h4 id="运行-docker-容器"&gt;运行 docker 容器
-&lt;/h4&gt;&lt;p&gt;创建配置目录 &lt;code&gt;mkdir -p /volume1/docker/airprint/config /volume1/docker/airprint/services&lt;/code&gt;
-创建 &lt;code&gt;/volume1/docker/airprint/docker-compose.yml&lt;/code&gt; 文件:&lt;/p&gt;
+&lt;/h4&gt;&lt;p&gt;创建配置目录 &lt;code&gt;mkdir -p /volume1/docker/airprint/config /volume1/docker/airprint/services&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;创建 &lt;code&gt;/volume1/docker/airprint/docker-compose.yml&lt;/code&gt; 文件:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
 &lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
 &lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
@@ -110,8 +110,8 @@
 &lt;p&gt;修改完成后，重启容器。&lt;/p&gt;
 &lt;h3 id="添加打印机"&gt;添加打印机
 &lt;/h3&gt;&lt;p&gt;打开浏览器访问 &lt;code&gt;http://群晖IP:631&lt;/code&gt;, 进入 CUPS web 界面, 添加打印机。&lt;/p&gt;
-&lt;p&gt;Administration - Add Printer - 选择 HP CP1025 打印机 - 下一步勾选 &amp;ldquo;Share This Printer&amp;rdquo; - 选择驱动 &amp;ldquo;HP LaserJet Pro CP1025nw Foomatic/foo2zjs-z3 (en)&amp;rdquo; - 完成添加。
-下一步修改打印机默认选项:&lt;/p&gt;
+&lt;p&gt;Administration - Add Printer - 选择 HP CP1025 打印机 - 下一步勾选 &amp;ldquo;Share This Printer&amp;rdquo; - 选择驱动 &amp;ldquo;HP LaserJet Pro CP1025nw Foomatic/foo2zjs-z3 (en)&amp;rdquo; - 完成添加。&lt;/p&gt;
+&lt;p&gt;下一步修改打印机默认选项:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Color Mode: Color&lt;/li&gt;
 &lt;li&gt;Resolution: 600x600dpi&lt;/li&gt;
@@ -192,8 +192,8 @@
 控制面版 - 设备和打印机 - 添加打印机 - 选择 &amp;ldquo;我需要的打印机不在列表中&amp;rdquo; - 选择 &amp;ldquo;使用 TCP/IP 地址或主机名添加打印机&amp;rdquo; - 设备类型选择 &amp;ldquo;TCP/IP 设备&amp;rdquo; - 主机名或 IP 地址填写群晖 IP 地址&lt;/p&gt;
 &lt;h3 id="参考链接"&gt;参考链接
 &lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;[记一次群辉dsm6.2.3使用cups实现老款打印机cp1025](airprint &lt;a class="link" href="https://www.bilibili.com/opus/774732308492058647" target="_blank" rel="noopener"
-&gt;https://www.bilibili.com/opus/774732308492058647&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.bilibili.com/opus/774732308492058647" target="_blank" rel="noopener"
+&gt;记一次群辉dsm6.2.3使用cups实现老款打印机cp1025&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://post.smzdm.com/p/ag4p7k7m/" target="_blank" rel="noopener"
 &gt;群晖、威联通NAS实现共享打印机+Airprint隔空打印教程，Docker版CUPS，让NAS变身打印服务器！&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://post.smzdm.com/p/a5xwr0x7/" target="_blank" rel="noopener"
