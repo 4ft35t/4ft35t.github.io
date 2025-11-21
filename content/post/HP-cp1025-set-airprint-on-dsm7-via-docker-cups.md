@@ -148,8 +148,7 @@ ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="3f0/
 
 ```bash
 #!/bin/sh
-cd /volume1/docker/airprint
-docker-compose restart
+docker restart airprint_airprint_1
 ```
 这里已经完成了全部配置，局域网内的 Mac 和 iOS 设备都可以通过 AirPrint 使用 HP CP1025 打印机了，windows 设备也可以通过添加网络打印机使用。
 
