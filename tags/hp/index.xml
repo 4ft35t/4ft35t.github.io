@@ -83,7 +83,7 @@
 &lt;/div&gt;&lt;p&gt;启动容器: &lt;code&gt;cd /volume1/docker/airprint &amp;amp;&amp;amp; sudo docker-compose up -d&lt;/code&gt;&lt;/p&gt;
 &lt;h4 id="安装-foo2zjs-驱动"&gt;安装 foo2zjs 驱动
 &lt;/h4&gt;&lt;p&gt;foo2zjs 官网 &lt;a class="link" href="http://foo2zjs.rkkda.com" target="_blank" rel="noopener"
-&gt;http://foo2zjs.rkkda.com&lt;/a&gt; 已经无法访问，幸好 webarchive.org 上有存档可以下载。
+&gt;http://foo2zjs.rkkda.com&lt;/a&gt; 已经无法访问，幸好 web.archive.org 上有存档可以下载。
 进入容器: &lt;code&gt; cd /volume1/docker/airprint &amp;amp;&amp;amp; sudo docker-compose exec airprint sh&lt;/code&gt;
 在容器内下载并安装 foo2zjs 驱动。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
