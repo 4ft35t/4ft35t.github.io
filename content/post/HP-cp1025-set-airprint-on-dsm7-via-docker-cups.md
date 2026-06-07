@@ -58,7 +58,7 @@ sudo synosystemctl disable cups-service-handler
 version: '3'
 services:
   airprint:
-    image: 'chuckcharlie/cups-avahi-airprint'
+    image: 'chuckcharlie/cups-avahi-airprint:1.2.1'
     privileged: true
     restart: unless-stopped
     environment:
