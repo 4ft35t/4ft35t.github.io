@@ -227,6 +227,9 @@
 &gt;How to read and insert new values into the debconf database&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description></item><item><title>低成本 mesh 组网</title><link>https://4ft35t.github.io/post/lowcast-mesh/</link><pubDate>Sun, 04 Dec 2022 17:57:03 +0800</pubDate><guid>https://4ft35t.github.io/post/lowcast-mesh/</guid><description>&lt;img src="https://cdn.unwire.hk/wp-content/uploads/2018/03/999-1.png" alt="Featured image of post 低成本 mesh 组网" /&gt;&lt;p&gt;上一次主动看 mesh 路由，单台成本 2000 左右，最近在什么值得买上看到用网件 6300V2 刷机后组 mesh 的，原理是网件6300V2 和华硕 AC68U 使用相同的硬件，修改 CEF 中相关配置，即可伪装成华硕 AC68U，使用华硕固件和功能。&lt;/p&gt;
 &lt;p&gt;6300V2 二手价格单台不到80，立马买两台来组网。&lt;/p&gt;
+&lt;h2 id="update-20260618"&gt;update 2026.06.18
+&lt;/h2&gt;&lt;p&gt;文中的下载链接已失效，相应文件到 &lt;a class="link" href="https://github.com/4ft35t/4ft35t.github.io/releases/tag/Netgear-R6300V2" target="_blank" rel="noopener"
+&gt;https://github.com/4ft35t/4ft35t.github.io/releases/tag/Netgear-R6300V2&lt;/a&gt; 下载。&lt;/p&gt;
 &lt;h2 id="硬件成本"&gt;硬件成本
 &lt;/h2&gt;&lt;p&gt;自有一台服役多年的 6300V2，淘宝新买2台二手，75.99 一台包邮。&lt;/p&gt;
 &lt;p&gt;不想折腾的可以买刷好梅林386版本的机器，跳过刷机部分，直达 mesh 组网部分。&lt;/p&gt;
