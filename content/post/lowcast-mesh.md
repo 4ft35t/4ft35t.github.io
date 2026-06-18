@@ -15,6 +15,9 @@ draft: false
 
 6300V2 二手价格单台不到80，立马买两台来组网。
 
+## update 2026.06.18
+文中的下载链接已失效，相应文件到 https://github.com/4ft35t/4ft35t.github.io/releases/tag/Netgear-R6300V2 下载。
+
 ## 硬件成本
 自有一台服役多年的 6300V2，淘宝新买2台二手，75.99 一台包邮。
 
