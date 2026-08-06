@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>WIFI Calling on 4ft35t blog</title><link>https://4ft35t.github.io/tags/wifi-calling/</link><description>Recent content in WIFI Calling on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 06 Aug 2026 21:33:38 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/wifi-calling/index.xml" rel="self" type="application/rss+xml"/><item><title>Vohive 与 WIFI Calling</title><link>https://4ft35t.github.io/post/vohive/</link><pubDate>Thu, 06 Aug 2026 21:33:38 +0800</pubDate><guid>https://4ft35t.github.io/post/vohive/</guid><description>&lt;img src="https://miro.medium.com/v2/resize:fit:180/format:webp/1*ihirvzvqsu62iOt44hx1lg.jpeg" alt="Featured image of post Vohive 与 WIFI Calling" /&gt;&lt;p&gt;vohive 是一个使用高通4G/5G芯片，实现WIFI Calling（VoWiFi）功能的工具, 主要用于短信转发，特别是使用 WIFI Calling 收短信。详细功能介绍见 &lt;a class="link" href="https://www.nodeseek.com/post-610499-1" target="_blank" rel="noopener"
+&gt;https://www.nodeseek.com/post-610499-1&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;vohive 不开源，只提供二进制文件，支持 Linux 系统。&lt;/p&gt;
+&lt;p&gt;作者已被喷子气跑，删库跑路了，https://github.com/iniwex5/vohive-release。&lt;/p&gt;
+&lt;h2 id="重要提示"&gt;重要提示
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;有 WIFI Calling 需求的用 vohive 合适，只有短信转发需求的用 &lt;a class="link" href="https://github.com/chenxuuu/sms_forwarding" target="_blank" rel="noopener"
+&gt;https://github.com/chenxuuu/sms_forwarding&lt;/a&gt; 更便宜更稳定。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="支持的硬件"&gt;支持的硬件
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;移远的 EC20 系列模块&lt;/li&gt;
+&lt;li&gt;高通 410 的随身 wifi&lt;/li&gt;
+&lt;li&gt;大疆一代 4g 模块&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="ec20-系列模块"&gt;EC20 系列模块
+&lt;/h3&gt;&lt;p&gt;EC20 系列模块是 vohive 最早支持的硬件, 需要单独购买模块、转接板和天线，目前已不推荐。&lt;/p&gt;
+&lt;p&gt;手头有存货的可以折腾使用，购买不推荐。&lt;/p&gt;
+&lt;p&gt;使用电信网络需要数最新的 R08 版本固件，群内分享的固件已整理放在 &lt;a class="link" href="https://github.com/4ft35t/4ft35t.github.io/releases/tag/ec20-firmware" target="_blank" rel="noopener"
+&gt;https://github.com/4ft35t/4ft35t.github.io/releases/tag/ec20-firmware&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id="高通-410-的随身-wifi"&gt;高通 410 的随身 wifi
+&lt;/h3&gt;&lt;p&gt;最便宜的方案，手头有存货的可以折腾使用，购买不推荐，毕竟做工在那里，寿命有限。&lt;/p&gt;
+&lt;p&gt;折腾过程：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;MiKo 完整备份&lt;/li&gt;
+&lt;li&gt;切换外置卡槽，具体按板子上的型号去搜索，都有资料&lt;/li&gt;
+&lt;li&gt;使用 &lt;a class="link" href="https://github.com/OpenStick/OpenStick" target="_blank" rel="noopener"
+&gt;https://github.com/OpenStick/OpenStick&lt;/a&gt; 刷 debian，具体操作见项目 wiki&lt;/li&gt;
+&lt;li&gt;最重要的一步，恢复 modem 固件。 从第一步的备份中找到 modem.bin 或者 modem.img, 然后使用 fastboot flash modem modem.bin 或者 fastboot flash modem modem.img 恢复。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="大疆一代-4g-模块"&gt;大疆一代 4g 模块
+&lt;/h3&gt;&lt;p&gt;最推荐的方案，折腾最少，只需要买模块，无需转接板和天线。&lt;/p&gt;
+&lt;p&gt;咸鱼搜“大疆一代4g模块”，当时35包邮，目前最便宜的 64。&lt;/p&gt;
+&lt;h3 id="刷机"&gt;刷机
+&lt;/h3&gt;&lt;p&gt;大疆一代 4g 模块，实际是移远的 EC25 模块，
+大疆模块用 usb 线插入 linux 电脑，拔掉电脑上其余 USB 设备, 执行以下命令一次，即可刷回 EC25 模块，在所有机器上免驱使用。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;span class="lnt"&gt;6
+&lt;/span&gt;&lt;span class="lnt"&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# 强行挂载串口&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;modprobe usbserial
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;2ca3 4006&amp;#34;&lt;/span&gt; &amp;gt; /sys/bus/usb-serial/drivers/generic/new_id
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# 切换模式&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; -e &lt;span class="s1"&gt;&amp;#39;AT+QCFG=&amp;#34;usbcfg&amp;#34;,0x2C7C,0x0125,1,1,1,1,1,0,0\r&amp;#39;&lt;/span&gt; &amp;gt; /dev/ttyUSB2
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# 重启模块&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; -e &lt;span class="s2"&gt;&amp;#34;AT+CFUN=1,1\r&amp;#34;&lt;/span&gt; &amp;gt; /dev/ttyUSB2
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;等几秒后执行 &lt;code&gt;lsusb&lt;/code&gt;，看到 &lt;code&gt;2c7c:0125 Quectel&lt;/code&gt; 就说明刷机成功了。&lt;/p&gt;
+&lt;h2 id="vohive-使用"&gt;vohive 使用
+&lt;/h2&gt;&lt;h3 id="安装"&gt;安装
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;sudo mkdir -p /opt/vohive/{config,data,logs}&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;从 &lt;a class="link" href="https://github.com/4ft35t/4ft35t.github.io/releases/tag/vohive" target="_blank" rel="noopener"
+&gt;https://github.com/4ft35t/4ft35t.github.io/releases/tag/vohive&lt;/a&gt; 下载 vohive 二进制文件, 重命名为 vohive, 放到 /opt/vohive 目录下&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo chmod +x /opt/vohive/vohive&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo echo -e 'server:\n port: 7575\n debug: false\n web:\n username: admin\n password: admin' &amp;gt; /opt/vohive/config/config.yaml&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;启动, 必须使用 root， 否则找不到 4g 模块。&lt;code&gt;sudo /opt/vohive/vohive -c /opt/vohive/config/config.yaml&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="使用"&gt;使用
+&lt;/h3&gt;&lt;p&gt;在网页中访问 http://localhost:7575, 输入用户名和密码 admin/admin 登录，点击“添加设备”，选择对应的模块，输入 ID，内容随意，几个模块不重复即可，点击“保存”。&lt;/p&gt;
+&lt;p&gt;等几秒就能看到设备状态变为“在线”。&lt;/p&gt;
+&lt;p&gt;具体的短信转发通道在网页里都有，不再赘述。&lt;/p&gt;
+&lt;h3 id="开启-wifi-calling"&gt;开启 WIFI Calling
+&lt;/h3&gt;&lt;p&gt;开启 WIFI Calling 需要运营商支持，同时需要有对应国家的梯子出口，梯子需要支持 UDP 。&lt;/p&gt;
+&lt;p&gt;不建议搞软路由的全局分流，推荐在运行 vohive 的机器上直接开梯子，然后在代理管理-漫游前置代理中添加梯子监听的 socks5 代理，保存后点“国家规则”，把代理绑定到对应的国家。&lt;/p&gt;
+&lt;p&gt;最后去设备管理-对应模块-配置-VoWiFi，开启 VoWiFi-保存，等待几秒，设备状态变为“在线”，就可以使用 WIFI Calling 了。&lt;/p&gt;
+&lt;p&gt;部分运营商会挑 IP 质量，如果出现无法注册的情况，可以尝试给梯子套 cloudflare warp。&lt;/p&gt;</description></item></channel></rss>
