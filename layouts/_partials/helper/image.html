@@ -1,0 +1,83 @@
+/// Params:
+///     Resources: Where to search for images
+///     Image: Image URL or map
+///     Context: page context (used to access the configuration)
+
+/// Returns:
+///     Resource: Hugo image resource object
+///     Permalink: Image URL
+///     Height: Image height
+///     Width: Image width
+
+{{ $result := dict }}
+
+{{ $imageStr := "" }}
+{{ if .Image }}
+    {{ if reflect.IsMap .Image }}
+        {{ if default true .Image.enabled }}
+            {{ $imageStr = .Image.src }}
+        {{ end }}
+    {{ else }}
+        {{ $imageStr = printf "%s" .Image }}
+    {{ end }}
+{{ end }}
+
+{{ if $imageStr }}
+    {{ $url := urls.Parse $imageStr }}
+    {{ $permalink := $imageStr }}
+
+    {{ $result = dict
+        "Resource" nil
+        "Permalink" $permalink
+        "Height" nil
+        "Width" nil
+    }}
+    {{ $resource := dict }}
+    {{ $local := true }}
+
+    {{ if not (in (slice "https" "http") $url.Scheme) }}
+        {{/* Local image */}}
+        {{ if .Resources }}
+            {{ $resource = .Resources.Get (printf "%s" ($imageStr | safeURL)) }}
+        {{ end }}
+        {{ if not $resource }}
+            {{/* Fallback to site assets / resources */}}
+            {{ $resource = resources.Get (printf "%s" ($imageStr | safeURL)) }}
+        {{ end }}
+
+        {{ if $resource }}
+            {{ if and .Context.Site.Params.imageProcessing.autoOrient (reflect.IsImageResourceProcessable $resource) }}
+                {{ $filter := images.AutoOrient }}
+                {{ $resource = $resource | images.Filter $filter }}
+            {{ end }}
+
+            {{ $permalink = $resource.RelPermalink }}
+
+            {{ if reflect.IsImageResourceWithMeta $resource }}
+                {{ $result = dict
+                    "Resource" $resource
+                    "Permalink" $permalink
+                    "Height" $resource.Height
+                    "Width" $resource.Width
+                }}
+            {{ else }}
+                {{ $result = dict
+                    "Resource" $resource
+                    "Permalink" $permalink
+                    "Height" nil
+                    "Width" nil
+                }}
+            {{ end }}
+        {{ end }}
+    {{ else }}
+        {{/* Remote image: return direct URL without network download */}}
+        {{ $result = dict
+            "Resource" nil
+            "Permalink" $permalink
+            "Height" nil
+            "Width" nil
+        }}
+    {{ end }}
+{{ end }}
+
+{{ return $result }}
