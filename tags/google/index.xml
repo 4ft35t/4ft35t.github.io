@@ -1,18 +1,18 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Google on 4ft35t blog</title><link>https://4ft35t.github.io/tags/google/</link><description>Recent content in Google on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 27 Feb 2022 23:41:49 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/google/index.xml" rel="self" type="application/rss+xml"/><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;p&gt;Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Google on 4ft35t blog</title><link>https://4ft35t.github.io/tags/google/</link><description>Recent content in Google on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 27 Feb 2022 23:41:49 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/google/index.xml" rel="self" type="application/rss+xml"/><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;img src="https://oss-cn-hangzhou.aliyuncs.com/codingsky/cdn/img/2019-07-25/dc29fbcc14b8c4acce61ba33a7f2af63.jpg" alt="Featured image of post 利用 Pixel 一代的无限存储备份 NAS 照片" /&gt;&lt;p&gt;Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p&gt;
 &lt;h2 id="tldr"&gt;TLDR
 &lt;/h2&gt;&lt;h3 id="手机端设置"&gt;手机端设置
 &lt;/h3&gt;&lt;ol&gt;
 &lt;li&gt;Pixel 手机无需 root，安装 &lt;a class="link" href="https://play.google.com/store/apps/details?id=pl.solidexplorer2" target="_blank" rel="noopener"
-&gt;Solid Explorer&lt;/a&gt;, 开启 FTP 服务。FTP 默认端口 9999, 默认目录 /sdcard/Download/。&lt;/li&gt;
+ &gt;Solid Explorer&lt;/a&gt;, 开启 FTP 服务。FTP 默认端口 9999, 默认目录 /sdcard/Download/。&lt;/li&gt;
 &lt;li&gt;在 FTP 目录放一张图片（使用 Solid Explorer 复制、浏览器从网上下载、FTP 上传均可），Google Photos 会询问是否备份此目录，选备份。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id="nas-设置"&gt;NAS 设置
 &lt;/h3&gt;&lt;p&gt;群晖自带的 curl 不支持 FTP，需要下载一个静态编译开启 FTP 支持的 curl。可以在 &lt;a class="link" href="https://github.com/moparisthebest/static-curl/releases" target="_blank" rel="noopener"
-&gt;https://github.com/moparisthebest/static-curl/releases&lt;/a&gt; 下载。&lt;/p&gt;
+ &gt;https://github.com/moparisthebest/static-curl/releases&lt;/a&gt; 下载。&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;下载 curl 并重命名成 &lt;strong&gt;curl-amd64&lt;/strong&gt;, 并执行 &lt;code&gt;chmod +x curl-amd64&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;下载上传脚本&lt;a class="link" href="https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5" target="_blank" rel="noopener"
-&gt;https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5&lt;/a&gt;, 和 curl-amd64 一起放到家目录。&lt;/li&gt;
+ &gt;https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5&lt;/a&gt;, 和 curl-amd64 一起放到家目录。&lt;/li&gt;
 &lt;li&gt;修改 photo-upload.sh 中配置&lt;/li&gt;
 &lt;/ol&gt;
 &lt;ul&gt;
@@ -33,11 +33,11 @@
 &lt;/h2&gt;&lt;h3 id="环境准备"&gt;环境准备
 &lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk" target="_blank" rel="noopener"
-&gt;https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk&lt;/a&gt;&lt;/li&gt;
+ &gt;https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://raw.githubusercontent.com/4ft35t/utils/master/autojs/utils.js" target="_blank" rel="noopener"
-&gt;https://raw.githubusercontent.com/4ft35t/utils/master/autojs/utils.js&lt;/a&gt;&lt;/li&gt;
+ &gt;https://raw.githubusercontent.com/4ft35t/utils/master/autojs/utils.js&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js" target="_blank" rel="noopener"
-&gt;https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js&lt;/a&gt;&lt;/li&gt;
+ &gt;https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id="操作步骤"&gt;操作步骤
 &lt;/h3&gt;&lt;ol&gt;
@@ -140,13 +140,13 @@
 &lt;h2 id="参考链接"&gt;参考链接
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;&lt;a class="link" href="https://support.google.com/photos/answer/6220791" target="_blank" rel="noopener"
-&gt;Choose the upload size of your photos &amp;amp; videos&lt;/a&gt;&lt;/li&gt;
+ &gt;Choose the upload size of your photos &amp;amp; videos&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.reddit.com/r/GooglePixel/comments/l9m6nk/how_to_use_og_pixel_as_an_unlimited_google_photos/" target="_blank" rel="noopener"
-&gt;How to use OG Pixel as an unlimited Google Photos uploader&lt;/a&gt;&lt;/li&gt;
+ &gt;How to use OG Pixel as an unlimited Google Photos uploader&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://repaynt.com/2021/02/original-pixel-unlimited-google-photos-uploader/" target="_blank" rel="noopener"
-&gt;Original Pixel Phone – The Unlimited Google Photos Uploader&lt;/a&gt;&lt;/li&gt;
+ &gt;Original Pixel Phone – The Unlimited Google Photos Uploader&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://rclone.org/sftp/" target="_blank" rel="noopener"
-&gt;rclone SFTP configuration&lt;/a&gt;&lt;/li&gt;
+ &gt;rclone SFTP configuration&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://pmiku.com/note/mount-cifs-in-android.html" target="_blank" rel="noopener"
-&gt;mount-cifs-in-android&lt;/a&gt;&lt;/li&gt;
+ &gt;mount-cifs-in-android&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;</description></item></channel></rss>

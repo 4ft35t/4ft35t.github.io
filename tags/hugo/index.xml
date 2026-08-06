@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Hugo on 4ft35t blog</title><link>https://4ft35t.github.io/tags/hugo/</link><description>Recent content in Hugo on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 07 Apr 2020 14:03:04 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/hugo/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Github Actions 自动部署 Hugo</title><link>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</link><pubDate>Tue, 07 Apr 2020 14:03:04 +0800</pubDate><guid>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</guid><description>&lt;p&gt;Hugo 是一款开源的使用 go 语言写的静态网站生成器，生成的静态页面可以轻松部署到 github pages。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Hugo on 4ft35t blog</title><link>https://4ft35t.github.io/tags/hugo/</link><description>Recent content in Hugo on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 07 Apr 2020 14:03:04 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/hugo/index.xml" rel="self" type="application/rss+xml"/><item><title>使用 Github Actions 自动部署 Hugo</title><link>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</link><pubDate>Tue, 07 Apr 2020 14:03:04 +0800</pubDate><guid>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</guid><description>&lt;img src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg" alt="Featured image of post 使用 Github Actions 自动部署 Hugo" /&gt;&lt;p&gt;Hugo 是一款开源的使用 go 语言写的静态网站生成器，生成的静态页面可以轻松部署到 github pages。&lt;/p&gt;
 &lt;p&gt;GitHub Actions 是 GitHub 的持续集成服务，持续集成由很多操作组成，比如抓取代码、运行测试、登录远程服务器，发布到第三方服务等等。GitHub 把这些操作就称为 actions。如果你需要某个 action，不必自己写复杂的脚本，直接引用他人写好的 action 即可，整个持续集成过程，就变成了一个 actions 的组合。&lt;a class="link" href="https://github.com/marketplace?type=actions" target="_blank" rel="noopener"
-&gt;Github actions 市场&lt;/a&gt;，可以搜索别人提交的 actions。&lt;/p&gt;
+ &gt;Github actions 市场&lt;/a&gt;，可以搜索别人提交的 actions。&lt;/p&gt;
 &lt;h2 id="自动部署要点"&gt;自动部署要点
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;username.github.io 只能使用 master 分支&lt;/li&gt;
@@ -81,9 +81,9 @@
 &lt;/div&gt;&lt;p&gt;引用的两个 actions 及作用&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/peaceiris/actions-hugo" target="_blank" rel="noopener"
-&gt;peaceiris/actions-hugo&lt;/a&gt; 获取最新的 hugo&lt;/li&gt;
+ &gt;peaceiris/actions-hugo&lt;/a&gt; 获取最新的 hugo&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/peaceiris/actions-gh-pages" target="_blank" rel="noopener"
-&gt;peaceiris/actions-gh-pages&lt;/a&gt; 发布静态页面&lt;/li&gt;
+ &gt;peaceiris/actions-gh-pages&lt;/a&gt; 发布静态页面&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="设置部署权限"&gt;设置部署权限
 &lt;/h2&gt;&lt;p&gt;可以使用 Github Token 或者私钥给 workflow 仓库写权限。
@@ -92,21 +92,17 @@
 &lt;li&gt;&lt;code&gt;ssh-keygen -t rsa -b 4096 -C &amp;quot;$(git config user.email)&amp;quot; -f gh-pages -N &amp;quot;&amp;quot;&lt;/code&gt; 生成公私钥对&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Repository Settings&lt;/strong&gt; - &lt;strong&gt;Deploy Keys&lt;/strong&gt;，粘贴 &lt;code&gt;gh-pages.pub&lt;/code&gt; 内容并勾选 &lt;code&gt; Allow write access&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Repository Settings&lt;/strong&gt; - &lt;strong&gt;Secrets&lt;/strong&gt;，粘贴 &lt;code&gt;gh-pages&lt;/code&gt; 内容, name 必须为 &lt;code&gt;ACTIONS_DEPLOY_KEY&lt;/code&gt;
-&lt;img src="https://cdn.jsdelivr.net/gh/peaceiris/actions-gh-pages/images/secrets-1.jpg"
-loading="lazy"
-&gt;&lt;/li&gt;
+&lt;img loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="https://cdn.jsdelivr.net/gh/peaceiris/actions-gh-pages/images/secrets-1.jpg"&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;设置完成后，向 source 分支提交代码，会自动生成静态页面发布到 master 分支。
 效果类似
-&lt;img src="https://cdn.jsdelivr.net/gh/peaceiris/actions-gh-pages/images/log_overview.jpg"
-loading="lazy"
-&gt;&lt;/p&gt;
+&lt;img loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="https://cdn.jsdelivr.net/gh/peaceiris/actions-gh-pages/images/log_overview.jpg"&gt;&lt;/p&gt;
 &lt;h2 id="参考资料"&gt;参考资料
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://tianhui.xin/blog/2019/11/17/hugousegithubactionstopages/" target="_blank" rel="noopener"
-&gt;https://tianhui.xin/blog/2019/11/17/hugousegithubactionstopages/&lt;/a&gt;&lt;/li&gt;
+ &gt;https://tianhui.xin/blog/2019/11/17/hugousegithubactionstopages/&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/peaceiris/actions-hugo" target="_blank" rel="noopener"
-&gt;https://github.com/peaceiris/actions-hugo&lt;/a&gt;&lt;/li&gt;
+ &gt;https://github.com/peaceiris/actions-hugo&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-deploy_key" target="_blank" rel="noopener"
-&gt;https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-deploy_key&lt;/a&gt;&lt;/li&gt;
+ &gt;https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-deploy_key&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>

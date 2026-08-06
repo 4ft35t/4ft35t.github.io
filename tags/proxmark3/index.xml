@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Proxmark3 on 4ft35t blog</title><link>https://4ft35t.github.io/tags/proxmark3/</link><description>Recent content in Proxmark3 on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 04 Jun 2020 19:21:59 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/proxmark3/index.xml" rel="self" type="application/rss+xml"/><item><title>Promark3 使用 冰人（iceman）固件</title><link>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</link><pubDate>Thu, 04 Jun 2020 19:21:59 +0800</pubDate><guid>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</guid><description>&lt;p&gt;淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 &lt;code&gt;Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error&lt;/code&gt;。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Proxmark3 on 4ft35t blog</title><link>https://4ft35t.github.io/tags/proxmark3/</link><description>Recent content in Proxmark3 on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 04 Jun 2020 19:21:59 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/proxmark3/index.xml" rel="self" type="application/rss+xml"/><item><title>Promark3 使用 冰人（iceman）固件</title><link>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</link><pubDate>Thu, 04 Jun 2020 19:21:59 +0800</pubDate><guid>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</guid><description>&lt;img src="http://img-blog.csdnimg.cn/20200307161927634.jpg" alt="Featured image of post Promark3 使用 冰人（iceman）固件" /&gt;&lt;p&gt;淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 &lt;code&gt;Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;官方固件编译、烧录、使用都没问题，看到冰人的固件有两条命令很心动，把重复工作自动化，节约时间。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;auto&lt;/code&gt; 自动识别卡类型&lt;/li&gt;
@@ -27,17 +27,16 @@
 &lt;p&gt;同时刷 bootimg 和 fullimage&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;./pm3-flash-all&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;bootimg 刷成功，刷 fullimage 出错&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Error: Unexpected reply 0x00fe NACK (expected ACK)
+
+ &lt;blockquote&gt;
+ &lt;p&gt;Error: Unexpected reply 0x00fe NACK (expected ACK)
 Lock Error&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200604192557.png"
-loading="lazy"
-alt="image-20200604192556929"
-&gt;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;p&gt;&lt;img alt="image-20200604192556929" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200604192557.png"&gt;&lt;/p&gt;
 &lt;h2 id="刷预编译固件"&gt;刷预编译固件
 &lt;/h2&gt;&lt;p&gt;在冰人固件的 wiki 中找到 windows 的预编译非 RDV4 版本下载，Generice Proxmark3 devices (non RDV4) [&lt;a class="link" href="https://drive.google.com/open?id=1PI3Xr1mussPBPnYGu4ZjWzGPARK4N7JR" target="_blank" rel="noopener"
-&gt;Precompiled builds for RRG / Iceman repository x64&lt;/a&gt;&lt;/p&gt;
+ &gt;Precompiled builds for RRG / Iceman repository x64&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;提取 fullimage.elf 后，顺利刷入。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
 &lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
@@ -202,20 +201,22 @@ alt="image-20200604192556929"
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;刷完固件后的版本信息&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;[ ARM ]
+
+ &lt;blockquote&gt;
+ &lt;p&gt;[ ARM ]
 bootrom: RRG/Iceman/master/v4.9237-188-gbd5aa92a 2020-06-04 16:05:12
 os: RRG/Iceman/master/v4.9237-188-gbd5aa92a 2020-06-04 21:01:01
 compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;/blockquote&gt;
 &lt;h2 id="参考链接"&gt;参考链接
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;a class="link" href="https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1" target="_blank" rel="noopener"
-&gt;https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;a class="link" href="https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md" target="_blank" rel="noopener"
-&gt;https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>

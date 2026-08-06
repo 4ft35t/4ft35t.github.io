@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 4ft35t blog</title><link>https://4ft35t.github.io/categories/linux/</link><description>Recent content in Linux on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 06 Aug 2026 21:33:38 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Vohive 与 WIFI Calling</title><link>https://4ft35t.github.io/post/vohive/</link><pubDate>Thu, 06 Aug 2026 21:33:38 +0800</pubDate><guid>https://4ft35t.github.io/post/vohive/</guid><description>&lt;p&gt;vohive 是一个使用高通4G/5G芯片，实现WIFI Calling（VoWiFi）功能的工具, 主要用于短信转发，特别是使用 WIFI Calling 收短信。详细功能介绍见 &lt;a class="link" href="https://www.nodeseek.com/post-610499-1" target="_blank" rel="noopener"
-&gt;https://www.nodeseek.com/post-610499-1&lt;/a&gt;。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on 4ft35t blog</title><link>https://4ft35t.github.io/categories/linux/</link><description>Recent content in Linux on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 06 Aug 2026 21:33:38 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Vohive 与 WIFI Calling</title><link>https://4ft35t.github.io/post/vohive/</link><pubDate>Thu, 06 Aug 2026 21:33:38 +0800</pubDate><guid>https://4ft35t.github.io/post/vohive/</guid><description>&lt;img src="https://miro.medium.com/v2/resize:fit:180/format:webp/1*ihirvzvqsu62iOt44hx1lg.jpeg" alt="Featured image of post Vohive 与 WIFI Calling" /&gt;&lt;p&gt;vohive 是一个使用高通4G/5G芯片，实现WIFI Calling（VoWiFi）功能的工具, 主要用于短信转发，特别是使用 WIFI Calling 收短信。详细功能介绍见 &lt;a class="link" href="https://www.nodeseek.com/post-610499-1" target="_blank" rel="noopener"
+ &gt;https://www.nodeseek.com/post-610499-1&lt;/a&gt;。&lt;/p&gt;
 &lt;p&gt;vohive 不开源，只提供二进制文件，支持 Linux 系统。&lt;/p&gt;
 &lt;p&gt;作者已被喷子气跑，删库跑路了，https://github.com/iniwex5/vohive-release。&lt;/p&gt;
 &lt;h2 id="重要提示"&gt;重要提示
 &lt;/h2&gt;&lt;p&gt;&lt;strong&gt;有 WIFI Calling 需求的用 vohive 合适，只有短信转发需求的用 &lt;a class="link" href="https://github.com/chenxuuu/sms_forwarding" target="_blank" rel="noopener"
-&gt;https://github.com/chenxuuu/sms_forwarding&lt;/a&gt; 更便宜更稳定。&lt;/strong&gt;&lt;/p&gt;
+ &gt;https://github.com/chenxuuu/sms_forwarding&lt;/a&gt; 更便宜更稳定。&lt;/strong&gt;&lt;/p&gt;
 &lt;h2 id="支持的硬件"&gt;支持的硬件
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;移远的 EC20 系列模块&lt;/li&gt;
@@ -15,7 +15,7 @@
 &lt;/h3&gt;&lt;p&gt;EC20 系列模块是 vohive 最早支持的硬件, 需要单独购买模块、转接板和天线，目前已不推荐。&lt;/p&gt;
 &lt;p&gt;手头有存货的可以折腾使用，购买不推荐。&lt;/p&gt;
 &lt;p&gt;使用电信网络需要数最新的 R08 版本固件，群内分享的固件已整理放在 &lt;a class="link" href="https://github.com/4ft35t/4ft35t.github.io/releases/tag/ec20-firmware" target="_blank" rel="noopener"
-&gt;https://github.com/4ft35t/4ft35t.github.io/releases/tag/ec20-firmware&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/4ft35t/4ft35t.github.io/releases/tag/ec20-firmware&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id="高通-410-的随身-wifi"&gt;高通 410 的随身 wifi
 &lt;/h3&gt;&lt;p&gt;最便宜的方案，手头有存货的可以折腾使用，购买不推荐，毕竟做工在那里，寿命有限。&lt;/p&gt;
 &lt;p&gt;折腾过程：&lt;/p&gt;
@@ -23,7 +23,7 @@
 &lt;li&gt;MiKo 完整备份&lt;/li&gt;
 &lt;li&gt;切换外置卡槽，具体按板子上的型号去搜索，都有资料&lt;/li&gt;
 &lt;li&gt;使用 &lt;a class="link" href="https://github.com/OpenStick/OpenStick" target="_blank" rel="noopener"
-&gt;https://github.com/OpenStick/OpenStick&lt;/a&gt; 刷 debian，具体操作见项目 wiki&lt;/li&gt;
+ &gt;https://github.com/OpenStick/OpenStick&lt;/a&gt; 刷 debian，具体操作见项目 wiki&lt;/li&gt;
 &lt;li&gt;最重要的一步，恢复 modem 固件。 从第一步的备份中找到 modem.bin 或者 modem.img, 然后使用 fastboot flash modem modem.bin 或者 fastboot flash modem modem.img 恢复。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id="大疆一代-4g-模块"&gt;大疆一代 4g 模块
@@ -58,7 +58,7 @@
 &lt;/h3&gt;&lt;ol&gt;
 &lt;li&gt;&lt;code&gt;sudo mkdir -p /opt/vohive/{config,data,logs}&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;从 &lt;a class="link" href="https://github.com/4ft35t/4ft35t.github.io/releases/tag/vohive" target="_blank" rel="noopener"
-&gt;https://github.com/4ft35t/4ft35t.github.io/releases/tag/vohive&lt;/a&gt; 下载 vohive 二进制文件, 重命名为 vohive, 放到 /opt/vohive 目录下&lt;/li&gt;
+ &gt;https://github.com/4ft35t/4ft35t.github.io/releases/tag/vohive&lt;/a&gt; 下载 vohive 二进制文件, 重命名为 vohive, 放到 /opt/vohive 目录下&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;sudo chmod +x /opt/vohive/vohive&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;sudo echo -e 'server:\n port: 7575\n debug: false\n web:\n username: admin\n password: admin' &amp;gt; /opt/vohive/config/config.yaml&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;启动, 必须使用 root， 否则找不到 4g 模块。&lt;code&gt;sudo /opt/vohive/vohive -c /opt/vohive/config/config.yaml&lt;/code&gt;&lt;/li&gt;
@@ -71,7 +71,7 @@
 &lt;/h3&gt;&lt;p&gt;开启 WIFI Calling 需要运营商支持，同时需要有对应国家的梯子出口，梯子需要支持 UDP 。&lt;/p&gt;
 &lt;p&gt;不建议搞软路由的全局分流，推荐在运行 vohive 的机器上直接开梯子，然后在代理管理-漫游前置代理中添加梯子监听的 socks5 代理，保存后点“国家规则”，把代理绑定到对应的国家。&lt;/p&gt;
 &lt;p&gt;最后去设备管理-对应模块-配置-VoWiFi，开启 VoWiFi-保存，等待几秒，设备状态变为“在线”，就可以使用 WIFI Calling 了。&lt;/p&gt;
-&lt;p&gt;部分运营商会挑 IP 质量，如果出现无法注册的情况，可以尝试给梯子套 cloudflare warp。&lt;/p&gt;</description></item><item><title>群晖 DSM7 上使用古董打印机 HP CP1025</title><link>https://4ft35t.github.io/post/hp-cp1025-set-airprint-on-dsm7-via-docker-cups/</link><pubDate>Thu, 23 Oct 2025 17:29:21 +0800</pubDate><guid>https://4ft35t.github.io/post/hp-cp1025-set-airprint-on-dsm7-via-docker-cups/</guid><description>&lt;p&gt;想在群晖 DSM7.2 上使用 老古董 HP CP1025 打印机, 但群晖自带的打印服务器不支持该打印机驱动, 只能通过 Docker 安装 CUPS 来实现.&lt;/p&gt;
+&lt;p&gt;部分运营商会挑 IP 质量，如果出现无法注册的情况，可以尝试给梯子套 cloudflare warp。&lt;/p&gt;</description></item><item><title>群晖 DSM7 上使用古董打印机 HP CP1025</title><link>https://4ft35t.github.io/post/hp-cp1025-set-airprint-on-dsm7-via-docker-cups/</link><pubDate>Thu, 23 Oct 2025 17:29:21 +0800</pubDate><guid>https://4ft35t.github.io/post/hp-cp1025-set-airprint-on-dsm7-via-docker-cups/</guid><description>&lt;img src="https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c02768865.png" alt="Featured image of post 群晖 DSM7 上使用古董打印机 HP CP1025" /&gt;&lt;p&gt;想在群晖 DSM7.2 上使用 老古董 HP CP1025 打印机, 但群晖自带的打印服务器不支持该打印机驱动, 只能通过 Docker 安装 CUPS 来实现.&lt;/p&gt;
 &lt;p&gt;搜索多篇文章，找到几个 docker 镜像，大部分无法识别 HP CP1025 打印机, 只有 chuckcharlie/cups-avahi-airprint 能找到打印机。&lt;/p&gt;
 &lt;p&gt;文章中提到的几个 docker 镜像:&lt;/p&gt;
 &lt;ul&gt;
@@ -81,7 +81,7 @@
 &lt;/ul&gt;
 &lt;p&gt;chuckcharlie/cups-avahi-airprint 能找到打印机, 但无法打印，提示 &amp;ldquo;Filter failed&amp;rdquo;。&lt;/p&gt;
 &lt;p&gt;一番搜索后，在&lt;a class="link" href="https://forums.raspberrypi.com/viewtopic.php?t=118732" target="_blank" rel="noopener"
-&gt;树莓派论坛&lt;/a&gt;找到了原因， hplip 驱动有问题，需要安装 foo2zjs 开源驱动。&lt;/p&gt;
+ &gt;树莓派论坛&lt;/a&gt;找到了原因， hplip 驱动有问题，需要安装 foo2zjs 开源驱动。&lt;/p&gt;
 &lt;h3 id="玩客云测试"&gt;玩客云测试
 &lt;/h3&gt;&lt;p&gt;为了测试 foo2zjs 驱动是否有效， 打开了另一件吃灰的老古董玩客云, 系统是 armbian, 安装了 openmediavault 4。&lt;/p&gt;
 &lt;p&gt;从 omv-extras 里安装 openmediavault-cups, 然后在 cups web 界面添加打印机, 选择 &amp;ldquo;HP LaserJet Pro CP1025nw Foomatic/foo2zjs-z3 (en)&amp;rdquo; 驱动，成功打印测试页。&lt;/p&gt;
@@ -156,7 +156,7 @@
 &lt;/div&gt;&lt;p&gt;启动容器: &lt;code&gt;cd /volume1/docker/airprint &amp;amp;&amp;amp; sudo docker-compose up -d&lt;/code&gt;&lt;/p&gt;
 &lt;h4 id="安装-foo2zjs-驱动"&gt;安装 foo2zjs 驱动
 &lt;/h4&gt;&lt;p&gt;foo2zjs 官网 &lt;a class="link" href="http://foo2zjs.rkkda.com" target="_blank" rel="noopener"
-&gt;http://foo2zjs.rkkda.com&lt;/a&gt; 已经无法访问，幸好 web.archive.org 上有存档可以下载。
+ &gt;http://foo2zjs.rkkda.com&lt;/a&gt; 已经无法访问，幸好 web.archive.org 上有存档可以下载。
 进入容器: &lt;code&gt; cd /volume1/docker/airprint &amp;amp;&amp;amp; sudo docker-compose exec airprint sh&lt;/code&gt;
 在容器内下载并安装 foo2zjs 驱动。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
@@ -264,21 +264,23 @@
 &lt;h3 id="参考链接"&gt;参考链接
 &lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.bilibili.com/opus/774732308492058647" target="_blank" rel="noopener"
-&gt;记一次群辉dsm6.2.3使用cups实现老款打印机cp1025&lt;/a&gt;&lt;/li&gt;
+ &gt;记一次群辉dsm6.2.3使用cups实现老款打印机cp1025&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://post.smzdm.com/p/ag4p7k7m/" target="_blank" rel="noopener"
-&gt;群晖、威联通NAS实现共享打印机+Airprint隔空打印教程，Docker版CUPS，让NAS变身打印服务器！&lt;/a&gt;&lt;/li&gt;
+ &gt;群晖、威联通NAS实现共享打印机+Airprint隔空打印教程，Docker版CUPS，让NAS变身打印服务器！&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://post.smzdm.com/p/a5xwr0x7/" target="_blank" rel="noopener"
-&gt;通过Docker的cups实现定期打印，防止爱普生墨仓式打印机堵墨&lt;/a&gt;&lt;/li&gt;
+ &gt;通过Docker的cups实现定期打印，防止爱普生墨仓式打印机堵墨&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.bilibili.com/opus/720655857020305463" target="_blank" rel="noopener"
-&gt;群晖dsm7.1 实现老款打印机AirPrint&lt;/a&gt;&lt;/li&gt;
+ &gt;群晖dsm7.1 实现老款打印机AirPrint&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://forums.raspberrypi.com/viewtopic.php?t=118732" target="_blank" rel="noopener"
-&gt;CP1025 printer&lt;/a&gt;&lt;/li&gt;
+ &gt;CP1025 printer&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://blog.zhoujie218.top/archives/2540.html" target="_blank" rel="noopener"
-&gt;DOCKER安装CUPS容器实现无线打印（支持大部分ARM设备&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>群晖 NAS 上运行 PaddleOCR</title><link>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</link><pubDate>Thu, 21 Apr 2022 19:22:21 +0800</pubDate><guid>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</guid><description>&lt;p&gt;本文的起因是 Manjaro 的 python 版本升级到 3.10 后，PaddleOCR 无法运行。尝试用 pyenv 安装 3.9.10 版 python 后，执行命令 &lt;code&gt;paddleocr&lt;/code&gt; 报错&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;ImportError: /opt/github/ocr/venv3910/lib/python3.9/site-packages/paddle/fluid/core_avx.so: undefined symbol: _dl_sym, version GLIBC_PRIVATE&lt;/p&gt;
-&lt;/blockquote&gt;
+ &gt;DOCKER安装CUPS容器实现无线打印（支持大部分ARM设备&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>群晖 NAS 上运行 PaddleOCR</title><link>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</link><pubDate>Thu, 21 Apr 2022 19:22:21 +0800</pubDate><guid>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</guid><description>&lt;img src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.6/doc/PaddleOCR_log.png" alt="Featured image of post 群晖 NAS 上运行 PaddleOCR" /&gt;&lt;p&gt;本文的起因是 Manjaro 的 python 版本升级到 3.10 后，PaddleOCR 无法运行。尝试用 pyenv 安装 3.9.10 版 python 后，执行命令 &lt;code&gt;paddleocr&lt;/code&gt; 报错&lt;/p&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;ImportError: /opt/github/ocr/venv3910/lib/python3.9/site-packages/paddle/fluid/core_avx.so: undefined symbol: _dl_sym, version GLIBC_PRIVATE&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;这个报错，在 PaddleOCR 官方的 github 仓库 issue 有人发过, ubuntu 20.10 上遇到此报错，https://github.com/PaddlePaddle/Paddle/issues/36801 。&lt;/p&gt;
 &lt;p&gt;只能把 PaddleOCR 放在 Docker 运行了。不过官方镜像的体积高达 11G，我只需要 OCR 功能，不做样本训练，应该有很大的精简空间。&lt;/p&gt;
 &lt;p&gt;此前在 VPS 上的 ubuntu 20.04 里用过 PaddleOCR，故选择 ubuntu 20.04 做基础镜像。群晖 NAS 上有多个 Docker 服务，PaddleOCR 同样丢群晖跑。&lt;/p&gt;
@@ -341,14 +343,16 @@
 &lt;h3 id="modulenotfounderror-no-module-named-paddlefluidcore_noavx"&gt;ModuleNotFoundError: No module named &amp;lsquo;paddle.fluid.core_noavx&amp;rsquo;
 &lt;/h3&gt;&lt;p&gt;群晖的 CPU 太古老了，不支持 AVX(Advanced Vector Extensions) 指令集, 需要 noavx 的预编译包。
 在这个 issue &lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
-&gt;https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a&gt; 中找到线索，官方的预先编译 whl 列表 &lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
-&gt;https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a&gt; 中找到线索，官方的预先编译 whl 列表 &lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
+ &gt;https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;cpu-mkl-noavx&lt;/code&gt; 版本的预编译 whl 只有 python 3.8 的，正好和 ubuntu 20.04 的 python 版本一致。&lt;/p&gt;
 &lt;p&gt;下载地址&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;a class="link" href="https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl" target="_blank" rel="noopener"
-&gt;https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&lt;a class="link" href="https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl" target="_blank" rel="noopener"
+ &gt;https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl&lt;/a&gt;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;当前版本已是 2.2.2, 把连接中 2.2.1 全部替换成 2.2.2&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
 &lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
@@ -505,41 +509,41 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;Dockerfile 及其它文件在 Github Repo &lt;a class="link" href="https://github.com/4ft35t/Paddleocr-docker" target="_blank" rel="noopener"
-&gt;https://github.com/4ft35t/Paddleocr-docker&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/4ft35t/Paddleocr-docker&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Docker Hub 地址 &lt;a class="link" href="https://hub.docker.com/r/c403/paddleocr" target="_blank" rel="noopener"
-&gt;https://hub.docker.com/r/c403/paddleocr&lt;/a&gt;&lt;/p&gt;
+ &gt;https://hub.docker.com/r/c403/paddleocr&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;最后吐槽一下，PaddleOCR 的文档太混乱了, 很多内容在 issues 里，不在文档。&lt;/p&gt;
 &lt;h2 id="参考链接"&gt;参考链接
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
-&gt;https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a&gt;&lt;/li&gt;
+ &gt;https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
-&gt;https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a&gt;&lt;/li&gt;
+ &gt;https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://blog.csdn.net/Max_ZhangJF/article/details/108920050" target="_blank" rel="noopener"
-&gt;https://blog.csdn.net/Max_ZhangJF/article/details/108920050&lt;/a&gt;&lt;/li&gt;
+ &gt;https://blog.csdn.net/Max_ZhangJF/article/details/108920050&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/1735" target="_blank" rel="noopener"
-&gt;https://github.com/PaddlePaddle/PaddleOCR/issues/1735&lt;/a&gt;&lt;/li&gt;
+ &gt;https://github.com/PaddlePaddle/PaddleOCR/issues/1735&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o" target="_blank" rel="noopener"
-&gt;https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o&lt;/a&gt;&lt;/li&gt;
+ &gt;https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/explosion/spaCy/issues/1110" target="_blank" rel="noopener"
-&gt;https://github.com/explosion/spaCy/issues/1110&lt;/a&gt;&lt;/li&gt;
+ &gt;https://github.com/explosion/spaCy/issues/1110&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai" target="_blank" rel="noopener"
-&gt;https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;p&gt;Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p&gt;
+ &gt;https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;img src="https://oss-cn-hangzhou.aliyuncs.com/codingsky/cdn/img/2019-07-25/dc29fbcc14b8c4acce61ba33a7f2af63.jpg" alt="Featured image of post 利用 Pixel 一代的无限存储备份 NAS 照片" /&gt;&lt;p&gt;Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p&gt;
 &lt;h2 id="tldr"&gt;TLDR
 &lt;/h2&gt;&lt;h3 id="手机端设置"&gt;手机端设置
 &lt;/h3&gt;&lt;ol&gt;
 &lt;li&gt;Pixel 手机无需 root，安装 &lt;a class="link" href="https://play.google.com/store/apps/details?id=pl.solidexplorer2" target="_blank" rel="noopener"
-&gt;Solid Explorer&lt;/a&gt;, 开启 FTP 服务。FTP 默认端口 9999, 默认目录 /sdcard/Download/。&lt;/li&gt;
+ &gt;Solid Explorer&lt;/a&gt;, 开启 FTP 服务。FTP 默认端口 9999, 默认目录 /sdcard/Download/。&lt;/li&gt;
 &lt;li&gt;在 FTP 目录放一张图片（使用 Solid Explorer 复制、浏览器从网上下载、FTP 上传均可），Google Photos 会询问是否备份此目录，选备份。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id="nas-设置"&gt;NAS 设置
 &lt;/h3&gt;&lt;p&gt;群晖自带的 curl 不支持 FTP，需要下载一个静态编译开启 FTP 支持的 curl。可以在 &lt;a class="link" href="https://github.com/moparisthebest/static-curl/releases" target="_blank" rel="noopener"
-&gt;https://github.com/moparisthebest/static-curl/releases&lt;/a&gt; 下载。&lt;/p&gt;
+ &gt;https://github.com/moparisthebest/static-curl/releases&lt;/a&gt; 下载。&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;下载 curl 并重命名成 &lt;strong&gt;curl-amd64&lt;/strong&gt;, 并执行 &lt;code&gt;chmod +x curl-amd64&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;下载上传脚本&lt;a class="link" href="https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5" target="_blank" rel="noopener"
-&gt;https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5&lt;/a&gt;, 和 curl-amd64 一起放到家目录。&lt;/li&gt;
+ &gt;https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5&lt;/a&gt;, 和 curl-amd64 一起放到家目录。&lt;/li&gt;
 &lt;li&gt;修改 photo-upload.sh 中配置&lt;/li&gt;
 &lt;/ol&gt;
 &lt;ul&gt;
@@ -560,11 +564,11 @@
 &lt;/h2&gt;&lt;h3 id="环境准备"&gt;环境准备
 &lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk" target="_blank" rel="noopener"
-&gt;https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk&lt;/a&gt;&lt;/li&gt;
+ &gt;https://github.com/Ericwyn/Auto.js/releases/download/V4.1.1.Alpha2/autoJs-V4.1.1.Alpha2-common-armeabi-v7a-debug.apk&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://raw.githubusercontent.com/4ft35t/utils/master/autojs/utils.js" target="_blank" rel="noopener"
-&gt;https://raw.githubusercontent.com/4ft35t/utils/master/autojs/utils.js&lt;/a&gt;&lt;/li&gt;
+ &gt;https://raw.githubusercontent.com/4ft35t/utils/master/autojs/utils.js&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js" target="_blank" rel="noopener"
-&gt;https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js&lt;/a&gt;&lt;/li&gt;
+ &gt;https://gist.github.com/4ft35t/8024c8815a115ec134dd15965ed47fc5#file-google-photo-free-up-space-js&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id="操作步骤"&gt;操作步骤
 &lt;/h3&gt;&lt;ol&gt;
@@ -667,16 +671,16 @@
 &lt;h2 id="参考链接"&gt;参考链接
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;&lt;a class="link" href="https://support.google.com/photos/answer/6220791" target="_blank" rel="noopener"
-&gt;Choose the upload size of your photos &amp;amp; videos&lt;/a&gt;&lt;/li&gt;
+ &gt;Choose the upload size of your photos &amp;amp; videos&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.reddit.com/r/GooglePixel/comments/l9m6nk/how_to_use_og_pixel_as_an_unlimited_google_photos/" target="_blank" rel="noopener"
-&gt;How to use OG Pixel as an unlimited Google Photos uploader&lt;/a&gt;&lt;/li&gt;
+ &gt;How to use OG Pixel as an unlimited Google Photos uploader&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://repaynt.com/2021/02/original-pixel-unlimited-google-photos-uploader/" target="_blank" rel="noopener"
-&gt;Original Pixel Phone – The Unlimited Google Photos Uploader&lt;/a&gt;&lt;/li&gt;
+ &gt;Original Pixel Phone – The Unlimited Google Photos Uploader&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://rclone.org/sftp/" target="_blank" rel="noopener"
-&gt;rclone SFTP configuration&lt;/a&gt;&lt;/li&gt;
+ &gt;rclone SFTP configuration&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://pmiku.com/note/mount-cifs-in-android.html" target="_blank" rel="noopener"
-&gt;mount-cifs-in-android&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</description></item><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;p&gt;一个小脚本，&lt;code&gt;[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code&gt;,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p&gt;
+ &gt;mount-cifs-in-android&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description></item><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;img src="https://pic1.zhimg.com/v2-6101b6f0fb5664fd5f959332faefb38f_1440w.jpg" alt="Featured image of post bash 条件退出踩坑" /&gt;&lt;p&gt;一个小脚本，&lt;code&gt;[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code&gt;,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p&gt;
 &lt;h3 id="排查"&gt;排查
 &lt;/h3&gt;&lt;p&gt;这个写法以前在脚本里经常写，稳定运行未出错。对比之前的脚本后发现差异，之前的脚本 exit 是提前退出，后面还有内容；这个脚本exit是上层调用脚本反馈最终结果，exit 是最后一行。&lt;/p&gt;
 &lt;p&gt;修改脚本后一切正常&lt;/p&gt;

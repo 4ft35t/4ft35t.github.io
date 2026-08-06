@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Mess on 4ft35t blog</title><link>https://4ft35t.github.io/categories/mess/</link><description>Recent content in Mess on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 18 Sep 2022 11:13:39 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/categories/mess/index.xml" rel="self" type="application/rss+xml"/><item><title>Kodi 设置调整笔记</title><link>https://4ft35t.github.io/post/kodi-note/</link><pubDate>Sun, 18 Sep 2022 11:13:39 +0800</pubDate><guid>https://4ft35t.github.io/post/kodi-note/</guid><description>&lt;p&gt;Kodi是由XBMC基金会开发的开源媒体播放器，原名XBMC，Kodi可以运行在多种操作系统和硬件平台。Kodi支持硬件解码，可以在硬件的很便宜的、低功耗的系统上播放高清视频&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Mess on 4ft35t blog</title><link>https://4ft35t.github.io/categories/mess/</link><description>Recent content in Mess on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 18 Sep 2022 11:13:39 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/categories/mess/index.xml" rel="self" type="application/rss+xml"/><item><title>Kodi 设置调整笔记</title><link>https://4ft35t.github.io/post/kodi-note/</link><pubDate>Sun, 18 Sep 2022 11:13:39 +0800</pubDate><guid>https://4ft35t.github.io/post/kodi-note/</guid><description>&lt;img src="https://kodi.tv/images/kodi-logo-with-text.svg" alt="Featured image of post Kodi 设置调整笔记" /&gt;&lt;p&gt;Kodi是由XBMC基金会开发的开源媒体播放器，原名XBMC，Kodi可以运行在多种操作系统和硬件平台。Kodi支持硬件解码，可以在硬件的很便宜的、低功耗的系统上播放高清视频&lt;/p&gt;
 &lt;h2 id="字幕移动到视频外黑框"&gt;字幕移动到视频外黑框
 &lt;/h2&gt;&lt;p&gt;电视分辨率一般16:9, 比如1920x1080, 遇到比例不一致的视频，会填充黑框。&lt;/p&gt;
 &lt;p&gt;Kodi 默认字幕显示在视频内底部， 播放1918x802美剧时，视频上下有黑边，字幕在视频内底部。把字幕位置移动到黑框内，可以获得更好体验。&lt;/p&gt;
@@ -11,12 +11,12 @@
 &lt;h2 id="参考链接"&gt;参考链接
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.hao4k.cn/thread-24008-1-1.html" target="_blank" rel="noopener"
-&gt;请问有谁知道哪个版本的kodi能设置字幕的显示位置？（已自解决，方法在7楼）&lt;/a&gt;&lt;/li&gt;
+ &gt;请问有谁知道哪个版本的kodi能设置字幕的显示位置？（已自解决，方法在7楼）&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://kodi.wiki/view/Settings/Player/Language#Subtitles" target="_blank" rel="noopener"
-&gt;Settings/Player/Language&lt;/a&gt;&lt;/li&gt;
+ &gt;Settings/Player/Language&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/RuralHunter/CoreELEC/issues/84" target="_blank" rel="noopener"
-&gt;[BUG] 19.x 会自动唤醒电视 #84&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>PD/QC 电源转 DC 头输出</title><link>https://4ft35t.github.io/post/pd-qc-dc/</link><pubDate>Mon, 13 Jul 2020 14:35:25 +0800</pubDate><guid>https://4ft35t.github.io/post/pd-qc-dc/</guid><description>&lt;p&gt;最初了解到 PD 电源 type-c 输出转 DC 圆头输出，是在 twitter 上，当时作者说从淘宝买了 PD 诱骗器，可以用 PD 头给 NUC 供电，省了 NUC 自带电源占的空间。&lt;/p&gt;
+ &gt;[BUG] 19.x 会自动唤醒电视 #84&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>PD/QC 电源转 DC 头输出</title><link>https://4ft35t.github.io/post/pd-qc-dc/</link><pubDate>Mon, 13 Jul 2020 14:35:25 +0800</pubDate><guid>https://4ft35t.github.io/post/pd-qc-dc/</guid><description>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2015.10.09.png" alt="Featured image of post PD/QC 电源转 DC 头输出" /&gt;&lt;p&gt;最初了解到 PD 电源 type-c 输出转 DC 圆头输出，是在 twitter 上，当时作者说从淘宝买了 PD 诱骗器，可以用 PD 头给 NUC 供电，省了 NUC 自带电源占的空间。&lt;/p&gt;
 &lt;p&gt;PD 和 QC 是两种电源快充协议，一般 PD 充电头都支持 QC 协议，反之则不行；与之相对应的，PD 充电头的价格要比 QC 贵很多。&lt;/p&gt;
 &lt;p&gt;我也量了一下笔记本充电头的外径 4mm，然后在淘宝看到的参数有两种：&lt;/p&gt;
 &lt;ul&gt;
@@ -26,9 +26,7 @@
 &lt;p&gt;第一次看到这个星号，&lt;del&gt;&lt;strong&gt;想当然以为是直径乘以长度&lt;/strong&gt;&lt;/del&gt;，买了 4.0*1.35 就踩坑了。&lt;/p&gt;
 &lt;h3 id="dc-头尺寸表示方法"&gt;DC 头尺寸表示方法
 &lt;/h3&gt;&lt;p&gt;DC 头是家里小电器常用的供电插头，通常是圆的，中心是空的。光猫、路由器、笔记本电脑、台灯等都在用这种接头。DC 头供电比 USB 稳固、可靠、耐用。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2015.10.09.png"
-loading="lazy"
-&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2015.10.09.png"&gt;&lt;/p&gt;
 &lt;p&gt;DC 圆头用两组数字来定义一个头的大小，&lt;strong&gt;外直径&lt;/strong&gt;和&lt;strong&gt;内直径&lt;/strong&gt;。&lt;/p&gt;
 &lt;p&gt;一个外直径 5.5mm，内直径 2.1mm 的 DC 头，在淘宝上不同店家有两种写法：&lt;/p&gt;
 &lt;ul&gt;
@@ -39,20 +37,16 @@ loading="lazy"
 &lt;h3 id="pd-诱骗头"&gt;PD 诱骗头
 &lt;/h3&gt;&lt;p&gt;淘宝上的 PD 诱骗器头一般输出电压是 18.5v ~ 20v，笔记本电脑电源输出电压一般在 19v 左右。使用 PD 诱骗头，完美用 PD 头给笔记本电脑和 Surface Pro供电，节约不少桌面空间。&lt;/p&gt;
 &lt;p&gt;使用 PD 充电器头+PD 诱骗器给笔记本供电和原装电源体积对比&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/mmexport1594626877412.jpg"
-loading="lazy"
-&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/mmexport1594626877412.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;PD 诱骗器头的另一侧一般是 type-c 头，使用一根双头 type-c 的线连接 PD&lt;/p&gt;
 &lt;p&gt;电源和诱骗器。&lt;/p&gt;
 &lt;h3 id="qc-诱骗线升压线"&gt;QC 诱骗线／升压线
 &lt;/h3&gt;&lt;p&gt;PD 诱骗器可以解决 19v 左右供电问题，别的小电器用的 DC 头一般是 9V 或者 12v，这就需要另外找一种可以诱骗出 9v 或者 12v 电压的诱骗器。在群里提问后得到关键字“升压线”。后换成“qc 诱骗线”后结果更多。&lt;/p&gt;
 &lt;p&gt;用 12v 的 QC 诱骗线给 SmrtClean 超声波清洗机供电，同样节约很多桌面空间。&lt;/p&gt;
 &lt;p&gt;QC 诱骗线的另一侧是 USB 插头。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2016.08.32.png"
-loading="lazy"
-&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2016.08.32.png"&gt;&lt;/p&gt;
 &lt;h3 id="趣事"&gt;趣事
-&lt;/h3&gt;&lt;p&gt;家里有个硕方的标签打印机，自带电源是 9v 2.5a，直接插笔记本诱骗器的 19v 供电居然可以正常工作。&lt;/p&gt;</description></item><item><title>Promark3 使用 冰人（iceman）固件</title><link>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</link><pubDate>Thu, 04 Jun 2020 19:21:59 +0800</pubDate><guid>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</guid><description>&lt;p&gt;淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 &lt;code&gt;Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error&lt;/code&gt;。&lt;/p&gt;
+&lt;/h3&gt;&lt;p&gt;家里有个硕方的标签打印机，自带电源是 9v 2.5a，直接插笔记本诱骗器的 19v 供电居然可以正常工作。&lt;/p&gt;</description></item><item><title>Promark3 使用 冰人（iceman）固件</title><link>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</link><pubDate>Thu, 04 Jun 2020 19:21:59 +0800</pubDate><guid>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</guid><description>&lt;img src="http://img-blog.csdnimg.cn/20200307161927634.jpg" alt="Featured image of post Promark3 使用 冰人（iceman）固件" /&gt;&lt;p&gt;淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 &lt;code&gt;Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;官方固件编译、烧录、使用都没问题，看到冰人的固件有两条命令很心动，把重复工作自动化，节约时间。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;auto&lt;/code&gt; 自动识别卡类型&lt;/li&gt;
@@ -81,17 +75,16 @@ loading="lazy"
 &lt;p&gt;同时刷 bootimg 和 fullimage&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;./pm3-flash-all&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;bootimg 刷成功，刷 fullimage 出错&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Error: Unexpected reply 0x00fe NACK (expected ACK)
+
+ &lt;blockquote&gt;
+ &lt;p&gt;Error: Unexpected reply 0x00fe NACK (expected ACK)
 Lock Error&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200604192557.png"
-loading="lazy"
-alt="image-20200604192556929"
-&gt;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;p&gt;&lt;img alt="image-20200604192556929" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/20200604192557.png"&gt;&lt;/p&gt;
 &lt;h2 id="刷预编译固件"&gt;刷预编译固件
 &lt;/h2&gt;&lt;p&gt;在冰人固件的 wiki 中找到 windows 的预编译非 RDV4 版本下载，Generice Proxmark3 devices (non RDV4) [&lt;a class="link" href="https://drive.google.com/open?id=1PI3Xr1mussPBPnYGu4ZjWzGPARK4N7JR" target="_blank" rel="noopener"
-&gt;Precompiled builds for RRG / Iceman repository x64&lt;/a&gt;&lt;/p&gt;
+ &gt;Precompiled builds for RRG / Iceman repository x64&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;提取 fullimage.elf 后，顺利刷入。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
 &lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
@@ -256,20 +249,22 @@ alt="image-20200604192556929"
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;刷完固件后的版本信息&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;[ ARM ]
+
+ &lt;blockquote&gt;
+ &lt;p&gt;[ ARM ]
 bootrom: RRG/Iceman/master/v4.9237-188-gbd5aa92a 2020-06-04 16:05:12
 os: RRG/Iceman/master/v4.9237-188-gbd5aa92a 2020-06-04 21:01:01
 compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;/blockquote&gt;
 &lt;h2 id="参考链接"&gt;参考链接
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;a class="link" href="https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1" target="_blank" rel="noopener"
-&gt;https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Installation_Instructions/Windows-Installation-Instructions.md#compile-and-use-the-project-1&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;a class="link" href="https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md" target="_blank" rel="noopener"
-&gt;https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>

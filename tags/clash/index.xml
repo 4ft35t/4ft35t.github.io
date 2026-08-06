@@ -1,24 +1,24 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Clash on 4ft35t blog</title><link>https://4ft35t.github.io/tags/clash/</link><description>Recent content in Clash on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 25 Jun 2022 11:14:47 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/clash/index.xml" rel="self" type="application/rss+xml"/><item><title>使用机场加速自建代理</title><link>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</link><pubDate>Sat, 25 Jun 2022 11:14:47 +0800</pubDate><guid>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</guid><description>&lt;p&gt;自建代理与机场比较&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Clash on 4ft35t blog</title><link>https://4ft35t.github.io/tags/clash/</link><description>Recent content in Clash on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 25 Jun 2022 11:14:47 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/clash/index.xml" rel="self" type="application/rss+xml"/><item><title>使用机场加速自建代理</title><link>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</link><pubDate>Sat, 25 Jun 2022 11:14:47 +0800</pubDate><guid>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</guid><description>&lt;img src="https://raw.githubusercontent.com/Dreamacro/clash/master/docs/logo.png" alt="Featured image of post 使用机场加速自建代理" /&gt;&lt;p&gt;自建代理与机场比较&lt;/p&gt;
 &lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;&lt;/th&gt;
-&lt;th&gt;自建代理&lt;/th&gt;
-&lt;th&gt;机场&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;速度&lt;/td&gt;
-&lt;td&gt;慢&lt;/td&gt;
-&lt;td&gt;快&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;安全性&lt;/td&gt;
-&lt;td&gt;高&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;&lt;/th&gt;
+					&lt;th&gt;自建代理&lt;/th&gt;
+					&lt;th&gt;机场&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;速度&lt;/td&gt;
+					&lt;td&gt;慢&lt;/td&gt;
+					&lt;td&gt;快&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;安全性&lt;/td&gt;
+					&lt;td&gt;高&lt;/td&gt;
+					&lt;td&gt;无&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;有没有兼顾安全性和速度的方案？&lt;/p&gt;
 &lt;h2 id="最终方案"&gt;最终方案
@@ -88,14 +88,16 @@
 &lt;/ol&gt;
 &lt;h3 id="clash-简介"&gt;Clash 简介
 &lt;/h3&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/Dreamacro/clash" target="_blank" rel="noopener"
-&gt;Clash&lt;/a&gt;是一款用 Go 开发的多平台的代理工具，使用强大的策略组来管理节点;可以自动选择节点，不同的网站，在同一时间，可以使用不同的节点去访问。&lt;/p&gt;
+ &gt;Clash&lt;/a&gt;是一款用 Go 开发的多平台的代理工具，使用强大的策略组来管理节点;可以自动选择节点，不同的网站，在同一时间，可以使用不同的节点去访问。&lt;/p&gt;
 &lt;p&gt;我们用 Clash 强大的策略组功能来套娃。&lt;/p&gt;
 &lt;p&gt;官方文档有示例 &lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
-&gt;https://github.com/Dreamacro/clash/wiki/configuration&lt;/a&gt;&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;relay chains the proxies. proxies shall not contain a relay. No UDP support.
+ &gt;https://github.com/Dreamacro/clash/wiki/configuration&lt;/a&gt;&lt;/p&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;relay chains the proxies. proxies shall not contain a relay. No UDP support.
 Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; ss1 &amp;lt;-&amp;gt; ss2 &amp;lt;-&amp;gt; Internet&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;/blockquote&gt;
 &lt;h3 id="配置文件"&gt;配置文件
 &lt;/h3&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
 &lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
@@ -318,11 +320,11 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;h2 id="参考链接"&gt;参考链接
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://wanchuan.top/e9430b8345c049f8afce602db5f5f773" target="_blank" rel="noopener"
-&gt;使用Clash工具科学上网&lt;/a&gt;&lt;/li&gt;
+ &gt;使用Clash工具科学上网&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
-&gt;clash 官方配置文档&lt;/a&gt;&lt;/li&gt;
+ &gt;clash 官方配置文档&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://guide.v2fly.org/app/tproxy.html#%E9%85%8D%E7%BD%AE%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E8%A7%84%E5%88%99" target="_blank" rel="noopener"
-&gt;v2ay 配置透明代理规则&lt;/a&gt;&lt;/li&gt;
+ &gt;v2ay 配置透明代理规则&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="http://openwrt-dist.sourceforge.net/" target="_blank" rel="noopener"
-&gt;aa65535 维护的 shadowsocks for openwrt&lt;/a&gt;&lt;/li&gt;
+ &gt;aa65535 维护的 shadowsocks for openwrt&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>

@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ocr on 4ft35t blog</title><link>https://4ft35t.github.io/tags/ocr/</link><description>Recent content in Ocr on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 21 Apr 2022 19:22:21 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/ocr/index.xml" rel="self" type="application/rss+xml"/><item><title>群晖 NAS 上运行 PaddleOCR</title><link>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</link><pubDate>Thu, 21 Apr 2022 19:22:21 +0800</pubDate><guid>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</guid><description>&lt;p&gt;本文的起因是 Manjaro 的 python 版本升级到 3.10 后，PaddleOCR 无法运行。尝试用 pyenv 安装 3.9.10 版 python 后，执行命令 &lt;code&gt;paddleocr&lt;/code&gt; 报错&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;ImportError: /opt/github/ocr/venv3910/lib/python3.9/site-packages/paddle/fluid/core_avx.so: undefined symbol: _dl_sym, version GLIBC_PRIVATE&lt;/p&gt;
-&lt;/blockquote&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ocr on 4ft35t blog</title><link>https://4ft35t.github.io/tags/ocr/</link><description>Recent content in Ocr on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 21 Apr 2022 19:22:21 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/ocr/index.xml" rel="self" type="application/rss+xml"/><item><title>群晖 NAS 上运行 PaddleOCR</title><link>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</link><pubDate>Thu, 21 Apr 2022 19:22:21 +0800</pubDate><guid>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</guid><description>&lt;img src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.6/doc/PaddleOCR_log.png" alt="Featured image of post 群晖 NAS 上运行 PaddleOCR" /&gt;&lt;p&gt;本文的起因是 Manjaro 的 python 版本升级到 3.10 后，PaddleOCR 无法运行。尝试用 pyenv 安装 3.9.10 版 python 后，执行命令 &lt;code&gt;paddleocr&lt;/code&gt; 报错&lt;/p&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;ImportError: /opt/github/ocr/venv3910/lib/python3.9/site-packages/paddle/fluid/core_avx.so: undefined symbol: _dl_sym, version GLIBC_PRIVATE&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;这个报错，在 PaddleOCR 官方的 github 仓库 issue 有人发过, ubuntu 20.10 上遇到此报错，https://github.com/PaddlePaddle/Paddle/issues/36801 。&lt;/p&gt;
 &lt;p&gt;只能把 PaddleOCR 放在 Docker 运行了。不过官方镜像的体积高达 11G，我只需要 OCR 功能，不做样本训练，应该有很大的精简空间。&lt;/p&gt;
 &lt;p&gt;此前在 VPS 上的 ubuntu 20.04 里用过 PaddleOCR，故选择 ubuntu 20.04 做基础镜像。群晖 NAS 上有多个 Docker 服务，PaddleOCR 同样丢群晖跑。&lt;/p&gt;
@@ -64,14 +66,16 @@
 &lt;h3 id="modulenotfounderror-no-module-named-paddlefluidcore_noavx"&gt;ModuleNotFoundError: No module named &amp;lsquo;paddle.fluid.core_noavx&amp;rsquo;
 &lt;/h3&gt;&lt;p&gt;群晖的 CPU 太古老了，不支持 AVX(Advanced Vector Extensions) 指令集, 需要 noavx 的预编译包。
 在这个 issue &lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
-&gt;https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a&gt; 中找到线索，官方的预先编译 whl 列表 &lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
-&gt;https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a&gt; 中找到线索，官方的预先编译 whl 列表 &lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
+ &gt;https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;cpu-mkl-noavx&lt;/code&gt; 版本的预编译 whl 只有 python 3.8 的，正好和 ubuntu 20.04 的 python 版本一致。&lt;/p&gt;
 &lt;p&gt;下载地址&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;a class="link" href="https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl" target="_blank" rel="noopener"
-&gt;https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&lt;a class="link" href="https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl" target="_blank" rel="noopener"
+ &gt;https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl&lt;/a&gt;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;当前版本已是 2.2.2, 把连接中 2.2.1 全部替换成 2.2.2&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
 &lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
@@ -228,24 +232,24 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;Dockerfile 及其它文件在 Github Repo &lt;a class="link" href="https://github.com/4ft35t/Paddleocr-docker" target="_blank" rel="noopener"
-&gt;https://github.com/4ft35t/Paddleocr-docker&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/4ft35t/Paddleocr-docker&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Docker Hub 地址 &lt;a class="link" href="https://hub.docker.com/r/c403/paddleocr" target="_blank" rel="noopener"
-&gt;https://hub.docker.com/r/c403/paddleocr&lt;/a&gt;&lt;/p&gt;
+ &gt;https://hub.docker.com/r/c403/paddleocr&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;最后吐槽一下，PaddleOCR 的文档太混乱了, 很多内容在 issues 里，不在文档。&lt;/p&gt;
 &lt;h2 id="参考链接"&gt;参考链接
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
-&gt;https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a&gt;&lt;/li&gt;
+ &gt;https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
-&gt;https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a&gt;&lt;/li&gt;
+ &gt;https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://blog.csdn.net/Max_ZhangJF/article/details/108920050" target="_blank" rel="noopener"
-&gt;https://blog.csdn.net/Max_ZhangJF/article/details/108920050&lt;/a&gt;&lt;/li&gt;
+ &gt;https://blog.csdn.net/Max_ZhangJF/article/details/108920050&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/1735" target="_blank" rel="noopener"
-&gt;https://github.com/PaddlePaddle/PaddleOCR/issues/1735&lt;/a&gt;&lt;/li&gt;
+ &gt;https://github.com/PaddlePaddle/PaddleOCR/issues/1735&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o" target="_blank" rel="noopener"
-&gt;https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o&lt;/a&gt;&lt;/li&gt;
+ &gt;https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/explosion/spaCy/issues/1110" target="_blank" rel="noopener"
-&gt;https://github.com/explosion/spaCy/issues/1110&lt;/a&gt;&lt;/li&gt;
+ &gt;https://github.com/explosion/spaCy/issues/1110&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai" target="_blank" rel="noopener"
-&gt;https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai&lt;/a&gt;&lt;/li&gt;
+ &gt;https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on 4ft35t blog</title><link>https://4ft35t.github.io/tags/docker/</link><description>Recent content in Docker on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 23 Oct 2025 17:29:21 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>群晖 DSM7 上使用古董打印机 HP CP1025</title><link>https://4ft35t.github.io/post/hp-cp1025-set-airprint-on-dsm7-via-docker-cups/</link><pubDate>Thu, 23 Oct 2025 17:29:21 +0800</pubDate><guid>https://4ft35t.github.io/post/hp-cp1025-set-airprint-on-dsm7-via-docker-cups/</guid><description>&lt;p&gt;想在群晖 DSM7.2 上使用 老古董 HP CP1025 打印机, 但群晖自带的打印服务器不支持该打印机驱动, 只能通过 Docker 安装 CUPS 来实现.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Docker on 4ft35t blog</title><link>https://4ft35t.github.io/tags/docker/</link><description>Recent content in Docker on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 23 Oct 2025 17:29:21 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml"/><item><title>群晖 DSM7 上使用古董打印机 HP CP1025</title><link>https://4ft35t.github.io/post/hp-cp1025-set-airprint-on-dsm7-via-docker-cups/</link><pubDate>Thu, 23 Oct 2025 17:29:21 +0800</pubDate><guid>https://4ft35t.github.io/post/hp-cp1025-set-airprint-on-dsm7-via-docker-cups/</guid><description>&lt;img src="https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c02768865.png" alt="Featured image of post 群晖 DSM7 上使用古董打印机 HP CP1025" /&gt;&lt;p&gt;想在群晖 DSM7.2 上使用 老古董 HP CP1025 打印机, 但群晖自带的打印服务器不支持该打印机驱动, 只能通过 Docker 安装 CUPS 来实现.&lt;/p&gt;
 &lt;p&gt;搜索多篇文章，找到几个 docker 镜像，大部分无法识别 HP CP1025 打印机, 只有 chuckcharlie/cups-avahi-airprint 能找到打印机。&lt;/p&gt;
 &lt;p&gt;文章中提到的几个 docker 镜像:&lt;/p&gt;
 &lt;ul&gt;
@@ -8,7 +8,7 @@
 &lt;/ul&gt;
 &lt;p&gt;chuckcharlie/cups-avahi-airprint 能找到打印机, 但无法打印，提示 &amp;ldquo;Filter failed&amp;rdquo;。&lt;/p&gt;
 &lt;p&gt;一番搜索后，在&lt;a class="link" href="https://forums.raspberrypi.com/viewtopic.php?t=118732" target="_blank" rel="noopener"
-&gt;树莓派论坛&lt;/a&gt;找到了原因， hplip 驱动有问题，需要安装 foo2zjs 开源驱动。&lt;/p&gt;
+ &gt;树莓派论坛&lt;/a&gt;找到了原因， hplip 驱动有问题，需要安装 foo2zjs 开源驱动。&lt;/p&gt;
 &lt;h3 id="玩客云测试"&gt;玩客云测试
 &lt;/h3&gt;&lt;p&gt;为了测试 foo2zjs 驱动是否有效， 打开了另一件吃灰的老古董玩客云, 系统是 armbian, 安装了 openmediavault 4。&lt;/p&gt;
 &lt;p&gt;从 omv-extras 里安装 openmediavault-cups, 然后在 cups web 界面添加打印机, 选择 &amp;ldquo;HP LaserJet Pro CP1025nw Foomatic/foo2zjs-z3 (en)&amp;rdquo; 驱动，成功打印测试页。&lt;/p&gt;
@@ -83,7 +83,7 @@
 &lt;/div&gt;&lt;p&gt;启动容器: &lt;code&gt;cd /volume1/docker/airprint &amp;amp;&amp;amp; sudo docker-compose up -d&lt;/code&gt;&lt;/p&gt;
 &lt;h4 id="安装-foo2zjs-驱动"&gt;安装 foo2zjs 驱动
 &lt;/h4&gt;&lt;p&gt;foo2zjs 官网 &lt;a class="link" href="http://foo2zjs.rkkda.com" target="_blank" rel="noopener"
-&gt;http://foo2zjs.rkkda.com&lt;/a&gt; 已经无法访问，幸好 web.archive.org 上有存档可以下载。
+ &gt;http://foo2zjs.rkkda.com&lt;/a&gt; 已经无法访问，幸好 web.archive.org 上有存档可以下载。
 进入容器: &lt;code&gt; cd /volume1/docker/airprint &amp;amp;&amp;amp; sudo docker-compose exec airprint sh&lt;/code&gt;
 在容器内下载并安装 foo2zjs 驱动。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
@@ -191,17 +191,17 @@
 &lt;h3 id="参考链接"&gt;参考链接
 &lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.bilibili.com/opus/774732308492058647" target="_blank" rel="noopener"
-&gt;记一次群辉dsm6.2.3使用cups实现老款打印机cp1025&lt;/a&gt;&lt;/li&gt;
+ &gt;记一次群辉dsm6.2.3使用cups实现老款打印机cp1025&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://post.smzdm.com/p/ag4p7k7m/" target="_blank" rel="noopener"
-&gt;群晖、威联通NAS实现共享打印机+Airprint隔空打印教程，Docker版CUPS，让NAS变身打印服务器！&lt;/a&gt;&lt;/li&gt;
+ &gt;群晖、威联通NAS实现共享打印机+Airprint隔空打印教程，Docker版CUPS，让NAS变身打印服务器！&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://post.smzdm.com/p/a5xwr0x7/" target="_blank" rel="noopener"
-&gt;通过Docker的cups实现定期打印，防止爱普生墨仓式打印机堵墨&lt;/a&gt;&lt;/li&gt;
+ &gt;通过Docker的cups实现定期打印，防止爱普生墨仓式打印机堵墨&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.bilibili.com/opus/720655857020305463" target="_blank" rel="noopener"
-&gt;群晖dsm7.1 实现老款打印机AirPrint&lt;/a&gt;&lt;/li&gt;
+ &gt;群晖dsm7.1 实现老款打印机AirPrint&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://forums.raspberrypi.com/viewtopic.php?t=118732" target="_blank" rel="noopener"
-&gt;CP1025 printer&lt;/a&gt;&lt;/li&gt;
+ &gt;CP1025 printer&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://blog.zhoujie218.top/archives/2540.html" target="_blank" rel="noopener"
-&gt;DOCKER安装CUPS容器实现无线打印（支持大部分ARM设备&lt;/a&gt;&lt;/li&gt;
+ &gt;DOCKER安装CUPS容器实现无线打印（支持大部分ARM设备&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description></item><item><title>群晖使用 A1 订阅版 Onedrive</title><link>https://4ft35t.github.io/post/use-office365-a1-onedrive-in-synology/</link><pubDate>Tue, 19 Mar 2024 11:22:46 +0800</pubDate><guid>https://4ft35t.github.io/post/use-office365-a1-onedrive-in-synology/</guid><description>&lt;p&gt;教育版 A1 订阅的 Onedrive 可以用 rclone 以 webdav 方式挂载。 但这不是标准的 webdav 协议，无法在群晖中使用。&lt;/p&gt;
 &lt;p&gt;群晖的 Cloud Sync 支持同步 Microsoft OneDrive for Business 和 Microsoft SharePoint，但是这个帐号使用 edu 邮箱自己注册的，没有管理员，登陆后报错&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
@@ -215,36 +215,36 @@
 &lt;/div&gt;&lt;h2 id="实现方案"&gt;实现方案
 &lt;/h2&gt;&lt;h3 id="skleeschultebasic-to-sharepoint-auth-http-proxy-方案"&gt;skleeschulte/basic-to-sharepoint-auth-http-proxy 方案
 &lt;/h3&gt;&lt;p&gt;使用 &lt;a class="link" href="https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy" target="_blank" rel="noopener"
-&gt;https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy&lt;/a&gt; 中转请求，最终以 webdav 协议使用。&lt;/p&gt;
+ &gt;https://github.com/skleeschulte/basic-to-sharepoint-auth-http-proxy&lt;/a&gt; 中转请求，最终以 webdav 协议使用。&lt;/p&gt;
 &lt;h3 id="rclone-方案"&gt;rclone 方案
 &lt;/h3&gt;&lt;p&gt;rclone 也是转为 webdav 服务&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;rclone serve webdav remote:path [flags]&lt;/code&gt;&lt;/p&gt;
 &lt;h3 id="方案效果对比"&gt;方案效果对比
 &lt;/h3&gt;&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;应用程序&lt;/th&gt;
-&lt;th&gt;basic-to-sharepoint-auth-http-proxy&lt;/th&gt;
-&lt;th&gt;rclone&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;File Station&lt;/td&gt;
-&lt;td&gt;N&lt;/td&gt;
-&lt;td&gt;Y&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Cloud Sync&lt;/td&gt;
-&lt;td&gt;Y&lt;/td&gt;
-&lt;td&gt;Y&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Hyper Backup&lt;/td&gt;
-&lt;td&gt;Y&lt;/td&gt;
-&lt;td&gt;Y&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;应用程序&lt;/th&gt;
+					&lt;th&gt;basic-to-sharepoint-auth-http-proxy&lt;/th&gt;
+					&lt;th&gt;rclone&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;File Station&lt;/td&gt;
+					&lt;td&gt;N&lt;/td&gt;
+					&lt;td&gt;Y&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Cloud Sync&lt;/td&gt;
+					&lt;td&gt;Y&lt;/td&gt;
+					&lt;td&gt;Y&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Hyper Backup&lt;/td&gt;
+					&lt;td&gt;Y&lt;/td&gt;
+					&lt;td&gt;Y&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;对比后 rclone 方案有明显优势:&lt;/p&gt;
 &lt;ol&gt;
@@ -310,21 +310,23 @@
 &lt;/div&gt;&lt;h2 id="参考链接"&gt;参考链接
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://blog.edmond.work/2023/02/19/dsm-hyper-backup-onedrive-%E5%82%99%E4%BB%BD%E6%95%99%E5%AD%B8/" target="_blank" rel="noopener"
-&gt;DSM Hyper Backup OneDrive 備份教學&lt;/a&gt;&lt;/li&gt;
+ &gt;DSM Hyper Backup OneDrive 備份教學&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://hostloc.com/thread-785905-1-1.html" target="_blank" rel="noopener"
-&gt;使群晖 CloudSync 支持同步世纪互联 OneDrive&lt;/a&gt;&lt;/li&gt;
+ &gt;使群晖 CloudSync 支持同步世纪互联 OneDrive&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://tongjunsz.gitee.io/2020/10/29/%E9%80%9A%E8%BF%87Synology%E7%9A%84Hyper-Backup%E5%A4%87%E4%BB%BD%E5%88%B0Microsoft-OneDrive-for-Business-SharePoint/" target="_blank" rel="noopener"
-&gt;通过synology的hyper backup备份到microsoft onedrive for business（sharepoint)&lt;/a&gt;&lt;/li&gt;
+ &gt;通过synology的hyper backup备份到microsoft onedrive for business（sharepoint)&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://blog.ty-wu.com/posts/synohyperbksharepoint/" target="_blank" rel="noopener"
-&gt;Synology Hyper Backup 備份到 OneDrive&lt;/a&gt;&lt;/li&gt;
+ &gt;Synology Hyper Backup 備份到 OneDrive&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://rclone.org/webdav/" target="_blank" rel="noopener"
-&gt; WebDAV&lt;/a&gt;&lt;/li&gt;
+ &gt; WebDAV&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://rclone.org/commands/rclone_serve_webdav/" target="_blank" rel="noopener"
-&gt;rclone serve webdav&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>群晖 NAS 上运行 PaddleOCR</title><link>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</link><pubDate>Thu, 21 Apr 2022 19:22:21 +0800</pubDate><guid>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</guid><description>&lt;p&gt;本文的起因是 Manjaro 的 python 版本升级到 3.10 后，PaddleOCR 无法运行。尝试用 pyenv 安装 3.9.10 版 python 后，执行命令 &lt;code&gt;paddleocr&lt;/code&gt; 报错&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;ImportError: /opt/github/ocr/venv3910/lib/python3.9/site-packages/paddle/fluid/core_avx.so: undefined symbol: _dl_sym, version GLIBC_PRIVATE&lt;/p&gt;
-&lt;/blockquote&gt;
+ &gt;rclone serve webdav&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>群晖 NAS 上运行 PaddleOCR</title><link>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</link><pubDate>Thu, 21 Apr 2022 19:22:21 +0800</pubDate><guid>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</guid><description>&lt;img src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.6/doc/PaddleOCR_log.png" alt="Featured image of post 群晖 NAS 上运行 PaddleOCR" /&gt;&lt;p&gt;本文的起因是 Manjaro 的 python 版本升级到 3.10 后，PaddleOCR 无法运行。尝试用 pyenv 安装 3.9.10 版 python 后，执行命令 &lt;code&gt;paddleocr&lt;/code&gt; 报错&lt;/p&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;ImportError: /opt/github/ocr/venv3910/lib/python3.9/site-packages/paddle/fluid/core_avx.so: undefined symbol: _dl_sym, version GLIBC_PRIVATE&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;这个报错，在 PaddleOCR 官方的 github 仓库 issue 有人发过, ubuntu 20.10 上遇到此报错，https://github.com/PaddlePaddle/Paddle/issues/36801 。&lt;/p&gt;
 &lt;p&gt;只能把 PaddleOCR 放在 Docker 运行了。不过官方镜像的体积高达 11G，我只需要 OCR 功能，不做样本训练，应该有很大的精简空间。&lt;/p&gt;
 &lt;p&gt;此前在 VPS 上的 ubuntu 20.04 里用过 PaddleOCR，故选择 ubuntu 20.04 做基础镜像。群晖 NAS 上有多个 Docker 服务，PaddleOCR 同样丢群晖跑。&lt;/p&gt;
@@ -387,14 +389,16 @@
 &lt;h3 id="modulenotfounderror-no-module-named-paddlefluidcore_noavx"&gt;ModuleNotFoundError: No module named &amp;lsquo;paddle.fluid.core_noavx&amp;rsquo;
 &lt;/h3&gt;&lt;p&gt;群晖的 CPU 太古老了，不支持 AVX(Advanced Vector Extensions) 指令集, 需要 noavx 的预编译包。
 在这个 issue &lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
-&gt;https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a&gt; 中找到线索，官方的预先编译 whl 列表 &lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
-&gt;https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a&gt; 中找到线索，官方的预先编译 whl 列表 &lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
+ &gt;https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;cpu-mkl-noavx&lt;/code&gt; 版本的预编译 whl 只有 python 3.8 的，正好和 ubuntu 20.04 的 python 版本一致。&lt;/p&gt;
 &lt;p&gt;下载地址&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;a class="link" href="https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl" target="_blank" rel="noopener"
-&gt;https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&lt;a class="link" href="https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl" target="_blank" rel="noopener"
+ &gt;https://paddle-wheel.bj.bcebos.com/2.2.1/linux/linux-cpu-mkl-noavx/paddlepaddle-2.2.1-cp38-cp38-linux_x86_64.whl&lt;/a&gt;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;当前版本已是 2.2.2, 把连接中 2.2.1 全部替换成 2.2.2&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
 &lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
@@ -551,24 +555,24 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;Dockerfile 及其它文件在 Github Repo &lt;a class="link" href="https://github.com/4ft35t/Paddleocr-docker" target="_blank" rel="noopener"
-&gt;https://github.com/4ft35t/Paddleocr-docker&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/4ft35t/Paddleocr-docker&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Docker Hub 地址 &lt;a class="link" href="https://hub.docker.com/r/c403/paddleocr" target="_blank" rel="noopener"
-&gt;https://hub.docker.com/r/c403/paddleocr&lt;/a&gt;&lt;/p&gt;
+ &gt;https://hub.docker.com/r/c403/paddleocr&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;最后吐槽一下，PaddleOCR 的文档太混乱了, 很多内容在 issues 里，不在文档。&lt;/p&gt;
 &lt;h2 id="参考链接"&gt;参考链接
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/4275" target="_blank" rel="noopener"
-&gt;https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a&gt;&lt;/li&gt;
+ &gt;https://github.com/PaddlePaddle/PaddleOCR/issues/4275&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release" target="_blank" rel="noopener"
-&gt;https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a&gt;&lt;/li&gt;
+ &gt;https://www.paddlepaddle.org.cn/documentation/docs/zh/develop/install/Tables.html#whl-release&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://blog.csdn.net/Max_ZhangJF/article/details/108920050" target="_blank" rel="noopener"
-&gt;https://blog.csdn.net/Max_ZhangJF/article/details/108920050&lt;/a&gt;&lt;/li&gt;
+ &gt;https://blog.csdn.net/Max_ZhangJF/article/details/108920050&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/PaddlePaddle/PaddleOCR/issues/1735" target="_blank" rel="noopener"
-&gt;https://github.com/PaddlePaddle/PaddleOCR/issues/1735&lt;/a&gt;&lt;/li&gt;
+ &gt;https://github.com/PaddlePaddle/PaddleOCR/issues/1735&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o" target="_blank" rel="noopener"
-&gt;https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o&lt;/a&gt;&lt;/li&gt;
+ &gt;https://stackoverflow.com/questions/62786028/importerror-libgthread-2-0-so-0-cannot-open-shared-object-file-no-such-file-o&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/explosion/spaCy/issues/1110" target="_blank" rel="noopener"
-&gt;https://github.com/explosion/spaCy/issues/1110&lt;/a&gt;&lt;/li&gt;
+ &gt;https://github.com/explosion/spaCy/issues/1110&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai" target="_blank" rel="noopener"
-&gt;https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai&lt;/a&gt;&lt;/li&gt;
+ &gt;https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>

@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>WIFI Calling on 4ft35t blog</title><link>https://4ft35t.github.io/tags/wifi-calling/</link><description>Recent content in WIFI Calling on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 06 Aug 2026 21:33:38 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/wifi-calling/index.xml" rel="self" type="application/rss+xml"/><item><title>Vohive 与 WIFI Calling</title><link>https://4ft35t.github.io/post/vohive/</link><pubDate>Thu, 06 Aug 2026 21:33:38 +0800</pubDate><guid>https://4ft35t.github.io/post/vohive/</guid><description>&lt;p&gt;vohive 是一个使用高通4G/5G芯片，实现WIFI Calling（VoWiFi）功能的工具, 主要用于短信转发，特别是使用 WIFI Calling 收短信。详细功能介绍见 &lt;a class="link" href="https://www.nodeseek.com/post-610499-1" target="_blank" rel="noopener"
-&gt;https://www.nodeseek.com/post-610499-1&lt;/a&gt;。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>WIFI Calling on 4ft35t blog</title><link>https://4ft35t.github.io/tags/wifi-calling/</link><description>Recent content in WIFI Calling on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 06 Aug 2026 21:33:38 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/wifi-calling/index.xml" rel="self" type="application/rss+xml"/><item><title>Vohive 与 WIFI Calling</title><link>https://4ft35t.github.io/post/vohive/</link><pubDate>Thu, 06 Aug 2026 21:33:38 +0800</pubDate><guid>https://4ft35t.github.io/post/vohive/</guid><description>&lt;img src="https://miro.medium.com/v2/resize:fit:180/format:webp/1*ihirvzvqsu62iOt44hx1lg.jpeg" alt="Featured image of post Vohive 与 WIFI Calling" /&gt;&lt;p&gt;vohive 是一个使用高通4G/5G芯片，实现WIFI Calling（VoWiFi）功能的工具, 主要用于短信转发，特别是使用 WIFI Calling 收短信。详细功能介绍见 &lt;a class="link" href="https://www.nodeseek.com/post-610499-1" target="_blank" rel="noopener"
+ &gt;https://www.nodeseek.com/post-610499-1&lt;/a&gt;。&lt;/p&gt;
 &lt;p&gt;vohive 不开源，只提供二进制文件，支持 Linux 系统。&lt;/p&gt;
 &lt;p&gt;作者已被喷子气跑，删库跑路了，https://github.com/iniwex5/vohive-release。&lt;/p&gt;
 &lt;h2 id="重要提示"&gt;重要提示
 &lt;/h2&gt;&lt;p&gt;&lt;strong&gt;有 WIFI Calling 需求的用 vohive 合适，只有短信转发需求的用 &lt;a class="link" href="https://github.com/chenxuuu/sms_forwarding" target="_blank" rel="noopener"
-&gt;https://github.com/chenxuuu/sms_forwarding&lt;/a&gt; 更便宜更稳定。&lt;/strong&gt;&lt;/p&gt;
+ &gt;https://github.com/chenxuuu/sms_forwarding&lt;/a&gt; 更便宜更稳定。&lt;/strong&gt;&lt;/p&gt;
 &lt;h2 id="支持的硬件"&gt;支持的硬件
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;移远的 EC20 系列模块&lt;/li&gt;
@@ -15,7 +15,7 @@
 &lt;/h3&gt;&lt;p&gt;EC20 系列模块是 vohive 最早支持的硬件, 需要单独购买模块、转接板和天线，目前已不推荐。&lt;/p&gt;
 &lt;p&gt;手头有存货的可以折腾使用，购买不推荐。&lt;/p&gt;
 &lt;p&gt;使用电信网络需要数最新的 R08 版本固件，群内分享的固件已整理放在 &lt;a class="link" href="https://github.com/4ft35t/4ft35t.github.io/releases/tag/ec20-firmware" target="_blank" rel="noopener"
-&gt;https://github.com/4ft35t/4ft35t.github.io/releases/tag/ec20-firmware&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/4ft35t/4ft35t.github.io/releases/tag/ec20-firmware&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id="高通-410-的随身-wifi"&gt;高通 410 的随身 wifi
 &lt;/h3&gt;&lt;p&gt;最便宜的方案，手头有存货的可以折腾使用，购买不推荐，毕竟做工在那里，寿命有限。&lt;/p&gt;
 &lt;p&gt;折腾过程：&lt;/p&gt;
@@ -23,7 +23,7 @@
 &lt;li&gt;MiKo 完整备份&lt;/li&gt;
 &lt;li&gt;切换外置卡槽，具体按板子上的型号去搜索，都有资料&lt;/li&gt;
 &lt;li&gt;使用 &lt;a class="link" href="https://github.com/OpenStick/OpenStick" target="_blank" rel="noopener"
-&gt;https://github.com/OpenStick/OpenStick&lt;/a&gt; 刷 debian，具体操作见项目 wiki&lt;/li&gt;
+ &gt;https://github.com/OpenStick/OpenStick&lt;/a&gt; 刷 debian，具体操作见项目 wiki&lt;/li&gt;
 &lt;li&gt;最重要的一步，恢复 modem 固件。 从第一步的备份中找到 modem.bin 或者 modem.img, 然后使用 fastboot flash modem modem.bin 或者 fastboot flash modem modem.img 恢复。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id="大疆一代-4g-模块"&gt;大疆一代 4g 模块
@@ -58,7 +58,7 @@
 &lt;/h3&gt;&lt;ol&gt;
 &lt;li&gt;&lt;code&gt;sudo mkdir -p /opt/vohive/{config,data,logs}&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;从 &lt;a class="link" href="https://github.com/4ft35t/4ft35t.github.io/releases/tag/vohive" target="_blank" rel="noopener"
-&gt;https://github.com/4ft35t/4ft35t.github.io/releases/tag/vohive&lt;/a&gt; 下载 vohive 二进制文件, 重命名为 vohive, 放到 /opt/vohive 目录下&lt;/li&gt;
+ &gt;https://github.com/4ft35t/4ft35t.github.io/releases/tag/vohive&lt;/a&gt; 下载 vohive 二进制文件, 重命名为 vohive, 放到 /opt/vohive 目录下&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;sudo chmod +x /opt/vohive/vohive&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;sudo echo -e 'server:\n port: 7575\n debug: false\n web:\n username: admin\n password: admin' &amp;gt; /opt/vohive/config/config.yaml&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;启动, 必须使用 root， 否则找不到 4g 模块。&lt;code&gt;sudo /opt/vohive/vohive -c /opt/vohive/config/config.yaml&lt;/code&gt;&lt;/li&gt;

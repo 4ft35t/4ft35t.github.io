@@ -1,24 +1,24 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Proxy on 4ft35t blog</title><link>https://4ft35t.github.io/tags/proxy/</link><description>Recent content in Proxy on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 25 Jun 2022 11:14:47 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/proxy/index.xml" rel="self" type="application/rss+xml"/><item><title>使用机场加速自建代理</title><link>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</link><pubDate>Sat, 25 Jun 2022 11:14:47 +0800</pubDate><guid>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</guid><description>&lt;p&gt;自建代理与机场比较&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Proxy on 4ft35t blog</title><link>https://4ft35t.github.io/tags/proxy/</link><description>Recent content in Proxy on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sat, 25 Jun 2022 11:14:47 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/proxy/index.xml" rel="self" type="application/rss+xml"/><item><title>使用机场加速自建代理</title><link>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</link><pubDate>Sat, 25 Jun 2022 11:14:47 +0800</pubDate><guid>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</guid><description>&lt;img src="https://raw.githubusercontent.com/Dreamacro/clash/master/docs/logo.png" alt="Featured image of post 使用机场加速自建代理" /&gt;&lt;p&gt;自建代理与机场比较&lt;/p&gt;
 &lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;&lt;/th&gt;
-&lt;th&gt;自建代理&lt;/th&gt;
-&lt;th&gt;机场&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;速度&lt;/td&gt;
-&lt;td&gt;慢&lt;/td&gt;
-&lt;td&gt;快&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;安全性&lt;/td&gt;
-&lt;td&gt;高&lt;/td&gt;
-&lt;td&gt;无&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;&lt;/th&gt;
+					&lt;th&gt;自建代理&lt;/th&gt;
+					&lt;th&gt;机场&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;速度&lt;/td&gt;
+					&lt;td&gt;慢&lt;/td&gt;
+					&lt;td&gt;快&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;安全性&lt;/td&gt;
+					&lt;td&gt;高&lt;/td&gt;
+					&lt;td&gt;无&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;有没有兼顾安全性和速度的方案？&lt;/p&gt;
 &lt;h2 id="最终方案"&gt;最终方案
@@ -88,14 +88,16 @@
 &lt;/ol&gt;
 &lt;h3 id="clash-简介"&gt;Clash 简介
 &lt;/h3&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/Dreamacro/clash" target="_blank" rel="noopener"
-&gt;Clash&lt;/a&gt;是一款用 Go 开发的多平台的代理工具，使用强大的策略组来管理节点;可以自动选择节点，不同的网站，在同一时间，可以使用不同的节点去访问。&lt;/p&gt;
+ &gt;Clash&lt;/a&gt;是一款用 Go 开发的多平台的代理工具，使用强大的策略组来管理节点;可以自动选择节点，不同的网站，在同一时间，可以使用不同的节点去访问。&lt;/p&gt;
 &lt;p&gt;我们用 Clash 强大的策略组功能来套娃。&lt;/p&gt;
 &lt;p&gt;官方文档有示例 &lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
-&gt;https://github.com/Dreamacro/clash/wiki/configuration&lt;/a&gt;&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;relay chains the proxies. proxies shall not contain a relay. No UDP support.
+ &gt;https://github.com/Dreamacro/clash/wiki/configuration&lt;/a&gt;&lt;/p&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;relay chains the proxies. proxies shall not contain a relay. No UDP support.
 Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; ss1 &amp;lt;-&amp;gt; ss2 &amp;lt;-&amp;gt; Internet&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;/blockquote&gt;
 &lt;h3 id="配置文件"&gt;配置文件
 &lt;/h3&gt;&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
 &lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
@@ -318,14 +320,14 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;h2 id="参考链接"&gt;参考链接
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://wanchuan.top/e9430b8345c049f8afce602db5f5f773" target="_blank" rel="noopener"
-&gt;使用Clash工具科学上网&lt;/a&gt;&lt;/li&gt;
+ &gt;使用Clash工具科学上网&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/Dreamacro/clash/wiki/configuration" target="_blank" rel="noopener"
-&gt;clash 官方配置文档&lt;/a&gt;&lt;/li&gt;
+ &gt;clash 官方配置文档&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://guide.v2fly.org/app/tproxy.html#%E9%85%8D%E7%BD%AE%E9%80%8F%E6%98%8E%E4%BB%A3%E7%90%86%E8%A7%84%E5%88%99" target="_blank" rel="noopener"
-&gt;v2ay 配置透明代理规则&lt;/a&gt;&lt;/li&gt;
+ &gt;v2ay 配置透明代理规则&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="http://openwrt-dist.sourceforge.net/" target="_blank" rel="noopener"
-&gt;aa65535 维护的 shadowsocks for openwrt&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>SSH 跳板机与代理</title><link>https://4ft35t.github.io/post/ssh-porxy/</link><pubDate>Wed, 03 Jun 2020 16:55:35 +0800</pubDate><guid>https://4ft35t.github.io/post/ssh-porxy/</guid><description>&lt;p&gt;基于各种复杂环境，ssh 无法直接连接目标主机，需要借助中间的跳板机或者代理来连接。通常使用 ssh-agent 来通过跳板机连接目标主机，使用 ProxyCommand 或者 ProxyJump 连接更方便。&lt;/p&gt;
+ &gt;aa65535 维护的 shadowsocks for openwrt&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description></item><item><title>SSH 跳板机与代理</title><link>https://4ft35t.github.io/post/ssh-porxy/</link><pubDate>Wed, 03 Jun 2020 16:55:35 +0800</pubDate><guid>https://4ft35t.github.io/post/ssh-porxy/</guid><description>&lt;img src="https://www.openssh.com/images/openssh.gif" alt="Featured image of post SSH 跳板机与代理" /&gt;&lt;p&gt;基于各种复杂环境，ssh 无法直接连接目标主机，需要借助中间的跳板机或者代理来连接。通常使用 ssh-agent 来通过跳板机连接目标主机，使用 ProxyCommand 或者 ProxyJump 连接更方便。&lt;/p&gt;
 &lt;h3 id="跳板机"&gt;跳板机
 &lt;/h3&gt;&lt;p&gt;在　&lt;code&gt;~/.ssh/config&lt;/code&gt; 中给跳板机一个方便记忆的别名，比如　jumpserver&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
@@ -412,7 +414,7 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;a class="link" href="https://github.com/larryhou/connect-proxy" target="_blank" rel="noopener"
-&gt;https://github.com/larryhou/connect-proxy&lt;/a&gt; &lt;code&gt;ProxyCommand connect-proxy -S 127.0.0.1:1080 %h %p&lt;/code&gt;&lt;/p&gt;
+ &gt;https://github.com/larryhou/connect-proxy&lt;/a&gt; &lt;code&gt;ProxyCommand connect-proxy -S 127.0.0.1:1080 %h %p&lt;/code&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h4 id="httphttps-代理"&gt;HTTP/HTTPS 代理
@@ -422,14 +424,14 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;a class="link" href="https://github.com/bryanpkc/corkscrew" target="_blank" rel="noopener"
-&gt;https://github.com/bryanpkc/corkscrew&lt;/a&gt; &lt;code&gt;ProxyCommand /usr/local/bin/corkscrew 1.2.3.4 3128 %h %p&lt;/code&gt;&lt;/p&gt;
+ &gt;https://github.com/bryanpkc/corkscrew&lt;/a&gt; &lt;code&gt;ProxyCommand /usr/local/bin/corkscrew 1.2.3.4 3128 %h %p&lt;/code&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;strong&gt;corkscrew 在代理不稳定时比 nc 可靠&lt;/strong&gt;&lt;/p&gt;
 &lt;h3 id="特别注意"&gt;特别注意
 &lt;/h3&gt;&lt;p&gt;本文提到的 nc 是 &lt;strong&gt;BSD 版本的 netcat&lt;/strong&gt;， GNU 版本的 natcat 没有代理功能。&lt;/p&gt;
 &lt;p&gt;更多 netcat 版本见 &lt;a class="link" href="https://wiki.archlinux.org/title/Network_tools#Netcat" target="_blank" rel="noopener"
-&gt;https://wiki.archlinux.org/title/Network_tools#Netcat&lt;/a&gt;&lt;/p&gt;
+ &gt;https://wiki.archlinux.org/title/Network_tools#Netcat&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id="使用-socat-突破某些堡垒机"&gt;使用 socat 突破某些堡垒机
 &lt;/h3&gt;&lt;p&gt;某堡垒机的OpenSSH版本是&lt;code&gt;OpenSSH_7.8p1&lt;/code&gt;, 使用&lt;code&gt;ssh -J jumpserver user@dst-host&lt;/code&gt;无法连接，从报错信息来看，堡垒机禁止了 SSH 转发功能&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
@@ -480,15 +482,15 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &lt;h3 id="参考链接"&gt;参考链接
 &lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts" target="_blank" rel="noopener"
-&gt;https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts&lt;/a&gt;&lt;/li&gt;
+ &gt;https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/" target="_blank" rel="noopener"
-&gt;https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/&lt;/a&gt;&lt;/li&gt;
+ &gt;https://www.cyberciti.biz/faq/linux-unix-ssh-proxycommand-passing-through-one-host-gateway-server/&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.endpointdev.com/blog/2013/04/socat-and-netcat-proxycommand-ssh/" target="_blank" rel="noopener"
-&gt;https://www.endpointdev.com/blog/2013/04/socat-and-netcat-proxycommand-ssh/&lt;/a&gt;&lt;/li&gt;
+ &gt;https://www.endpointdev.com/blog/2013/04/socat-and-netcat-proxycommand-ssh/&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://unix.stackexchange.com/questions/68826/connecting-to-host-by-ssh-client-in-linux-by-proxy" target="_blank" rel="noopener"
-&gt;https://unix.stackexchange.com/questions/68826/connecting-to-host-by-ssh-client-in-linux-by-proxy&lt;/a&gt;&lt;/li&gt;
+ &gt;https://unix.stackexchange.com/questions/68826/connecting-to-host-by-ssh-client-in-linux-by-proxy&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://gitolite.com/git-over-proxy.html" target="_blank" rel="noopener"
-&gt;https://gitolite.com/git-over-proxy.html&lt;/a&gt;&lt;/li&gt;
+ &gt;https://gitolite.com/git-over-proxy.html&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://linux.die.net/man/1/socat" target="_blank" rel="noopener"
-&gt;https://linux.die.net/man/1/socat&lt;/a&gt;&lt;/li&gt;
+ &gt;https://linux.die.net/man/1/socat&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>

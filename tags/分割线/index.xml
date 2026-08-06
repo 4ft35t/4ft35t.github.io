@@ -1,9 +1,6 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>分割线 on 4ft35t blog</title><link>https://4ft35t.github.io/tags/%E5%88%86%E5%89%B2%E7%BA%BF/</link><description>Recent content in 分割线 on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 15 Mar 2023 13:44:24 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/%E5%88%86%E5%89%B2%E7%BA%BF/index.xml" rel="self" type="application/rss+xml"/><item><title>excel 折线图添加竖线</title><link>https://4ft35t.github.io/post/add-vertical-line-excel-chart/</link><pubDate>Wed, 15 Mar 2023 13:44:24 +0800</pubDate><guid>https://4ft35t.github.io/post/add-vertical-line-excel-chart/</guid><description>&lt;h2 id="背景"&gt;背景
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>分割线 on 4ft35t blog</title><link>https://4ft35t.github.io/tags/%E5%88%86%E5%89%B2%E7%BA%BF/</link><description>Recent content in 分割线 on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 15 Mar 2023 13:44:24 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/%E5%88%86%E5%89%B2%E7%BA%BF/index.xml" rel="self" type="application/rss+xml"/><item><title>excel 折线图添加竖线</title><link>https://4ft35t.github.io/post/add-vertical-line-excel-chart/</link><pubDate>Wed, 15 Mar 2023 13:44:24 +0800</pubDate><guid>https://4ft35t.github.io/post/add-vertical-line-excel-chart/</guid><description>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862174.jpg" alt="Featured image of post excel 折线图添加竖线" /&gt;&lt;h2 id="背景"&gt;背景
 &lt;/h2&gt;&lt;p&gt;一般用折线图来表示发展趋势，需要在折线图的某个位置添加竖线，用来强调在这里发生了重要的区分性事件。需要的效果如下图。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862174.jpg"
-loading="lazy"
-alt="chart-vertical-line-ok"
-&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="chart-vertical-line-ok" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862174.jpg"&gt;&lt;/p&gt;
 &lt;h2 id="实现方法"&gt;实现方法
 &lt;/h2&gt;&lt;p&gt;本文是在 MAC 版 Microsoft Office 上的操作，Windows 版操作见下方的参考链接。&lt;/p&gt;
 &lt;h3 id="带直线的散点图"&gt;带直线的散点图
@@ -19,22 +16,22 @@ alt="chart-vertical-line-ok"
 &lt;li&gt;右侧两格分别是0和折线图的最大值，表示竖线的高度范围，无先后顺序&lt;/li&gt;
 &lt;/ul&gt;
 &lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;X&lt;/th&gt;
-&lt;th&gt;Y&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;2023/2/14&lt;/td&gt;
-&lt;td&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;2023/2/14&lt;/td&gt;
-&lt;td&gt;70&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;X&lt;/th&gt;
+					&lt;th&gt;Y&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;2023/2/14&lt;/td&gt;
+					&lt;td&gt;0&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;2023/2/14&lt;/td&gt;
+					&lt;td&gt;70&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h3 id="画分割线"&gt;画分割线
 &lt;/h3&gt;&lt;p&gt;散点图上右键 - 选择数据 - 点“+”&lt;/p&gt;
@@ -45,40 +42,37 @@ alt="chart-vertical-line-ok"
 &lt;p&gt;大功告成。&lt;/p&gt;
 &lt;h3 id="画多条分割线"&gt;画多条分割线
 &lt;/h3&gt;&lt;p&gt;画多条分割线，直接在 X和Y列填写内容即可。但是要注意，&lt;strong&gt;不同分割线的数据之间要空一行，不然分割线会连起来&lt;/strong&gt;，变成下图的样子。&lt;/p&gt;
-&lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862263.jpg"
-loading="lazy"
-alt="chart-vertical-line-bad"
-&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="chart-vertical-line-bad" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862263.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;正确的数据格式&lt;/p&gt;
 &lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;X&lt;/th&gt;
-&lt;th&gt;Y&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;2023/2/14&lt;/td&gt;
-&lt;td&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;2023/2/14&lt;/td&gt;
-&lt;td&gt;70&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt; &lt;/td&gt;
-&lt;td&gt; &lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;2023/2/17&lt;/td&gt;
-&lt;td&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;2023/2/17&lt;/td&gt;
-&lt;td&gt;70&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;X&lt;/th&gt;
+					&lt;th&gt;Y&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;2023/2/14&lt;/td&gt;
+					&lt;td&gt;0&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;2023/2/14&lt;/td&gt;
+					&lt;td&gt;70&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt; &lt;/td&gt;
+					&lt;td&gt; &lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;2023/2/17&lt;/td&gt;
+					&lt;td&gt;0&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;2023/2/17&lt;/td&gt;
+					&lt;td&gt;70&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h3 id="分割线上加文字"&gt;分割线上加文字
 &lt;/h3&gt;&lt;p&gt;任意空白单元格写好文字 - 复制 - 任意空白单元格 - 右键 - 选择性粘贴- 粘贴图片链接 - 把图片拖到分割线合适位置。&lt;/p&gt;
@@ -86,9 +80,9 @@ alt="chart-vertical-line-bad"
 &lt;h2 id="参考链接"&gt;参考链接
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.bilibili.com/video/BV1ex411J7Q1" target="_blank" rel="noopener"
-&gt;Excel折线图美化技巧 在折线图中添加贯通竖线分隔季度数据&lt;/a&gt;&lt;/li&gt;
+ &gt;Excel折线图美化技巧 在折线图中添加贯通竖线分隔季度数据&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.bilibili.com/video/BV1p44y1j7oq" target="_blank" rel="noopener"
-&gt;Excel绘制可以随日期移动垂直于X轴的直线，竖线&lt;/a&gt;&lt;/li&gt;
+ &gt;Excel绘制可以随日期移动垂直于X轴的直线，竖线&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.ablebits.com/office-addins-blog/add-vertical-line-excel-chart/" target="_blank" rel="noopener"
-&gt;How to add vertical line to Excel chart: scatter plot, bar chart and line graph&lt;/a&gt;&lt;/li&gt;
+ &gt;How to add vertical line to Excel chart: scatter plot, bar chart and line graph&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;</description></item></channel></rss>

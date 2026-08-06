@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Adb on 4ft35t blog</title><link>https://4ft35t.github.io/tags/adb/</link><description>Recent content in Adb on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 06 Aug 2021 16:51:31 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/adb/index.xml" rel="self" type="application/rss+xml"/><item><title>Android 远程截图</title><link>https://4ft35t.github.io/post/android-screenshoot-remote/</link><pubDate>Fri, 06 Aug 2021 16:51:31 +0800</pubDate><guid>https://4ft35t.github.io/post/android-screenshoot-remote/</guid><description>&lt;p&gt;某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Adb on 4ft35t blog</title><link>https://4ft35t.github.io/tags/adb/</link><description>Recent content in Adb on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 06 Aug 2021 16:51:31 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/tags/adb/index.xml" rel="self" type="application/rss+xml"/><item><title>Android 远程截图</title><link>https://4ft35t.github.io/post/android-screenshoot-remote/</link><pubDate>Fri, 06 Aug 2021 16:51:31 +0800</pubDate><guid>https://4ft35t.github.io/post/android-screenshoot-remote/</guid><description>&lt;img src="https://img1.mydrivers.com/img/20210226/s_ff489bbf9a884b83a72837c099f23e97.jpg" alt="Featured image of post Android 远程截图" /&gt;&lt;p&gt;某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。&lt;/p&gt;
 &lt;h2 id="背景"&gt;背景
 &lt;/h2&gt;&lt;p&gt;云闪付公交乘车码，每周使用三次可以获得一张 6-5 消费券，但那一个帐号一周只能领一次，需要多个帐号。&lt;/p&gt;
 &lt;p&gt;家里有个老华为手机，上面登录的有老人的云闪付帐号，但是注册帐号的手机号失效，无法更换新手机号，新设备登录需要短信验证码，只有拿这个手机去刷。&lt;/p&gt;
@@ -6,8 +6,8 @@
 &lt;h2 id="截屏"&gt;截屏
 &lt;/h2&gt;&lt;p&gt;系统自带 &lt;code&gt;screencap&lt;/code&gt; 命令，桌面和别的 app 可以截屏，云闪付不行，应该是云闪付设置了&lt;code&gt;FLAG_SECURE&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;&lt;a class="link" href="https://github.com/Genymobile/scrcpy" target="_blank" rel="noopener"
-&gt;scrcpy&lt;/a&gt; 可以显示云闪付内容，猜测 &lt;a class="link" href="https://github.com/Ericwyn/Auto.js" target="_blank" rel="noopener"
-&gt;autojs&lt;/a&gt; 使用 cast 模式也可以截屏，实测确实可以。&lt;/p&gt;
+ &gt;scrcpy&lt;/a&gt; 可以显示云闪付内容，猜测 &lt;a class="link" href="https://github.com/Ericwyn/Auto.js" target="_blank" rel="noopener"
+ &gt;autojs&lt;/a&gt; 使用 cast 模式也可以截屏，实测确实可以。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
 &lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
 &lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
@@ -68,8 +68,8 @@
 &lt;/div&gt;
 &lt;/div&gt;&lt;h2 id="触发"&gt;触发
 &lt;/h2&gt;&lt;p&gt;一开始设想的是 autojs 监听通知，使用 &lt;a class="link" href="https://github.com/Finb/Bark" target="_blank" rel="noopener"
-&gt;Bark&lt;/a&gt; 的安卓客户端 &lt;a class="link" href="https://github.com/xlvecle/PushLite" target="_blank" rel="noopener"
-&gt;PushLite&lt;/a&gt; 来接收通知触发截图，然而 PushLite 需要 Google FCM，安装太折腾，放弃，寻求电脑端触发的方案。&lt;/p&gt;
+ &gt;Bark&lt;/a&gt; 的安卓客户端 &lt;a class="link" href="https://github.com/xlvecle/PushLite" target="_blank" rel="noopener"
+ &gt;PushLite&lt;/a&gt; 来接收通知触发截图，然而 PushLite 需要 Google FCM，安装太折腾，放弃，寻求电脑端触发的方案。&lt;/p&gt;
 &lt;p&gt;一番搜索，决定用 cgi 来接收外部请求并触发截图，各种依赖最少。&lt;/p&gt;
 &lt;p&gt;电脑上连接多个安卓手机，执行 adb 命令需要指定设备 id，设备 id 用 &lt;code&gt;adb devices&lt;/code&gt; 获取&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
@@ -195,8 +195,6 @@
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;浏览器访问 &lt;code&gt;http://127.0.0.1:8000/cgi-bin/yunshanfu.sh&lt;/code&gt;, 即可触发截图，并在当前页面展示截图。&lt;/p&gt;
 &lt;p&gt;设置端口转发，公网访问效果如图
-&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2021/IMG_0317.jpg"
-loading="lazy"
-&gt;&lt;/p&gt;
+&lt;img loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2021/IMG_0317.jpg"&gt;&lt;/p&gt;
 &lt;p&gt;最后，所有相关代码在 &lt;a class="link" href="https://github.com/4ft35t/Android-Screenshoot-Remote" target="_blank" rel="noopener"
-&gt;https://github.com/4ft35t/Android-Screenshoot-Remote&lt;/a&gt;&lt;/p&gt;</description></item></channel></rss>
+ &gt;https://github.com/4ft35t/Android-Screenshoot-Remote&lt;/a&gt;&lt;/p&gt;</description></item></channel></rss>
