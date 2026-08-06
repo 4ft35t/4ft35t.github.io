@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>4ft35t blog</title><link>https://4ft35t.github.io/</link><description>Recent content on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 06 Aug 2026 21:33:38 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Vohive 与 WIFI Calling</title><link>https://4ft35t.github.io/post/vohive/</link><pubDate>Thu, 06 Aug 2026 21:33:38 +0800</pubDate><guid>https://4ft35t.github.io/post/vohive/</guid><description>&lt;img src="https://miro.medium.com/v2/resize:fit:180/format:webp/1*ihirvzvqsu62iOt44hx1lg.jpeg" alt="Featured image of post Vohive 与 WIFI Calling" /&gt;&lt;p&gt;vohive 是一个使用高通4G/5G芯片，实现WIFI Calling（VoWiFi）功能的工具, 主要用于短信转发，特别是使用 WIFI Calling 收短信。详细功能介绍见 &lt;a class="link" href="https://www.nodeseek.com/post-610499-1" target="_blank" rel="noopener"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>4ft35t blog</title><link>https://4ft35t.github.io/</link><description>Recent content on 4ft35t blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 06 Aug 2026 21:33:38 +0800</lastBuildDate><atom:link href="https://4ft35t.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Vohive 与 WIFI Calling</title><link>https://4ft35t.github.io/post/vohive/</link><pubDate>Thu, 06 Aug 2026 21:33:38 +0800</pubDate><guid>https://4ft35t.github.io/post/vohive/</guid><description>&lt;p&gt;vohive 是一个使用高通4G/5G芯片，实现WIFI Calling（VoWiFi）功能的工具, 主要用于短信转发，特别是使用 WIFI Calling 收短信。详细功能介绍见 &lt;a class="link" href="https://www.nodeseek.com/post-610499-1" target="_blank" rel="noopener"
 &gt;https://www.nodeseek.com/post-610499-1&lt;/a&gt;。&lt;/p&gt;
 &lt;p&gt;vohive 不开源，只提供二进制文件，支持 Linux 系统。&lt;/p&gt;
 &lt;p&gt;作者已被喷子气跑，删库跑路了，https://github.com/iniwex5/vohive-release。&lt;/p&gt;
@@ -71,7 +71,7 @@
 &lt;/h3&gt;&lt;p&gt;开启 WIFI Calling 需要运营商支持，同时需要有对应国家的梯子出口，梯子需要支持 UDP 。&lt;/p&gt;
 &lt;p&gt;不建议搞软路由的全局分流，推荐在运行 vohive 的机器上直接开梯子，然后在代理管理-漫游前置代理中添加梯子监听的 socks5 代理，保存后点“国家规则”，把代理绑定到对应的国家。&lt;/p&gt;
 &lt;p&gt;最后去设备管理-对应模块-配置-VoWiFi，开启 VoWiFi-保存，等待几秒，设备状态变为“在线”，就可以使用 WIFI Calling 了。&lt;/p&gt;
-&lt;p&gt;部分运营商会挑 IP 质量，如果出现无法注册的情况，可以尝试给梯子套 cloudflare warp。&lt;/p&gt;</description></item><item><title>群晖 DSM7 上使用古董打印机 HP CP1025</title><link>https://4ft35t.github.io/post/hp-cp1025-set-airprint-on-dsm7-via-docker-cups/</link><pubDate>Thu, 23 Oct 2025 17:29:21 +0800</pubDate><guid>https://4ft35t.github.io/post/hp-cp1025-set-airprint-on-dsm7-via-docker-cups/</guid><description>&lt;img src="https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c02768865.png" alt="Featured image of post 群晖 DSM7 上使用古董打印机 HP CP1025" /&gt;&lt;p&gt;想在群晖 DSM7.2 上使用 老古董 HP CP1025 打印机, 但群晖自带的打印服务器不支持该打印机驱动, 只能通过 Docker 安装 CUPS 来实现.&lt;/p&gt;
+&lt;p&gt;部分运营商会挑 IP 质量，如果出现无法注册的情况，可以尝试给梯子套 cloudflare warp。&lt;/p&gt;</description></item><item><title>群晖 DSM7 上使用古董打印机 HP CP1025</title><link>https://4ft35t.github.io/post/hp-cp1025-set-airprint-on-dsm7-via-docker-cups/</link><pubDate>Thu, 23 Oct 2025 17:29:21 +0800</pubDate><guid>https://4ft35t.github.io/post/hp-cp1025-set-airprint-on-dsm7-via-docker-cups/</guid><description>&lt;p&gt;想在群晖 DSM7.2 上使用 老古董 HP CP1025 打印机, 但群晖自带的打印服务器不支持该打印机驱动, 只能通过 Docker 安装 CUPS 来实现.&lt;/p&gt;
 &lt;p&gt;搜索多篇文章，找到几个 docker 镜像，大部分无法识别 HP CP1025 打印机, 只有 chuckcharlie/cups-avahi-airprint 能找到打印机。&lt;/p&gt;
 &lt;p&gt;文章中提到的几个 docker 镜像:&lt;/p&gt;
 &lt;ul&gt;
@@ -275,7 +275,7 @@
 &gt;CP1025 printer&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://blog.zhoujie218.top/archives/2540.html" target="_blank" rel="noopener"
 &gt;DOCKER安装CUPS容器实现无线打印（支持大部分ARM设备&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>按人的思维方式解开数独</title><link>https://4ft35t.github.io/post/solve-soduku-like-human-without-backtracking/</link><pubDate>Wed, 07 Aug 2024 21:24:32 +0800</pubDate><guid>https://4ft35t.github.io/post/solve-soduku-like-human-without-backtracking/</guid><description>&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Sudoku_Puzzle_by_L2G-20050714_standardized_layout.svg/722px-Sudoku_Puzzle_by_L2G-20050714_standardized_layout.svg.png" alt="Featured image of post 按人的思维方式解开数独" /&gt;&lt;p&gt;数独是一种逻辑游戏，目标是填充一个 9x9 的网格，使得每一行、每一列和每一个 3x3 的子网格中的数字都是 1 到 9。&lt;/p&gt;
+&lt;/ul&gt;</description></item><item><title>按人的思维方式解开数独</title><link>https://4ft35t.github.io/post/solve-soduku-like-human-without-backtracking/</link><pubDate>Wed, 07 Aug 2024 21:24:32 +0800</pubDate><guid>https://4ft35t.github.io/post/solve-soduku-like-human-without-backtracking/</guid><description>&lt;p&gt;数独是一种逻辑游戏，目标是填充一个 9x9 的网格，使得每一行、每一列和每一个 3x3 的子网格中的数字都是 1 到 9。&lt;/p&gt;
 &lt;p&gt;数独的规则非常简单，但是解决数独问题却是一个复杂的任务。在这篇文章中，我们将介绍一种按照人的思维方式解开数独的方法，而不是使用传统的回溯算法。&lt;/p&gt;
 &lt;h2 id="人是如何解开数独的"&gt;人是如何解开数独的
 &lt;/h2&gt;&lt;p&gt;我自己解数独的时候，通常会按照以下步骤进行：&lt;/p&gt;
@@ -532,7 +532,7 @@ loading="lazy"
 &gt; WebDAV&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://rclone.org/commands/rclone_serve_webdav/" target="_blank" rel="noopener"
 &gt;rclone serve webdav&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>如何查找中国大陆地区的邮编</title><link>https://4ft35t.github.io/post/how-to-find-postcode-in-china/</link><pubDate>Mon, 18 Mar 2024 10:26:08 +0800</pubDate><guid>https://4ft35t.github.io/post/how-to-find-postcode-in-china/</guid><description>&lt;img src="https://dey.11185.cn/web/static/img/LOGO.png" alt="Featured image of post 如何查找中国大陆地区的邮编" /&gt;&lt;p&gt;随着通信与快递行业的发展，国内日常生活已经用不到邮政编码（简称邮编）。如果需要接收境外的平信（Giffgaff 的 SIM 卡或者 OCBC token 信）或者挂号信(OCBC 的银行卡), 就需要准确的邮编来让信件投递到片区邮局。&lt;/p&gt;
+&lt;/ul&gt;</description></item><item><title>如何查找中国大陆地区的邮编</title><link>https://4ft35t.github.io/post/how-to-find-postcode-in-china/</link><pubDate>Mon, 18 Mar 2024 10:26:08 +0800</pubDate><guid>https://4ft35t.github.io/post/how-to-find-postcode-in-china/</guid><description>&lt;p&gt;随着通信与快递行业的发展，国内日常生活已经用不到邮政编码（简称邮编）。如果需要接收境外的平信（Giffgaff 的 SIM 卡或者 OCBC token 信）或者挂号信(OCBC 的银行卡), 就需要准确的邮编来让信件投递到片区邮局。&lt;/p&gt;
 &lt;h2 id="邮编查询"&gt;邮编查询
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;访问 &lt;a class="link" href="https://dey.11185.cn/web/#/idtoolkitAddress" target="_blank" rel="noopener"
@@ -551,7 +551,7 @@ loading="lazy"
 &gt;https://dey.11185.cn/web/#/dotquery&lt;/a&gt; 输入小区名字查询。会出现有些新小区查不到的情况，就需要用别的方法&lt;/li&gt;
 &lt;li&gt;让信用卡银行寄一份纸质帐单，银行用挂号信寄出，收到后用编号去 &lt;a class="link" href="https://dey.11185.cn/web/#/waybillNo" target="_blank" rel="noopener"
 &gt;https://dey.11185.cn/web/#/waybillNo&lt;/a&gt; 查询，可以看到配送点名称和邮递员手机号。如果配送点名称找不到，打电话问邮递员。&lt;/li&gt;
-&lt;/ol&gt;</description></item><item><title>中国大陆资料自主激活 Wise</title><link>https://4ft35t.github.io/post/chinese-activate-wise-by-self/</link><pubDate>Sun, 09 Apr 2023 13:39:11 +0800</pubDate><guid>https://4ft35t.github.io/post/chinese-activate-wise-by-self/</guid><description>&lt;img src="https://wise.com/public-resources/assets/icons/wise-personal/share_landscape.png" alt="Featured image of post 中国大陆资料自主激活 Wise" /&gt;&lt;p&gt;Wise.com（原TransferWise）是一家总部位于英国的金融科技公司，成立于2011年。该公司的主要业务是提供跨境汇款服务，以低廉的费用和实时汇率吸引了全球数百万用户。与传统银行不同，Wise.com采用P2P（点对点）技术，直接将汇款的资金汇入接收方的账户，从而避免了传统银行的中间商和高昂的手续费。&lt;/p&gt;
+&lt;/ol&gt;</description></item><item><title>中国大陆资料自主激活 Wise</title><link>https://4ft35t.github.io/post/chinese-activate-wise-by-self/</link><pubDate>Sun, 09 Apr 2023 13:39:11 +0800</pubDate><guid>https://4ft35t.github.io/post/chinese-activate-wise-by-self/</guid><description>&lt;p&gt;Wise.com（原TransferWise）是一家总部位于英国的金融科技公司，成立于2011年。该公司的主要业务是提供跨境汇款服务，以低廉的费用和实时汇率吸引了全球数百万用户。与传统银行不同，Wise.com采用P2P（点对点）技术，直接将汇款的资金汇入接收方的账户，从而避免了传统银行的中间商和高昂的手续费。&lt;/p&gt;
 &lt;p&gt;除了跨境汇款服务，Wise.com 还提供了多种其他金融服务，例如多币种账户、预付卡、汇率换算器等。Wise.com的目标是使跨境金融交易更加便捷和透明，并减少用户支付的费用。该公司已经在全球40多个国家和地区设立了办事处，获得了众多投资者的支持，成为金融科技领域的领军企业之一。&lt;/p&gt;
 &lt;h2 id="tldr"&gt;TLDR
 &lt;/h2&gt;&lt;p&gt;&lt;strong&gt;国内地址激活的 wise 无法申请 wise 卡。&lt;/strong&gt;&lt;/p&gt;
@@ -712,7 +712,7 @@ loading="lazy"
 &gt;https://www.youtube.com/watch?v=nCkdbqbSAxw&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.dukascopy.bank/swiss/fees-limits/?lang=cn#acc-fees" target="_blank" rel="noopener"
 &gt;https://www.dukascopy.bank/swiss/fees-limits/?lang=cn#acc-fees&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>excel 折线图添加竖线</title><link>https://4ft35t.github.io/post/add-vertical-line-excel-chart/</link><pubDate>Wed, 15 Mar 2023 13:44:24 +0800</pubDate><guid>https://4ft35t.github.io/post/add-vertical-line-excel-chart/</guid><description>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862174.jpg" alt="Featured image of post excel 折线图添加竖线" /&gt;&lt;h2 id="背景"&gt;背景
+&lt;/ul&gt;</description></item><item><title>excel 折线图添加竖线</title><link>https://4ft35t.github.io/post/add-vertical-line-excel-chart/</link><pubDate>Wed, 15 Mar 2023 13:44:24 +0800</pubDate><guid>https://4ft35t.github.io/post/add-vertical-line-excel-chart/</guid><description>&lt;h2 id="背景"&gt;背景
 &lt;/h2&gt;&lt;p&gt;一般用折线图来表示发展趋势，需要在折线图的某个位置添加竖线，用来强调在这里发生了重要的区分性事件。需要的效果如下图。&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/2023/03/upgit_20230315_1678862174.jpg"
 loading="lazy"
@@ -805,7 +805,7 @@ alt="chart-vertical-line-bad"
 &gt;Excel绘制可以随日期移动垂直于X轴的直线，竖线&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.ablebits.com/office-addins-blog/add-vertical-line-excel-chart/" target="_blank" rel="noopener"
 &gt;How to add vertical line to Excel chart: scatter plot, bar chart and line graph&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>Ubuntu 20.04 server iptables 持久化</title><link>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</link><pubDate>Fri, 17 Feb 2023 10:36:40 +0800</pubDate><guid>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</guid><description>&lt;img src="https://i.stack.imgur.com/gZm6i.png" alt="Featured image of post Ubuntu 20.04 server iptables 持久化" /&gt;&lt;p&gt;有一批服务器需要做 iptables 持久化，开机自动加载。&lt;/p&gt;
+&lt;/ul&gt;</description></item><item><title>Ubuntu 20.04 server iptables 持久化</title><link>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</link><pubDate>Fri, 17 Feb 2023 10:36:40 +0800</pubDate><guid>https://4ft35t.github.io/post/persistent-iptables-on-ubuntu-20.04-server/</guid><description>&lt;p&gt;有一批服务器需要做 iptables 持久化，开机自动加载。&lt;/p&gt;
 &lt;p&gt;在 Ubuntu 12.04 时代, 可以把加载脚本写到 &lt;code&gt;/etc/rc.local&lt;/code&gt; 开机自动加载，Ubuntu 20.04 要启用 rc.local 太麻烦，用 &lt;code&gt;netfilter-persistent&lt;/code&gt; 来实现自动加载。&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;netfilter-persistent&lt;/code&gt; 加载 &lt;code&gt;ipset-persistent&lt;/code&gt; 和 &lt;code&gt;iptables-persistent&lt;/code&gt; 保存的规则。&lt;/p&gt;
 &lt;h2 id="tldr"&gt;TLDR
@@ -913,7 +913,7 @@ alt="chart-vertical-line-bad"
 &gt;Linux下实现软件的静默安装&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://sleeplessbeastie.eu/2018/09/17/how-to-read-and-insert-new-values-into-the-debconf-database/" target="_blank" rel="noopener"
 &gt;How to read and insert new values into the debconf database&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>低成本 mesh 组网</title><link>https://4ft35t.github.io/post/lowcast-mesh/</link><pubDate>Sun, 04 Dec 2022 17:57:03 +0800</pubDate><guid>https://4ft35t.github.io/post/lowcast-mesh/</guid><description>&lt;img src="https://cdn.unwire.hk/wp-content/uploads/2018/03/999-1.png" alt="Featured image of post 低成本 mesh 组网" /&gt;&lt;p&gt;上一次主动看 mesh 路由，单台成本 2000 左右，最近在什么值得买上看到用网件 6300V2 刷机后组 mesh 的，原理是网件6300V2 和华硕 AC68U 使用相同的硬件，修改 CEF 中相关配置，即可伪装成华硕 AC68U，使用华硕固件和功能。&lt;/p&gt;
+&lt;/ul&gt;</description></item><item><title>低成本 mesh 组网</title><link>https://4ft35t.github.io/post/lowcast-mesh/</link><pubDate>Sun, 04 Dec 2022 17:57:03 +0800</pubDate><guid>https://4ft35t.github.io/post/lowcast-mesh/</guid><description>&lt;p&gt;上一次主动看 mesh 路由，单台成本 2000 左右，最近在什么值得买上看到用网件 6300V2 刷机后组 mesh 的，原理是网件6300V2 和华硕 AC68U 使用相同的硬件，修改 CEF 中相关配置，即可伪装成华硕 AC68U，使用华硕固件和功能。&lt;/p&gt;
 &lt;p&gt;6300V2 二手价格单台不到80，立马买两台来组网。&lt;/p&gt;
 &lt;h2 id="update-20260618"&gt;update 2026.06.18
 &lt;/h2&gt;&lt;p&gt;文中的下载链接已失效，相应文件到 &lt;a class="link" href="https://github.com/4ft35t/4ft35t.github.io/releases/tag/Netgear-R6300V2" target="_blank" rel="noopener"
@@ -1074,7 +1074,7 @@ alt="chart-vertical-line-bad"
 &gt;无线路由器Mesh组网教程：华硕Aimesh组网篇&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.right.com.cn/forum/forum.php?mod=redirect&amp;amp;goto=findpost&amp;amp;ptid=1686743&amp;amp;pid=5735198" target="_blank" rel="noopener"
 &gt;6300v2主动散热加usb风扇问题&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>Kodi 设置调整笔记</title><link>https://4ft35t.github.io/post/kodi-note/</link><pubDate>Sun, 18 Sep 2022 11:13:39 +0800</pubDate><guid>https://4ft35t.github.io/post/kodi-note/</guid><description>&lt;img src="https://kodi.tv/images/kodi-logo-with-text.svg" alt="Featured image of post Kodi 设置调整笔记" /&gt;&lt;p&gt;Kodi是由XBMC基金会开发的开源媒体播放器，原名XBMC，Kodi可以运行在多种操作系统和硬件平台。Kodi支持硬件解码，可以在硬件的很便宜的、低功耗的系统上播放高清视频&lt;/p&gt;
+&lt;/ul&gt;</description></item><item><title>Kodi 设置调整笔记</title><link>https://4ft35t.github.io/post/kodi-note/</link><pubDate>Sun, 18 Sep 2022 11:13:39 +0800</pubDate><guid>https://4ft35t.github.io/post/kodi-note/</guid><description>&lt;p&gt;Kodi是由XBMC基金会开发的开源媒体播放器，原名XBMC，Kodi可以运行在多种操作系统和硬件平台。Kodi支持硬件解码，可以在硬件的很便宜的、低功耗的系统上播放高清视频&lt;/p&gt;
 &lt;h2 id="字幕移动到视频外黑框"&gt;字幕移动到视频外黑框
 &lt;/h2&gt;&lt;p&gt;电视分辨率一般16:9, 比如1920x1080, 遇到比例不一致的视频，会填充黑框。&lt;/p&gt;
 &lt;p&gt;Kodi 默认字幕显示在视频内底部， 播放1918x802美剧时，视频上下有黑边，字幕在视频内底部。把字幕位置移动到黑框内，可以获得更好体验。&lt;/p&gt;
@@ -1092,7 +1092,7 @@ alt="chart-vertical-line-bad"
 &gt;Settings/Player/Language&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/RuralHunter/CoreELEC/issues/84" target="_blank" rel="noopener"
 &gt;[BUG] 19.x 会自动唤醒电视 #84&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>修复 Chromecast YouTube 投屏失败问题</title><link>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</link><pubDate>Fri, 29 Jul 2022 01:38:00 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</guid><description>&lt;img src="https://www.right.com.cn/forum/data/attachment/forum/201803/08/102522uwh6r70ssbuh01r5.jpg" alt="Featured image of post 修复 Chromecast YouTube 投屏失败问题" /&gt;&lt;h2 id="问题分析"&gt;问题分析
+&lt;/ul&gt;</description></item><item><title>修复 Chromecast YouTube 投屏失败问题</title><link>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</link><pubDate>Fri, 29 Jul 2022 01:38:00 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-chromecast-youtube-something-went-wrong/</guid><description>&lt;h2 id="问题分析"&gt;问题分析
 &lt;/h2&gt;&lt;p&gt;软路由 OpenWrt 做网关，同时用 SS 透明代理所有国外 IP 的 TCP 连接，手机、电脑都无感翻墙。&lt;/p&gt;
 &lt;p&gt;Chromecast 在多个境外网站上投屏正常工作，Google Photos 投屏也正常，唯独 YouTube 无法投屏。&lt;/p&gt;
 &lt;p&gt;使用关键词 &amp;ldquo;chromecast youtube something went wrong&amp;rdquo; 没找到有用信息，把 ChromeCast 的语言改成中文后，用中文的报错信息一下就找到了，果然是天朝特有问题。Google 搜 &lt;code&gt;chromecast youtube &amp;quot;出问题了&amp;quot;&lt;/code&gt;。&lt;/p&gt;
@@ -1115,7 +1115,7 @@ alt="chart-vertical-line-bad"
 &gt;Chromecast 如何配搭路由的 SS 看 youtube？&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://iso1.wordpress.com/2017/07/06/install-shadowsocks-on-geek-router-and-fix-chromecast-casting-youtube-issue/" target="_blank" rel="noopener"
 &gt;极路由开发(Root)模式安装Shadowsocks, 以及Chromecast因DNS污染无法投射YouTube的解决方案&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>使用机场加速自建代理</title><link>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</link><pubDate>Sat, 25 Jun 2022 11:14:47 +0800</pubDate><guid>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</guid><description>&lt;img src="https://raw.githubusercontent.com/Dreamacro/clash/master/docs/logo.png" alt="Featured image of post 使用机场加速自建代理" /&gt;&lt;p&gt;自建代理与机场比较&lt;/p&gt;
+&lt;/ul&gt;</description></item><item><title>使用机场加速自建代理</title><link>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</link><pubDate>Sat, 25 Jun 2022 11:14:47 +0800</pubDate><guid>https://4ft35t.github.io/post/speedup-self-hosted-proxy-via-payed-proxy/</guid><description>&lt;p&gt;自建代理与机场比较&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
@@ -1442,7 +1442,7 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &gt;v2ay 配置透明代理规则&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="http://openwrt-dist.sourceforge.net/" target="_blank" rel="noopener"
 &gt;aa65535 维护的 shadowsocks for openwrt&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>群晖 NAS 上运行 PaddleOCR</title><link>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</link><pubDate>Thu, 21 Apr 2022 19:22:21 +0800</pubDate><guid>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</guid><description>&lt;img src="https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.6/doc/PaddleOCR_log.png" alt="Featured image of post 群晖 NAS 上运行 PaddleOCR" /&gt;&lt;p&gt;本文的起因是 Manjaro 的 python 版本升级到 3.10 后，PaddleOCR 无法运行。尝试用 pyenv 安装 3.9.10 版 python 后，执行命令 &lt;code&gt;paddleocr&lt;/code&gt; 报错&lt;/p&gt;
+&lt;/ul&gt;</description></item><item><title>群晖 NAS 上运行 PaddleOCR</title><link>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</link><pubDate>Thu, 21 Apr 2022 19:22:21 +0800</pubDate><guid>https://4ft35t.github.io/post/paddleocr-on-synology-with-docker/</guid><description>&lt;p&gt;本文的起因是 Manjaro 的 python 版本升级到 3.10 后，PaddleOCR 无法运行。尝试用 pyenv 安装 3.9.10 版 python 后，执行命令 &lt;code&gt;paddleocr&lt;/code&gt; 报错&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;ImportError: /opt/github/ocr/venv3910/lib/python3.9/site-packages/paddle/fluid/core_avx.so: undefined symbol: _dl_sym, version GLIBC_PRIVATE&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -1692,7 +1692,7 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &gt;https://github.com/explosion/spaCy/issues/1110&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai" target="_blank" rel="noopener"
 &gt;https://askubuntu.com/questions/909277/avoiding-user-interaction-with-tzdata-when-installing-cert-in-a-docker-contai&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;img src="https://oss-cn-hangzhou.aliyuncs.com/codingsky/cdn/img/2019-07-25/dc29fbcc14b8c4acce61ba33a7f2af63.jpg" alt="Featured image of post 利用 Pixel 一代的无限存储备份 NAS 照片" /&gt;&lt;p&gt;Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p&gt;
+&lt;/ul&gt;</description></item><item><title>利用 Pixel 一代的无限存储备份 NAS 照片</title><link>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</link><pubDate>Sun, 27 Feb 2022 23:41:49 +0800</pubDate><guid>https://4ft35t.github.io/post/backup-nas-photo-to-goole-photo-via-pixel-for-unlimited/</guid><description>&lt;p&gt;Pixel 一代可以无限上传原始质量的照片和视频到 Google Photos，是 NAS 上照片异地备份的好选择。&lt;/p&gt;
 &lt;h2 id="tldr"&gt;TLDR
 &lt;/h2&gt;&lt;h3 id="手机端设置"&gt;手机端设置
 &lt;/h3&gt;&lt;ol&gt;
@@ -1843,7 +1843,7 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 &gt;rclone SFTP configuration&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://pmiku.com/note/mount-cifs-in-android.html" target="_blank" rel="noopener"
 &gt;mount-cifs-in-android&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</description></item><item><title>Android 远程截图</title><link>https://4ft35t.github.io/post/android-screenshoot-remote/</link><pubDate>Fri, 06 Aug 2021 16:51:31 +0800</pubDate><guid>https://4ft35t.github.io/post/android-screenshoot-remote/</guid><description>&lt;img src="https://img1.mydrivers.com/img/20210226/s_ff489bbf9a884b83a72837c099f23e97.jpg" alt="Featured image of post Android 远程截图" /&gt;&lt;p&gt;某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。&lt;/p&gt;
+&lt;/ol&gt;</description></item><item><title>Android 远程截图</title><link>https://4ft35t.github.io/post/android-screenshoot-remote/</link><pubDate>Fri, 06 Aug 2021 16:51:31 +0800</pubDate><guid>https://4ft35t.github.io/post/android-screenshoot-remote/</guid><description>&lt;p&gt;某些日常的特殊场景，需要远程截屏并传输，记录下使用 autojs + cgi + adb 实现过程。&lt;/p&gt;
 &lt;h2 id="背景"&gt;背景
 &lt;/h2&gt;&lt;p&gt;云闪付公交乘车码，每周使用三次可以获得一张 6-5 消费券，但那一个帐号一周只能领一次，需要多个帐号。&lt;/p&gt;
 &lt;p&gt;家里有个老华为手机，上面登录的有老人的云闪付帐号，但是注册帐号的手机号失效，无法更换新手机号，新设备登录需要短信验证码，只有拿这个手机去刷。&lt;/p&gt;
@@ -2044,7 +2044,7 @@ Traffic: clash &amp;lt;-&amp;gt; http &amp;lt;-&amp;gt; vmess &amp;lt;-&amp;gt; 
 loading="lazy"
 &gt;&lt;/p&gt;
 &lt;p&gt;最后，所有相关代码在 &lt;a class="link" href="https://github.com/4ft35t/Android-Screenshoot-Remote" target="_blank" rel="noopener"
-&gt;https://github.com/4ft35t/Android-Screenshoot-Remote&lt;/a&gt;&lt;/p&gt;</description></item><item><title>PD/QC 电源转 DC 头输出</title><link>https://4ft35t.github.io/post/pd-qc-dc/</link><pubDate>Mon, 13 Jul 2020 14:35:25 +0800</pubDate><guid>https://4ft35t.github.io/post/pd-qc-dc/</guid><description>&lt;img src="https://cdn.jsdelivr.net/gh/4ft35t/images@blog/img/2020/Screenshot%202020-07-13%20at%2015.10.09.png" alt="Featured image of post PD/QC 电源转 DC 头输出" /&gt;&lt;p&gt;最初了解到 PD 电源 type-c 输出转 DC 圆头输出，是在 twitter 上，当时作者说从淘宝买了 PD 诱骗器，可以用 PD 头给 NUC 供电，省了 NUC 自带电源占的空间。&lt;/p&gt;
+&gt;https://github.com/4ft35t/Android-Screenshoot-Remote&lt;/a&gt;&lt;/p&gt;</description></item><item><title>PD/QC 电源转 DC 头输出</title><link>https://4ft35t.github.io/post/pd-qc-dc/</link><pubDate>Mon, 13 Jul 2020 14:35:25 +0800</pubDate><guid>https://4ft35t.github.io/post/pd-qc-dc/</guid><description>&lt;p&gt;最初了解到 PD 电源 type-c 输出转 DC 圆头输出，是在 twitter 上，当时作者说从淘宝买了 PD 诱骗器，可以用 PD 头给 NUC 供电，省了 NUC 自带电源占的空间。&lt;/p&gt;
 &lt;p&gt;PD 和 QC 是两种电源快充协议，一般 PD 充电头都支持 QC 协议，反之则不行；与之相对应的，PD 充电头的价格要比 QC 贵很多。&lt;/p&gt;
 &lt;p&gt;我也量了一下笔记本充电头的外径 4mm，然后在淘宝看到的参数有两种：&lt;/p&gt;
 &lt;ul&gt;
@@ -2080,7 +2080,7 @@ loading="lazy"
 loading="lazy"
 &gt;&lt;/p&gt;
 &lt;h3 id="趣事"&gt;趣事
-&lt;/h3&gt;&lt;p&gt;家里有个硕方的标签打印机，自带电源是 9v 2.5a，直接插笔记本诱骗器的 19v 供电居然可以正常工作。&lt;/p&gt;</description></item><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;img src="https://pic1.zhimg.com/v2-6101b6f0fb5664fd5f959332faefb38f_1440w.jpg" alt="Featured image of post bash 条件退出踩坑" /&gt;&lt;p&gt;一个小脚本，&lt;code&gt;[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code&gt;,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p&gt;
+&lt;/h3&gt;&lt;p&gt;家里有个硕方的标签打印机，自带电源是 9v 2.5a，直接插笔记本诱骗器的 19v 供电居然可以正常工作。&lt;/p&gt;</description></item><item><title>bash 条件退出踩坑</title><link>https://4ft35t.github.io/post/bash-exit-in-conditional/</link><pubDate>Fri, 19 Jun 2020 17:55:19 +0800</pubDate><guid>https://4ft35t.github.io/post/bash-exit-in-conditional/</guid><description>&lt;p&gt;一个小脚本，&lt;code&gt;[ $status != &amp;quot;success&amp;quot; ] &amp;amp;&amp;amp; exit ２&lt;/code&gt;,在 status 值是 success 时，最终的返回状态码是１，而不是０，有点诡异。&lt;/p&gt;
 &lt;h3 id="排查"&gt;排查
 &lt;/h3&gt;&lt;p&gt;这个写法以前在脚本里经常写，稳定运行未出错。对比之前的脚本后发现差异，之前的脚本 exit 是提前退出，后面还有内容；这个脚本exit是上层调用脚本反馈最终结果，exit 是最后一行。&lt;/p&gt;
 &lt;p&gt;修改脚本后一切正常&lt;/p&gt;
@@ -2150,7 +2150,7 @@ loading="lazy"
 &lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;[&lt;/span&gt; &lt;span class="nv"&gt;$status&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;success&amp;#34;&lt;/span&gt; &lt;span class="o"&gt;]&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item><item><title>Promark3 使用 冰人（iceman）固件</title><link>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</link><pubDate>Thu, 04 Jun 2020 19:21:59 +0800</pubDate><guid>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</guid><description>&lt;img src="http://img-blog.csdnimg.cn/20200307161927634.jpg" alt="Featured image of post Promark3 使用 冰人（iceman）固件" /&gt;&lt;p&gt;淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 &lt;code&gt;Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error&lt;/code&gt;。&lt;/p&gt;
+&lt;/div&gt;</description></item><item><title>Promark3 使用 冰人（iceman）固件</title><link>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</link><pubDate>Thu, 04 Jun 2020 19:21:59 +0800</pubDate><guid>https://4ft35t.github.io/post/promark3-flash-iceman-firmware/</guid><description>&lt;p&gt;淘宝买的 Promark3 RDV2，使用官方仓库的代码https://github.com/Proxmark/proxmark3，编译和刷固件都没问题；使用冰人的固件https://github.com/RfidResearchGroup/proxmark3，编译后刷bootrom.elf 没问题，刷 fullimage.elf 出错 &lt;code&gt;Error: Unexpected reply 0x00fe NACK (expected ACK) Lock Error&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;官方固件编译、烧录、使用都没问题，看到冰人的固件有两条命令很心动，把重复工作自动化，节约时间。&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;auto&lt;/code&gt; 自动识别卡类型&lt;/li&gt;
@@ -2370,7 +2370,7 @@ compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p&
 &lt;p&gt;&lt;a class="link" href="https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md" target="_blank" rel="noopener"
 &gt;https://github.com/RfidResearchGroup/proxmark3/blob/master/doc/md/Use_of_Proxmark/4_Advanced-compilation-parameters.md&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>SSH 跳板机与代理</title><link>https://4ft35t.github.io/post/ssh-porxy/</link><pubDate>Wed, 03 Jun 2020 16:55:35 +0800</pubDate><guid>https://4ft35t.github.io/post/ssh-porxy/</guid><description>&lt;img src="https://www.openssh.com/images/openssh.gif" alt="Featured image of post SSH 跳板机与代理" /&gt;&lt;p&gt;基于各种复杂环境，ssh 无法直接连接目标主机，需要借助中间的跳板机或者代理来连接。通常使用 ssh-agent 来通过跳板机连接目标主机，使用 ProxyCommand 或者 ProxyJump 连接更方便。&lt;/p&gt;
+&lt;/ul&gt;</description></item><item><title>SSH 跳板机与代理</title><link>https://4ft35t.github.io/post/ssh-porxy/</link><pubDate>Wed, 03 Jun 2020 16:55:35 +0800</pubDate><guid>https://4ft35t.github.io/post/ssh-porxy/</guid><description>&lt;p&gt;基于各种复杂环境，ssh 无法直接连接目标主机，需要借助中间的跳板机或者代理来连接。通常使用 ssh-agent 来通过跳板机连接目标主机，使用 ProxyCommand 或者 ProxyJump 连接更方便。&lt;/p&gt;
 &lt;h3 id="跳板机"&gt;跳板机
 &lt;/h3&gt;&lt;p&gt;在　&lt;code&gt;~/.ssh/config&lt;/code&gt; 中给跳板机一个方便记忆的别名，比如　jumpserver&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
@@ -2536,7 +2536,7 @@ compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p&
 &gt;https://gitolite.com/git-over-proxy.html&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://linux.die.net/man/1/socat" target="_blank" rel="noopener"
 &gt;https://linux.die.net/man/1/socat&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description></item><item><title>解决应用商店 0x80131500 错误</title><link>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</link><pubDate>Wed, 03 Jun 2020 11:48:10 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</guid><description>&lt;img src="https://img-blog.csdnimg.cn/20190629132640532.png" alt="Featured image of post 解决应用商店 0x80131500 错误" /&gt;&lt;p&gt;Win 10 应用商店打开就报 0x80131500 错误，尝试各种方法都不行，最终使用 fiddler 曲线解决。&lt;/p&gt;
+&lt;/ul&gt;</description></item><item><title>解决应用商店 0x80131500 错误</title><link>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</link><pubDate>Wed, 03 Jun 2020 11:48:10 +0800</pubDate><guid>https://4ft35t.github.io/post/fix-windows-store-0x80131500-error/</guid><description>&lt;p&gt;Win 10 应用商店打开就报 0x80131500 错误，尝试各种方法都不行，最终使用 fiddler 曲线解决。&lt;/p&gt;
 &lt;p&gt;尝试过的方法来自 &lt;a class="link" href="https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b" target="_blank" rel="noopener"
 &gt;https://answers.microsoft.com/zh-hans/windows/forum/all/%E4%BB%A3%E7%A0%81/cbbe7aaf-8f66-4779-89c8-3c74f5341c7b&lt;/a&gt;&lt;/p&gt;
 &lt;ul&gt;
@@ -2558,7 +2558,7 @@ compiled with GCC 8.3.1 20190703 (release) [gcc-8-branch revision 273027]&lt;/p&
 loading="lazy"
 alt="image-20200603120155534"
 &gt;&lt;/p&gt;
-&lt;p&gt;再次打开应用商店就能正常使用。唯一的缺陷是需要打开 fiddler 才能使用应用商店，不然会报 0x80072EFD 错误。&lt;/p&gt;</description></item><item><title>解决无忧行长时间显示“正在连接电话服务器”问题</title><link>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</link><pubDate>Thu, 09 Apr 2020 21:48:15 +0800</pubDate><guid>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</guid><description>&lt;img src="https://www.jegotrip.cn/m/img/favicon.ico" alt="Featured image of post 解决无忧行长时间显示“正在连接电话服务器”问题" /&gt;&lt;p&gt;无忧行(JegoTrip)APP是中国移动专门为出境游用户量身打造的APP。在境内也可以使用，移动号码可以在 APP 内接电话和收短信, 轻松实现一机双号。&lt;/p&gt;
+&lt;p&gt;再次打开应用商店就能正常使用。唯一的缺陷是需要打开 fiddler 才能使用应用商店，不然会报 0x80072EFD 错误。&lt;/p&gt;</description></item><item><title>解决无忧行长时间显示“正在连接电话服务器”问题</title><link>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</link><pubDate>Thu, 09 Apr 2020 21:48:15 +0800</pubDate><guid>https://4ft35t.github.io/post/jegotrip-takes-long-time-to-connect/</guid><description>&lt;p&gt;无忧行(JegoTrip)APP是中国移动专门为出境游用户量身打造的APP。在境内也可以使用，移动号码可以在 APP 内接电话和收短信, 轻松实现一机双号。&lt;/p&gt;
 &lt;h2 id="具体症状"&gt;具体症状
 &lt;/h2&gt;&lt;p&gt;家里路由器上部署梯子, 国内 IP 直连，其余 IP 走梯子, 国内 IP 库用的 &lt;a class="link" href="https://github.com/17mon/china_ip_list" target="_blank" rel="noopener"
 &gt;https://github.com/17mon/china_ip_list&lt;/a&gt;。连接家里 WIFI，无忧行 APP 启动后，显示“正在连接电话服务器”, 持续 30 秒以上才能连接到服务器，之后才能收到短信；用 4G 则没有这个提示，启动 APP 瞬间就能收到短信。猜测是无忧行服务器的香港 IP 走梯子后比直连慢很多所致。&lt;/p&gt;
@@ -2600,7 +2600,7 @@ cp.jegotrip.com.cn&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;223.121.0.0/16
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;重启梯子服务后问题解决。&lt;/p&gt;</description></item><item><title>使用 Github Actions 自动部署 Hugo</title><link>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</link><pubDate>Tue, 07 Apr 2020 14:03:04 +0800</pubDate><guid>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</guid><description>&lt;img src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg" alt="Featured image of post 使用 Github Actions 自动部署 Hugo" /&gt;&lt;p&gt;Hugo 是一款开源的使用 go 语言写的静态网站生成器，生成的静态页面可以轻松部署到 github pages。&lt;/p&gt;
+&lt;/div&gt;&lt;p&gt;重启梯子服务后问题解决。&lt;/p&gt;</description></item><item><title>使用 Github Actions 自动部署 Hugo</title><link>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</link><pubDate>Tue, 07 Apr 2020 14:03:04 +0800</pubDate><guid>https://4ft35t.github.io/post/hugo-auto-deploy-with-github-actions/</guid><description>&lt;p&gt;Hugo 是一款开源的使用 go 语言写的静态网站生成器，生成的静态页面可以轻松部署到 github pages。&lt;/p&gt;
 &lt;p&gt;GitHub Actions 是 GitHub 的持续集成服务，持续集成由很多操作组成，比如抓取代码、运行测试、登录远程服务器，发布到第三方服务等等。GitHub 把这些操作就称为 actions。如果你需要某个 action，不必自己写复杂的脚本，直接引用他人写好的 action 即可，整个持续集成过程，就变成了一个 actions 的组合。&lt;a class="link" href="https://github.com/marketplace?type=actions" target="_blank" rel="noopener"
 &gt;Github actions 市场&lt;/a&gt;，可以搜索别人提交的 actions。&lt;/p&gt;
 &lt;h2 id="自动部署要点"&gt;自动部署要点
